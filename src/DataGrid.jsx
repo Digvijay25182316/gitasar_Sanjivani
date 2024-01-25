@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { activitiesData } from "./data";
 import FilterComponent from "./FilterComponent";
 import { CSVLink } from "react-csv";
+import { XMarkIcon } from "@heroicons/react/24/solid";
 
 export default function DataGridDemo() {
   const [DataArr, setDataArr] = useState(activitiesData);
@@ -10,22 +11,24 @@ export default function DataGridDemo() {
   function AddFilter(data) {
     setQueryArr((prev) => [...prev, data]);
   }
-  useEffect(() => {
-    const filterData = () => {
-      if (queryArr.length > 0) {
-        return DataArr.filter((item) => {
-          return queryArr.every((query) => {
-            return (
-              item[Object?.keys(query)[0]] === query[Object?.keys(query)[0]]
-            );
-          });
+  const filterData = () => {
+    if (queryArr.length > 0) {
+      return DataArr.filter((item) => {
+        return queryArr.every((query) => {
+          return item[Object?.keys(query)[0]] === query[Object?.keys(query)[0]];
         });
-      }
-    };
+      });
+    }
+  };
+  useEffect(() => {
     setDataArr(
       filterData()?.length > 0 || filterData() ? filterData() : DataArr
     );
   }, [queryArr]);
+
+  const removeFilter = (data) => {
+    setQueryArr(queryArr.filter((item, index) => index !== data && item));
+  };
 
   const csvData = [
     [
@@ -37,6 +40,7 @@ export default function DataGridDemo() {
       "phone",
       "LastName",
       "date",
+      "startTime",
       "endTime",
     ],
     ...DataArr.map(
@@ -49,6 +53,7 @@ export default function DataGridDemo() {
         phone,
         LastName,
         date,
+        startTime,
         endTime,
       }) => [
         LastName,
@@ -59,6 +64,7 @@ export default function DataGridDemo() {
         typeofActivity,
         phone,
         date,
+        startTime,
         endTime,
       ]
     ),
@@ -88,12 +94,23 @@ export default function DataGridDemo() {
         <p className="text-red-500 md:px-5 px-2 w-max font-bold">
           current filters :{" "}
         </p>
-        <div className="text-blue-700 flex items-center gap-5">
+        <div className="flex items-center gap-5">
           {queryArr?.length > 0
             ? queryArr?.map((item, index) => (
-                <p className="flex items-center gap-2">
-                  {index + 1}.{Object.keys(item)[0]}
-                </p>
+                <div
+                  className="flex items-center gap-2 bg-blue-200 text-blue-700 pl-2 rounded-full"
+                  key={index}
+                >
+                  <p>
+                    {index + 1}.{Object.keys(item)[0]}
+                  </p>
+                  <button
+                    className="text-red-700 bg-red-200 rounded-full p-2"
+                    onClick={() => removeFilter(index)}
+                  >
+                    <XMarkIcon className="h-4 w-4" />
+                  </button>
+                </div>
               ))
             : 0}
         </div>
@@ -168,6 +185,15 @@ export default function DataGridDemo() {
 
               <th className="border">
                 <div className="flex items-center gap-2">
+                  startTime{" "}
+                  <FilterComponent
+                    filterRef={AddFilter}
+                    fieldname={"endTime"}
+                  />
+                </div>
+              </th>
+              <th className="border">
+                <div className="flex items-center gap-2">
                   endTime{" "}
                   <FilterComponent
                     filterRef={AddFilter}
@@ -184,7 +210,8 @@ export default function DataGridDemo() {
                 <td className="border">{item.courseCode}</td>
                 <td className="border">{item.sessionName}</td>
                 <td className="border">{item.status}</td>
-                <td className="border">{item.Activity}</td>
+                <td className="border">{item.typeofActivity}</td>
+                <td className="border">{item.Phone}</td>
                 <td className="border">{item.LastName}</td>
                 <td className="border">{item.date}</td>
                 <td className="border">{item.startTime}</td>
