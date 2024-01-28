@@ -4,13 +4,13 @@ import { Link, useLocation } from "react-router-dom";
 function Header() {
   const { pathname } = useLocation();
   return (
-    <div className="flex items-center bg-white fixed top-0 right-0 left-0 z-[1000] border-b shadow-sm font-nunito-sans font-bold">
+    <div className="flex items-center bg-white fixed top-0 right-0 left-0 z-[1000] font-nunito-sans font-bold">
       <div className="md:w-[20vw]">
         <p className="text-xl px-2 py-1.5 text-gray-700">Sanjivani</p>
       </div>
       <div className="md:w-[80vw] font-normal">
         <nav className="md:flex items-center hidden">
-          <Link to={"/admin/information"}>
+          <Link to={"/admin/information/program"}>
             <p
               className={` transition-colors duration-500 py-2 md:px-5 ${
                 pathname.startsWith("/admin/information")

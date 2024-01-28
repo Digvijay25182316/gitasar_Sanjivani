@@ -13,54 +13,48 @@ function BottomNav() {
     return (
       <div className="fixed bottom-0 left-0 right-0 md:hidden bg-white">
         <div className="flex items-center justify-evenly">
-          <Link to={"/admin/information"}>
+          <Link to={"/admin/information/program"} title="information">
             <p
               className={`transition-colors duration-500  px-4 ${
                 pathname.startsWith("/admin/information")
-                  ? "text-blue-700 border-t-2 py-3 border-t-blue-700"
-                  : "text-gray-400"
+                  ? "border-t-2 border-t-blue-700 text-blue-700  py-3"
+                  : "text-gray-400 py-3"
               }`}
             >
-              <CircleStackIcon
-                className={`h-6 w-6 transition-colors duration-500 `}
-              />
+              <CircleStackIcon className={`h-6 w-6 `} />
             </p>
           </Link>
-          <Link to={"/admin/home"}>
+          <Link to={"/admin/home"} title="home">
             <p
               className={`transition-colors duration-500  px-4 ${
                 pathname.startsWith("/admin/home")
-                  ? "text-blue-700 border-t-2 py-3 border-t-blue-700"
+                  ? "border-t-2 border-t-blue-700 text-blue-700  py-3 "
                   : "text-gray-400"
               }`}
             >
-              <HomeIcon className={`h-6 w-6 transition-colors duration-500 `} />
+              <HomeIcon className={`h-6 w-6 `} />
             </p>
           </Link>
-          <Link to={"/admin/dashboard"}>
+          <Link to={"/admin/dashboard"} title="dashboard">
             <p
               className={`transition-colors duration-500  px-4 ${
                 pathname.startsWith("/admin/dashboard")
-                  ? "text-blue-700 border-t-2 py-3 border-t-blue-700"
+                  ? "border-t-2 border-t-blue-700 text-blue-700  py-3 "
                   : "text-gray-400"
               }`}
             >
-              <ChartPieIcon
-                className={`h-6 w-6 transition-colors duration-500 `}
-              />
+              <ChartPieIcon className={`h-6 w-6 `} />
             </p>
           </Link>
-          <Link to={"/admin/settings"}>
+          <Link to={"/admin/settings"} title="settings">
             <p
               className={`transition-colors duration-500  px-4 ${
                 pathname.startsWith("/admin/settings")
-                  ? "text-blue-700 border-t-2 py-3 border-t-blue-700"
+                  ? "border-t-2 border-t-blue-700 text-blue-700  py-3 "
                   : "text-gray-400"
               }`}
             >
-              <Cog6ToothIcon
-                className={`h-6 w-6 transition-colors duration-500 `}
-              />
+              <Cog6ToothIcon className={`h-6 w-6 `} />
             </p>
           </Link>
         </div>

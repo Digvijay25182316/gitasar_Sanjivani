@@ -6,7 +6,7 @@ import {
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
 
-function Program() {
+function CourseM() {
   const { pathname } = useLocation();
   return (
     <div className="flex items-center max-w-screen bg-white">
@@ -72,10 +72,10 @@ function Program() {
       </div>
       <div className="md:w-[80vw] bg-gray-50 min-h-screen w-screen px-5">
         {" "}
-        something
+        Course
       </div>
     </div>
   );
 }
 
-export default Program;
+export default CourseM;

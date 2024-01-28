@@ -1,12 +1,13 @@
 import {
   AcademicCapIcon,
   CalendarDaysIcon,
+  ChevronRightIcon,
   PresentationChartBarIcon,
 } from "@heroicons/react/24/solid";
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
 
-function Program() {
+function CourseLevel() {
   const { pathname } = useLocation();
   return (
     <div className="flex items-center max-w-screen bg-white">
@@ -70,12 +71,36 @@ function Program() {
           </Link>
         </div>
       </div>
-      <div className="md:w-[80vw] bg-gray-50 min-h-screen w-screen px-5">
-        {" "}
-        something
+      <div className="md:w-[80vw] bg-gray-50 min-h-screen w-screen">
+        <div className="flex flex-col">
+          <div className="flex items-center">
+            {pathname
+              ?.split("/")
+              .filter((item) => item !== "") // Filter out empty segments
+              .map((item, index) => (
+                <div
+                  className="flex items-center py-2"
+                  key={`${item}-${index}`}
+                >
+                  <p>
+                    <ChevronRightIcon className="h-6 w-6" />
+                  </p>
+                  <p className="text-lg font-semibold text-blue-700">{item}</p>
+                </div>
+              ))}
+          </div>
+          <div className="flex items-center bg-white mx-5 mt-5 px-5 py-5 rounded-2xl justify-between">
+            <div></div>
+            <div>
+              <button className="bg-blue-700 text-white text-lg px-4 py-1.5 rounded-xl shadow-lg">
+                + New Activity
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
 }
 
-export default Program;
+export default CourseLevel;
