@@ -254,7 +254,7 @@ function Activities() {
                 <tbody>
                   {activitiesData?.map((acitivity, index) => (
                     <tr key={index}>
-                      <td className="border-l border-b flex justify-center py-5">
+                      <td className="border-b flex justify-center py-5">
                         <input
                           type="checkbox"
                           id=""

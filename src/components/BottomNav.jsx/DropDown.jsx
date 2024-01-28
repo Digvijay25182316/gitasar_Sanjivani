@@ -93,7 +93,7 @@ const Dropdown = ({
               placeholder="search..."
               value={formstate}
               onChange={(e) => setFormState(e.target.value)}
-              className="border px-4 py-1 rounded-md border-blue-200 outline-none"
+              className="border  py-1 rounded-md border-blue-200 outline-none"
             />
             <div className="flex items-center gap-5">
               <button
