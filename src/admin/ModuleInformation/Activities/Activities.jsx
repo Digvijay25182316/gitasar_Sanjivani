@@ -8,10 +8,12 @@ import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import Dropdown from "../../../components/BottomNav.jsx/DropDown";
 import { activitiesData } from "../../../data";
+import AddActivitiesModal from "./AddActivitiesModal";
 
 function Activities() {
   const { pathname } = useLocation();
   const [queryArr, setQueryArr] = useState([]);
+  const [openActivities, setOpenActivities] = useState(false);
 
   function AddFilter(data) {
     setQueryArr((prev) => [...prev, data]);
@@ -114,24 +116,13 @@ function Activities() {
               </button>
             </div>
 
-            <button className="bg-blue-700 text-white text-lg px-4 py-1.5 rounded-xl shadow-lg">
+            <button
+              className="bg-blue-700 text-white md:text-lg md:px-4 md:py-1.5 px-2 py-1 rounded-xl shadow-lg"
+              onClick={() => setOpenActivities(true)}
+            >
               + New Activity
             </button>
           </div>
-          {/* <div className="md:mx-5 mx-2 bg-white mt-2 md:mt-5 flex items-center rounded-lg shadow">
-            <p className="flex items-center gap-2 px-2 py-1 text-gray-400">
-              <FunnelIcon className="h-4 w-4" />
-              filters :
-            </p>
-            <div className="overflow-x-scroll no-scrollbar">
-              <div className="text-blue-700 bg-blue-100 pl-2 md:pl-3 md:gap-5 flex items-center gap-2 rounded-full md:text-lg ">
-                <p>filter 1</p>
-                <p className="bg-red-200 text-red-700 p-1 rounded-full">
-                  <XMarkIcon className="h-4 w-4 " />
-                </p>
-              </div>
-            </div>
-          </div> */}
           <div className="md:mx-5 mx-2 bg-white mt-2 md:mt-5 flex flex-col rounded-lg shadow">
             <p className="border-b px-2 py-1 font-semibold text-gray-600">
               Activities
@@ -290,6 +281,10 @@ function Activities() {
           </div>
         </div>
       </div>
+      <AddActivitiesModal
+        isOpen={openActivities}
+        setIsOpen={() => setOpenActivities(false)}
+      />
     </div>
   );
 }
