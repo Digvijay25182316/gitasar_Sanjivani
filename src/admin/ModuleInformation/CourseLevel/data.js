@@ -8,10 +8,10 @@ export const courseLevelData = [
     status: "Active",
     attendanceUrl: "https://example.com/attendance/intro-programming",
     sessions: [
-      { sessionName: "Session 1", scheduledDate: "2024-03-02" },
-      { sessionName: "Session 2", scheduledDate: "2024-03-09" },
-      { sessionName: "Session 3", scheduledDate: "2024-03-16" },
-      { sessionName: "Session 4", scheduledDate: "2024-03-23" },
+      { id: "1", sessionName: "Session 1", scheduledDate: "2024-03-02" },
+      { id: "2", sessionName: "Session 2", scheduledDate: "2024-03-09" },
+      { id: "3", sessionName: "Session 3", scheduledDate: "2024-03-16" },
+      { id: "4", sessionName: "Session 4", scheduledDate: "2024-03-23" },
     ],
   },
   {
@@ -23,10 +23,10 @@ export const courseLevelData = [
     status: "Active",
     attendanceUrl: "https://example.com/attendance/web-development-basics",
     sessions: [
-      { sessionName: "Session 1", scheduledDate: "2024-03-02" },
-      { sessionName: "Session 2", scheduledDate: "2024-03-09" },
-      { sessionName: "Session 3", scheduledDate: "2024-03-16" },
-      { sessionName: "Session 4", scheduledDate: "2024-03-23" },
+      { id: "1", sessionName: "Session 1", scheduledDate: "2024-03-02" },
+      { id: "2", sessionName: "Session 2", scheduledDate: "2024-03-09" },
+      { id: "3", sessionName: "Session 3", scheduledDate: "2024-03-16" },
+      { id: "4", sessionName: "Session 4", scheduledDate: "2024-03-23" },
     ],
   },
   {
@@ -38,10 +38,10 @@ export const courseLevelData = [
     status: "Active",
     attendanceUrl: "https://example.com/attendance/data-structures-algorithms",
     sessions: [
-      { sessionName: "Session 1", scheduledDate: "2024-03-02" },
-      { sessionName: "Session 2", scheduledDate: "2024-03-09" },
-      { sessionName: "Session 3", scheduledDate: "2024-03-16" },
-      { sessionName: "Session 4", scheduledDate: "2024-03-23" },
+      { id: "1", sessionName: "Session 1", scheduledDate: "2024-03-02" },
+      { id: "2", sessionName: "Session 2", scheduledDate: "2024-03-09" },
+      { id: "3", sessionName: "Session 3", scheduledDate: "2024-03-16" },
+      { id: "4", sessionName: "Session 4", scheduledDate: "2024-03-23" },
     ],
   },
   {
@@ -53,10 +53,10 @@ export const courseLevelData = [
     status: "Inactive",
     attendanceUrl: "https://example.com/attendance/mobile-app-development",
     sessions: [
-      { sessionName: "Session 1", scheduledDate: "2024-03-02" },
-      { sessionName: "Session 2", scheduledDate: "2024-03-09" },
-      { sessionName: "Session 3", scheduledDate: "2024-03-16" },
-      { sessionName: "Session 4", scheduledDate: "2024-03-23" },
+      { id: "1", sessionName: "Session 1", scheduledDate: "2024-03-02" },
+      { id: "2", sessionName: "Session 2", scheduledDate: "2024-03-09" },
+      { id: "3", sessionName: "Session 3", scheduledDate: "2024-03-16" },
+      { id: "4", sessionName: "Session 4", scheduledDate: "2024-03-23" },
     ],
   },
   {
@@ -69,10 +69,10 @@ export const courseLevelData = [
     attendanceUrl:
       "https://example.com/attendance/machine-learning-fundamentals",
     sessions: [
-      { sessionName: "Session 1", scheduledDate: "2024-03-02" },
-      { sessionName: "Session 2", scheduledDate: "2024-03-09" },
-      { sessionName: "Session 3", scheduledDate: "2024-03-16" },
-      { sessionName: "Session 4", scheduledDate: "2024-03-23" },
+      { id: "1", sessionName: "Session 1", scheduledDate: "2024-03-02" },
+      { id: "2", sessionName: "Session 2", scheduledDate: "2024-03-09" },
+      { id: "3", sessionName: "Session 3", scheduledDate: "2024-03-16" },
+      { id: "4", sessionName: "Session 4", scheduledDate: "2024-03-23" },
     ],
   },
   {
@@ -84,10 +84,10 @@ export const courseLevelData = [
     status: "Active",
     attendanceUrl: "https://example.com/attendance/cybersecurity-basics",
     sessions: [
-      { sessionName: "Session 1", scheduledDate: "2024-03-02" },
-      { sessionName: "Session 2", scheduledDate: "2024-03-09" },
-      { sessionName: "Session 3", scheduledDate: "2024-03-16" },
-      { sessionName: "Session 4", scheduledDate: "2024-03-23" },
+      { id: "1", sessionName: "Session 1", scheduledDate: "2024-03-02" },
+      { id: "2", sessionName: "Session 2", scheduledDate: "2024-03-09" },
+      { id: "3", sessionName: "Session 3", scheduledDate: "2024-03-16" },
+      { id: "4", sessionName: "Session 4", scheduledDate: "2024-03-23" },
     ],
   },
   {
@@ -99,10 +99,10 @@ export const courseLevelData = [
     status: "Inactive",
     attendanceUrl: "https://example.com/attendance/data-analytics",
     sessions: [
-      { sessionName: "Session 1", scheduledDate: "2024-03-02" },
-      { sessionName: "Session 2", scheduledDate: "2024-03-09" },
-      { sessionName: "Session 3", scheduledDate: "2024-03-16" },
-      { sessionName: "Session 4", scheduledDate: "2024-03-23" },
+      { id: "1", sessionName: "Session 1", scheduledDate: "2024-03-02" },
+      { id: "2", sessionName: "Session 2", scheduledDate: "2024-03-09" },
+      { id: "3", sessionName: "Session 3", scheduledDate: "2024-03-16" },
+      { id: "4", sessionName: "Session 4", scheduledDate: "2024-03-23" },
     ],
   },
   {
@@ -114,10 +114,10 @@ export const courseLevelData = [
     status: "Active",
     attendanceUrl: "https://example.com/attendance/frontend-web-development",
     sessions: [
-      { sessionName: "Session 1", scheduledDate: "2024-03-02" },
-      { sessionName: "Session 2", scheduledDate: "2024-03-09" },
-      { sessionName: "Session 3", scheduledDate: "2024-03-16" },
-      { sessionName: "Session 4", scheduledDate: "2024-03-23" },
+      { id: "1", sessionName: "Session 1", scheduledDate: "2024-03-02" },
+      { id: "2", sessionName: "Session 2", scheduledDate: "2024-03-09" },
+      { id: "3", sessionName: "Session 3", scheduledDate: "2024-03-16" },
+      { id: "4", sessionName: "Session 4", scheduledDate: "2024-03-23" },
     ],
   },
   {
@@ -129,10 +129,10 @@ export const courseLevelData = [
     status: "Active",
     attendanceUrl: "https://example.com/attendance/backend-web-development",
     sessions: [
-      { sessionName: "Session 1", scheduledDate: "2024-03-02" },
-      { sessionName: "Session 2", scheduledDate: "2024-03-09" },
-      { sessionName: "Session 3", scheduledDate: "2024-03-16" },
-      { sessionName: "Session 4", scheduledDate: "2024-03-23" },
+      { id: "1", sessionName: "Session 1", scheduledDate: "2024-03-02" },
+      { id: "2", sessionName: "Session 2", scheduledDate: "2024-03-09" },
+      { id: "3", sessionName: "Session 3", scheduledDate: "2024-03-16" },
+      { id: "4", sessionName: "Session 4", scheduledDate: "2024-03-23" },
     ],
   },
   {
@@ -144,10 +144,10 @@ export const courseLevelData = [
     status: "Active",
     attendanceUrl: "https://example.com/attendance/artificial-intelligence",
     sessions: [
-      { sessionName: "Session 1", scheduledDate: "2024-03-02" },
-      { sessionName: "Session 2", scheduledDate: "2024-03-09" },
-      { sessionName: "Session 3", scheduledDate: "2024-03-16" },
-      { sessionName: "Session 4", scheduledDate: "2024-03-23" },
+      { id: "1", sessionName: "Session 1", scheduledDate: "2024-03-02" },
+      { id: "2", sessionName: "Session 2", scheduledDate: "2024-03-09" },
+      { id: "3", sessionName: "Session 3", scheduledDate: "2024-03-16" },
+      { id: "4", sessionName: "Session 4", scheduledDate: "2024-03-23" },
     ],
   },
 ];

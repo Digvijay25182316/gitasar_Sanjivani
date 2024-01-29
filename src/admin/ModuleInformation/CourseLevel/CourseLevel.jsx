@@ -12,6 +12,7 @@ import { courseLevelData } from "./data";
 import CopyClipBoard from "../../../components/BottomNav.jsx/CopyClipBoard";
 import QrCode from "./QrCode";
 import ViewPageController from "./ViewPageController";
+import CourseModal from "./CourseModal";
 
 function CourseLevel() {
   const { pathname } = useLocation();
@@ -285,6 +286,12 @@ function CourseLevel() {
           </div>
         </div>
       </div>
+      <CourseModal
+        isOpen={OpenCourseLevel}
+        setIsOpen={() => setOpenCourseLevel(false)}
+      >
+        <div>courseModal</div>
+      </CourseModal>
     </div>
   );
 }

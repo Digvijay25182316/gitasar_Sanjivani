@@ -4,7 +4,7 @@ import {
   EllipsisVerticalIcon,
   XMarkIcon,
 } from "@heroicons/react/24/solid";
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 
 const Dropdown = ({
   position,

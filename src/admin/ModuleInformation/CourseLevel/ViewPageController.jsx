@@ -2,7 +2,6 @@ import {
   ChevronLeftIcon,
   ChevronRightIcon,
   EyeIcon,
-  LinkIcon,
   PencilSquareIcon,
   XMarkIcon,
 } from "@heroicons/react/24/solid";
@@ -10,29 +9,15 @@ import { AcademicCapIcon } from "@heroicons/react/24/outline";
 import React, { useState } from "react";
 import CourseModal from "./CourseModal";
 import { courseLevelData } from "./data";
-import CopyClipBoard from "../../../components/BottomNav.jsx/CopyClipBoard";
-import QrCode from "./QrCode";
-import Dropdown from "../../../components/BottomNav.jsx/DropDown";
+import SessionList from "./SessionList";
 
 function ViewPageController({ currentPage, setPage, selected }) {
   const courseData = courseLevelData[0];
   const [ViewOpen, setViewOpen] = useState(false);
   const [UpdateOpen, setUpdateOpen] = useState(false);
-  const [queryArr, setQueryArr] = useState([]);
-  const [OpenCourseLevel, setOpenCourseLevel] = useState(false);
+  // const [OpenCourseLevel, setOpenCourseLevel] = useState(false);
   const [selectedItem, setSelectedItem] = useState(0);
-  const [selectedSessions, setSelectedSessions] = useState(0);
-
-  function AddFilter(data) {
-    setQueryArr((prev) => [...prev, data]);
-  }
-  function doesFieldExists(array, propertyName) {
-    return array?.some((obj) => obj.hasOwnProperty(propertyName));
-  }
-
-  function removeObjectByKey(data) {
-    setQueryArr(queryArr.filter((item) => !Object.keys(item).includes(data)));
-  }
+  // const [selectedSessions, setSelectedSessions] = useState(0);
 
   const remainingPages = 10;
   const totalEntries = 500;
@@ -144,142 +129,13 @@ function ViewPageController({ currentPage, setPage, selected }) {
               </div>
             </div>
             <div>
-              <div className="md:mx-5 mx-2 bg-white mt-2 md:mt-5 flex flex-col rounded-lg shadow">
-                <div className="flex items-center justify-between border-b">
-                  <p className=" px-2 py-1 font-semibold text-gray-600">
-                    Sessions
-                  </p>
-                  <ViewPageController
-                    currentPage={currentPage}
-                    setPage={setPage}
-                    selected={selected}
-                    courseData={selectedItem}
-                  />
-                </div>
-                <div className="overflow-x-scroll no-scrollbar">
-                  <table>
-                    <thead>
-                      <tr>
-                        <th className="font-normal border-r border-b py-1">
-                          Select
-                        </th>
-                        <th className="font-normal border-r border-b">
-                          <div className=" flex items-center w-max py-1">
-                            Program Name
-                            <Dropdown
-                              origin={"origin-top-left"}
-                              position={"left-0"}
-                              setvalue={AddFilter}
-                              fieldname={"programName"}
-                            />
-                          </div>
-                        </th>
-                        <th className="font-normal border-r border-b">
-                          <div className=" flex items-center w-max py-1">
-                            Course level
-                            <Dropdown
-                              origin={"origin-top-left"}
-                              position={"left-0"}
-                              setvalue={AddFilter}
-                              fieldname={"courseLevel"}
-                            />
-                          </div>
-                        </th>
-                        <th className="font-normal border-r border-b">
-                          <div className=" flex items-center w-max py-1">
-                            preacher
-                            <Dropdown
-                              origin={"origin-top-left"}
-                              position={"left-0"}
-                              setvalue={AddFilter}
-                              fieldname={"preacher"}
-                            />
-                          </div>
-                        </th>
-                        <th className="font-normal border-r border-b">
-                          <div className=" flex items-center w-max py-1">
-                            mentor
-                            <Dropdown
-                              origin={"origin-top-left"}
-                              position={"left-0"}
-                              setvalue={AddFilter}
-                              fieldname={"mentor"}
-                            />
-                          </div>
-                        </th>
-                        <th className="font-normal border-r border-b">
-                          <div className=" flex items-center w-max py-1">
-                            coordinator
-                            <Dropdown
-                              origin={"origin-top-left"}
-                              position={"left-0"}
-                              setvalue={AddFilter}
-                              fieldname={"coordinator"}
-                            />
-                          </div>
-                        </th>
-                        <th className="font-normal border-r border-b">
-                          <div className=" flex items-center w-max py-1">
-                            Status
-                            <Dropdown
-                              origin={"origin-top-right"}
-                              position={"right-0"}
-                              setvalue={AddFilter}
-                              fieldname={"status"}
-                            />
-                          </div>
-                        </th>
-                        <th className="font-normal border-r border-b">
-                          <div className=" flex items-center w-max py-1 px-5">
-                            Attendance Links
-                          </div>
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {courseLevelData?.map((courseLevel, index) => (
-                        <tr key={index + 1} className="border-b">
-                          <td className="flex justify-center py-5">
-                            <input
-                              type="checkbox"
-                              value={index + 1}
-                              className=" checked:text-green-400 text-green-400 cursor-pointer"
-                              disabled={selected}
-                              checked={selectedItem === index + 1}
-                            />
-                          </td>
-                          <td className="border-l">
-                            {courseLevel.programName}
-                          </td>
-                          <td className="border-l">
-                            {courseLevel.courseLevel}
-                          </td>
-                          <td className="border-l">{courseLevel.preacher}</td>
-                          <td className="border-l">{courseLevel.mentor}</td>
-                          <td className="border-l">
-                            {courseLevel.coordinator}
-                          </td>
-                          <td className="border-l border-r">
-                            {courseLevel.status}
-                          </td>
-                          <td className="flex items-center gap-5 justify-center ">
-                            <a
-                              href={courseLevel.attendanceUrl}
-                              className=" hover:underline   text-blue-700 flex items-center gap-2 justify-center"
-                            >
-                              <LinkIcon className="h-4 w-4" />
-                              Link
-                            </a>
-                            <CopyClipBoard url={courseLevel.attendanceUrl} />
-                            <QrCode
-                              url={courseLevel.attendanceUrl}
-                              courseCode={courseLevel.programName}
-                            />
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
+              <div className="md:mx-5 mx-2 bg-white mt-2 md:mt-5 flex flex-col rounded-lg shadow border">
+                <p className=" px-2 py-1 font-semibold text-gray-600">
+                  Sessions
+                </p>
+
+                <div>
+                  <SessionList sessions={courseData.sessions} />
                 </div>
               </div>
             </div>
