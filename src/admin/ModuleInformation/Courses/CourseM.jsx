@@ -2,10 +2,12 @@ import {
   AcademicCapIcon,
   ArrowTrendingUpIcon,
   CalendarDaysIcon,
+  ChevronRightIcon,
   PresentationChartBarIcon,
 } from "@heroicons/react/24/solid";
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
+import Slider from "../../../components/MdLeftHeaderSlider";
 
 function CourseM() {
   const { pathname } = useLocation();
@@ -72,8 +74,25 @@ function CourseM() {
         </div>
       </div>
       <div className="md:w-[80vw] bg-gray-50 min-h-screen w-screen px-5">
-        {" "}
-        Course
+        <div className="flex flex-col">
+          <div className="flex items-center">
+            <Slider />
+            {pathname
+              ?.split("/")
+              .filter((item) => item !== "") // Filter out empty segments
+              .map((item, index) => (
+                <div
+                  className="flex items-center py-2"
+                  key={`${item}-${index}`}
+                >
+                  <p>
+                    <ChevronRightIcon className="h-6 w-6" />
+                  </p>
+                  <p className="font-semibold text-blue-700">{item}</p>
+                </div>
+              ))}
+          </div>
+        </div>
       </div>
     </div>
   );

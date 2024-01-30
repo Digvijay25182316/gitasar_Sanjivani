@@ -120,7 +120,7 @@ function CourseLevel() {
                   <p>
                     <ChevronRightIcon className="h-6 w-6" />
                   </p>
-                  <p className="text-lg font-semibold text-blue-700">{item}</p>
+                  <p className="font-semibold text-blue-700">{item}</p>
                 </div>
               ))}
           </div>

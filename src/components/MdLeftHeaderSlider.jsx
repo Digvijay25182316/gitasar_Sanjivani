@@ -41,12 +41,12 @@ const Slider = () => {
         } transition-transform duration-300 ease-in-out backdrop-brightness-50`}
       >
         <button
-          className="absolute top-4 right-4 text-gray-700 bg-gray-100 focus:outline-none hover:bg-purple-100 p-2 rounded-full text-xl"
+          className="absolute top-4 right-4 text-blue-700 bg-blue-100 border border-blue-200 focus:outline-none hover:bg-blue-100 p-2 rounded-full text-xl drop-shadow-lg"
           onClick={toggleSlider}
         >
           <XMarkIcon className="h-6 w-6" />
         </button>
-        <div className="py-10 flex flex-col gap-5">
+        <div className="py-10 flex flex-col gap-5 pt-16">
           <Link to={"/admin/information/program"} onClick={toggleSlider}>
             <div
               className={`flex items-center text-lg ${
