@@ -1,5 +1,6 @@
 import {
   AcademicCapIcon,
+  ArrowTrendingUpIcon,
   CalendarDaysIcon,
   ChevronRightIcon,
   PresentationChartBarIcon,
@@ -9,6 +10,7 @@ import { Link, useLocation } from "react-router-dom";
 import Dropdown from "../../../components/BottomNav.jsx/DropDown";
 import { activitiesData } from "../../../data";
 import AddActivitiesModal from "./AddActivitiesModal";
+import Slider from "../../../components/MdLeftHeaderSlider";
 
 function Activities() {
   const { pathname } = useLocation();
@@ -81,7 +83,7 @@ function Activities() {
               }  px-5 py-1.5 mx-2 lg:mx-5 gap-5`}
             >
               <p>
-                <AcademicCapIcon className="h-6 w-6" />
+                <ArrowTrendingUpIcon className="h-6 w-6" />
               </p>
               <p>Course Level</p>
             </div>
@@ -91,6 +93,7 @@ function Activities() {
       <div className="md:w-[80vw] bg-gray-50 min-h-screen w-screen">
         <div className="flex flex-col">
           <div className="flex items-center">
+            <Slider />
             {pathname
               ?.split("/")
               .filter((item) => item !== "") // Filter out empty segments
@@ -102,7 +105,7 @@ function Activities() {
                   <p>
                     <ChevronRightIcon className="h-6 w-6" />
                   </p>
-                  <p className="text-lg font-semibold text-blue-700">{item}</p>
+                  <p className="font-semibold text-blue-700">{item}</p>
                 </div>
               ))}
           </div>

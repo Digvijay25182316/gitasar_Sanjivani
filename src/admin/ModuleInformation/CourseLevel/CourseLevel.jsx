@@ -1,9 +1,11 @@
 import {
   AcademicCapIcon,
+  ArrowTrendingUpIcon,
   CalendarDaysIcon,
   ChevronRightIcon,
   LinkIcon,
   PresentationChartBarIcon,
+  XMarkIcon,
 } from "@heroicons/react/24/solid";
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
@@ -13,6 +15,7 @@ import CopyClipBoard from "../../../components/BottomNav.jsx/CopyClipBoard";
 import QrCode from "./QrCode";
 import ViewPageController from "./ViewPageController";
 import CourseModal from "./CourseModal";
+import Slider from "../../../components/MdLeftHeaderSlider";
 
 function CourseLevel() {
   const { pathname } = useLocation();
@@ -95,7 +98,7 @@ function CourseLevel() {
               }  px-5 py-1.5 mx-2 lg:mx-5 gap-5`}
             >
               <p>
-                <AcademicCapIcon className="h-6 w-6" />
+                <ArrowTrendingUpIcon className="h-6 w-6" />
               </p>
               <p>Course Level</p>
             </div>
@@ -105,6 +108,7 @@ function CourseLevel() {
       <div className="md:w-[80vw] bg-gray-50 min-h-screen w-screen">
         <div className="flex flex-col">
           <div className="flex items-center">
+            <Slider />
             {pathname
               ?.split("/")
               .filter((item) => item !== "") // Filter out empty segments
@@ -290,7 +294,88 @@ function CourseLevel() {
         isOpen={OpenCourseLevel}
         setIsOpen={() => setOpenCourseLevel(false)}
       >
-        <div>courseModal</div>
+        <div>
+          <button
+            className="bg-red-100 text-red-700 w-max p-2 rounded-full h-max absolute right-2 top-2 z-[100]"
+            onClick={() => setOpenCourseLevel(false)}
+          >
+            <XMarkIcon className="h-5 w-5" />
+          </button>
+          <div className="border-b">
+            <p className="text-lg font-semibold text-gray-600">Create Course</p>
+          </div>
+          <div className="md:w-[50vw] w-[85vw] mt-5">
+            <form action="">
+              <div className="flex flex-col gap-5">
+                <div className="flex flex-col gap-2">
+                  <label className="font-semibold text-gray-600">
+                    select Course
+                  </label>
+                  <select
+                    name=""
+                    id=""
+                    className="border bg-white px-4 py-2 rounded-md transition-colors duration-500 focus:outline-gray-400"
+                  >
+                    <option disabled>select</option>
+                    <option value={""}>option1</option>
+                    <option value={""}>option2</option>
+                  </select>
+                </div>
+                <div className="flex flex-col gap-2">
+                  <label className="font-semibold text-gray-600">
+                    Course Name
+                  </label>
+                  <input
+                    type="text"
+                    name="course Name"
+                    placeholder="your Prefered Course Name"
+                    className="border bg-white px-4 py-1.5 rounded-md transition-colors duration-500 focus:outline-gray-400"
+                  />
+                </div>
+                <div className="flex flex-col gap-2">
+                  <label className="font-semibold text-gray-600">
+                    Course description
+                  </label>
+                  <input
+                    type="text"
+                    name="course Name"
+                    placeholder="your Prefered Course description"
+                    className="border bg-white px-4 py-1.5 rounded-md transition-colors duration-500 focus:outline-gray-400"
+                  />
+                </div>
+                <div className="grid md:grid-cols-2 grid-cols-1 gap-5">
+                  <div className="flex flex-col gap-2 ">
+                    <label className="font-semibold text-gray-600">
+                      Expected start date
+                    </label>
+                    <input
+                      type="text"
+                      name="course Name"
+                      placeholder="your Prefered Course description"
+                      className="border bg-white px-4 py-1.5 rounded-md transition-colors duration-500 focus:outline-gray-400"
+                    />
+                  </div>
+                  <div className="flex flex-col gap-2 ">
+                    <label className="font-semibold text-gray-600 ">
+                      Expected End Date
+                    </label>
+                    <input
+                      type="text"
+                      name="course Name"
+                      placeholder="your Prefered Course description"
+                      className="border bg-white px-4 py-1.5 rounded-md transition-colors duration-500 focus:outline-gray-400"
+                    />
+                  </div>
+                </div>
+                <div className="flex justify-center">
+                  <button className="font-semibold bg-blue-700 text-white text-lg px-4 py-1 w-[200px] rounded-lg">
+                    Submit
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
       </CourseModal>
     </div>
   );

@@ -1,19 +1,53 @@
+import React, { useState } from "react";
+import { XMarkIcon } from "@heroicons/react/24/outline";
 import {
   AcademicCapIcon,
   ArrowTrendingUpIcon,
+  Bars3BottomLeftIcon,
   CalendarDaysIcon,
   PresentationChartBarIcon,
 } from "@heroicons/react/24/solid";
-import React from "react";
 import { Link, useLocation } from "react-router-dom";
 
-function CourseM() {
+const Slider = () => {
   const { pathname } = useLocation();
+  const [isSliderOpen, setSliderOpen] = useState(false);
+
+  const toggleSlider = () => {
+    setSliderOpen((prev) => !prev);
+  };
+
   return (
-    <div className="flex items-center max-w-screen bg-white">
-      <div className="md:w-[20vw] md:flex hidden">
-        <div className="fixed left-0 top-10 min-h-screen md:max-w-[19.7vw] w-full bg-white drop-shadow-lg py-10 flex flex-col gap-5 font-nunito-sans text-gray-500 ">
-          <Link to={"/admin/information/program"}>
+    <div>
+      <button
+        className={`rounded-full focus:outline-none md:hidden p-2`}
+        onClick={toggleSlider}
+      >
+        <Bars3BottomLeftIcon className="h-6 w-6" />
+      </button>
+      <div
+        className={
+          isSliderOpen
+            ? "fixed top-0 left-0 right-0 bottom-0 min-h-screen z-[1000] backdrop-brightness-50 cursor-pointer flex items-center justify-center"
+            : ""
+        }
+        onClick={toggleSlider}
+      ></div>
+      <aside
+        className={`fixed top-0 left-0 h-full sm:w-2/5 w-4/5 shadow-lg bg-white text-white transition-transform z-[2000] ${
+          isSliderOpen
+            ? "transform translate-x-0"
+            : "transform -translate-x-full"
+        } transition-transform duration-300 ease-in-out backdrop-brightness-50`}
+      >
+        <button
+          className="absolute top-4 right-4 text-gray-700 bg-gray-100 focus:outline-none hover:bg-purple-100 p-2 rounded-full text-xl"
+          onClick={toggleSlider}
+        >
+          <XMarkIcon className="h-6 w-6" />
+        </button>
+        <div className="py-10 flex flex-col gap-5">
+          <Link to={"/admin/information/program"} onClick={toggleSlider}>
             <div
               className={`flex items-center text-lg ${
                 pathname.startsWith("/admin/information/program")
@@ -27,7 +61,7 @@ function CourseM() {
               <p>Programs</p>
             </div>
           </Link>
-          <Link to={"/admin/information/mcourse"}>
+          <Link to={"/admin/information/mcourse"} onClick={toggleSlider}>
             <div
               className={`flex items-center text-lg ${
                 pathname.startsWith("/admin/information/mcourse")
@@ -41,7 +75,7 @@ function CourseM() {
               <p>Course Master</p>
             </div>
           </Link>
-          <Link to={"/admin/information/activities"}>
+          <Link to={"/admin/information/activities"} onClick={toggleSlider}>
             <div
               className={`flex items-center text-lg ${
                 pathname.startsWith("/admin/information/activities")
@@ -55,7 +89,7 @@ function CourseM() {
               <p>Activities</p>
             </div>
           </Link>
-          <Link to={"/admin/information/course-level"}>
+          <Link to={"/admin/information/course-level"} onClick={toggleSlider}>
             <div
               className={`flex items-center text-lg ${
                 pathname.startsWith("/admin/information/course-level")
@@ -70,13 +104,9 @@ function CourseM() {
             </div>
           </Link>
         </div>
-      </div>
-      <div className="md:w-[80vw] bg-gray-50 min-h-screen w-screen px-5">
-        {" "}
-        Course
-      </div>
+      </aside>
     </div>
   );
-}
+};
 
-export default CourseM;
+export default Slider;
