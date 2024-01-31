@@ -8,11 +8,10 @@ import {
   UserIcon,
 } from "@heroicons/react/24/solid";
 import React, { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
 import Slider from "../../../components/MdLeftHeaderSlider";
-import ProgramModal from "../Programs/ProgramModal";
+import { Link, useLocation } from "react-router-dom";
 
-function CourseM() {
+function Volunteers() {
   const { pathname } = useLocation();
   const [queryArr, setQueryArr] = useState([]);
   const [OpenPrograms, setOpenPrograms] = useState(false);
@@ -38,6 +37,7 @@ function CourseM() {
     setSelectedItem(0);
     setSelected(false);
   }
+
   return (
     <div className="flex items-center max-w-screen bg-white">
       <div className="md:w-[20vw] md:flex hidden">
@@ -163,25 +163,13 @@ function CourseM() {
               className="bg-blue-700 text-white md:text-lg md:px-4 md:py-1.5 px-2 py-1 rounded-xl shadow-lg"
               onClick={() => setOpenPrograms(true)}
             >
-              + New Course
+              + New Program
             </button>
-          </div>
-          <div className="md:mx-5 mx-2 bg-white mt-2 md:mt-5 flex flex-col rounded-lg shadow">
-            <div className="flex items-center justify-between border-b">
-              <p className=" px-2 py-1 font-semibold text-gray-600">
-                Courses Master
-              </p>
-            </div>
-            <div className="mx-2 my-1 border rounded-lg overflow-x-scroll no-scrollbar lg:w-[75vw] md:w-[73vw] w-[93vw]"></div>
           </div>
         </div>
       </div>
-      <ProgramModal
-        isOpen={OpenPrograms}
-        onClose={() => setOpenPrograms(false)}
-      />
     </div>
   );
 }
 
-export default CourseM;
+export default Volunteers;

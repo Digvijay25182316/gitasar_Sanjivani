@@ -18,8 +18,7 @@ function ViewPageController({ currentPage, setPage, selected }) {
   const [ViewOpen, setViewOpen] = useState(false);
   const [UpdateOpen, setUpdateOpen] = useState(false);
   const [AddSession, setAddSession] = useState(false);
-  const [sessionFormDataThisCourse, SetSessionFormDataThisCourse] =
-    useState(true);
+
   // const [OpenCourseLevel, setOpenCourseLevel] = useState(false);
   const [selectedItem, setSelectedItem] = useState(0);
   // const [selectedSessions, setSelectedSessions] = useState(0);
@@ -182,77 +181,41 @@ function ViewPageController({ currentPage, setPage, selected }) {
                         className="border bg-white px-4 py-2 rounded-md transition-colors duration-500 focus:outline-gray-400"
                       />
                     </div>
-                    {sessionFormDataThisCourse ? (
+
+                    <div className="flex flex-col gap-5">
                       <div className="flex flex-col gap-2">
-                        <div className="flex flex-col gap-2">
-                          <label className="font-semibold text-gray-600">
-                            Select Sessions{" "}
-                            <i className="font-normal text-gray-400">
-                              (from this course)
-                            </i>
-                          </label>
-                          <select
-                            type="date"
-                            className="border bg-white px-4 py-2 rounded-md transition-colors duration-500 focus:outline-gray-400"
-                          >
-                            <option>select</option>
-                            <option>option1</option>
-                            <option>option2</option>
-                          </select>
-                        </div>
-                        <div
-                          className="border border-dashed border-gray-400 text-gray-400 flex items-center justify-center relative px-5 py-2 cursor-pointer"
-                          onClick={() => SetSessionFormDataThisCourse(false)}
+                        <label className="font-semibold text-gray-600">
+                          Select Course
+                          <i className="font-normal text-gray-400"></i>
+                        </label>
+                        <select
+                          type="date"
+                          className="border bg-white px-4 py-2 rounded-md transition-colors duration-500 focus:outline-gray-400"
                         >
-                          <p className="mx-auto">From Another Course</p>
-                          <p className="absolute right-0 bg-gray-100 p-2">
-                            <PlusIcon className="h-6 w-6" />
-                          </p>
-                        </div>
+                          <option>select</option>
+                          <option>option1</option>
+                          <option>option2</option>
+                        </select>
                       </div>
-                    ) : (
-                      <div className="flex flex-col gap-2 mt-5">
-                        <div
-                          className="border border-dashed border-gray-400 text-gray-400 flex items-center justify-center relative px-5 py-2 cursor-pointer"
-                          onClick={() => SetSessionFormDataThisCourse(true)}
+                      <div className="flex flex-col gap-2">
+                        <label className="font-semibold text-gray-600">
+                          Select Session
+                          <i className="font-normal text-gray-400"></i>
+                        </label>
+                        <select
+                          type="date"
+                          className="border bg-white px-4 py-2 rounded-md transition-colors duration-500 focus:outline-gray-400"
                         >
-                          <p className="mx-auto">From Previous Course</p>
-                          <p className="absolute right-0 bg-gray-100 p-2">
-                            <MinusIcon className="h-6 w-6" />
-                          </p>
-                        </div>
-                        <div className="flex flex-col gap-2">
-                          <label className="font-semibold text-gray-600">
-                            Select Course
-                          </label>
-                          <select
-                            type="date"
-                            className="border bg-white px-4 py-2 rounded-md transition-colors duration-500 focus:outline-gray-400"
-                          >
-                            <option>select</option>
-                            <option>option1</option>
-                            <option>option2</option>
-                          </select>
-                        </div>
-                        <div className="flex flex-col gap-2">
-                          <label className="font-semibold text-gray-600">
-                            Select Session
-                          </label>
-                          <select
-                            type="date"
-                            className="border bg-white px-4 py-2 rounded-md transition-colors duration-500 focus:outline-gray-400"
-                          >
-                            <option>select</option>
-                            <option>option1</option>
-                            <option>option2</option>
-                          </select>
-                        </div>
+                          <option>select</option>
+                          <option>option1</option>
+                          <option>option2</option>
+                        </select>
                       </div>
-                    )}
+                    </div>
+
                     <div className="flex flex-col gap-2">
                       <label className="text-gray-600 font-semibold">
-                        Session Name{" "}
-                        <i className="text-gray-400 font-normal">(optional)</i>
+                        Session Name
                       </label>
                       <input
                         type="text"
@@ -261,22 +224,10 @@ function ViewPageController({ currentPage, setPage, selected }) {
                       />
                     </div>
                   </div>
-                  <div
-                    className={
-                      sessionFormDataThisCourse
-                        ? "md:mt-28 mt-36 flex items-center justify-center gap-4"
-                        : "md:mt-5  mt-12 flex items-center justify-center gap-4"
-                    }
-                  >
-                    <button
-                      type="button"
-                      className={`md:w-[200px] w-[100px] bg-gray-400 text-white font-semibold py-2 text-lg rounded `}
-                    >
-                      previous
-                    </button>
+                  <div className="mt-20 flex items-center justify-center">
                     <button
                       type="submit"
-                      className={`md:w-[200px] w-[100px] bg-blue-700 text-white font-semibold py-2 text-lg rounded `}
+                      className={`md:w-[200px] w-[100px] bg-blue-700 text-white font-semibold py-2 text-lg rounded`}
                     >
                       Submit
                     </button>

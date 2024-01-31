@@ -8,12 +8,14 @@ import NotFound from "./components/BottomNav.jsx/NotFound";
 import CourseM from "./admin/ModuleInformation/Courses/CourseM";
 import Activities from "./admin/ModuleInformation/Activities/Activities";
 import CourseLevel from "./admin/ModuleInformation/CourseLevel/CourseLevel";
+import Volunteers from "./admin/ModuleInformation/Volunteers/Volunteers";
+import Participants from "./admin/ModuleInformation/Participants/Participants";
 import Home from "./admin/ModuleHome/Home";
 import Settings from "./admin/ModuleSettings/Settings";
 
 function App() {
   return (
-    <div className="py-12 bg-gray-100 min-h-screen">
+    <div className="pt-10 pb-14 bg-gray-100 min-h-screen">
       <Router>
         <Header />
         <Routes>
@@ -26,6 +28,14 @@ function App() {
           <Route
             path="/admin/information/course-level"
             element={<CourseLevel />}
+          />
+          <Route
+            path="/admin/information/volunteers"
+            element={<Volunteers />}
+          />
+          <Route
+            path="/admin/information/participants"
+            element={<Participants />}
           />
           <Route path="/admin/home" element={<Home />} />
           <Route path="/admin/dashboard" element={<Dashboard />} />
