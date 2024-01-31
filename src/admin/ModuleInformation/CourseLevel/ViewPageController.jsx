@@ -33,8 +33,8 @@ function ViewPageController({ currentPage, setPage, selected }) {
             className="text-blue-700 flex items-center bg-blue-200 px-1 rounded"
             onClick={() => setViewOpen(true)}
           >
-            <EyeIcon className="h-5 w-5" />
-            View
+            <PlusIcon className="h-5 w-5" />
+            Sessions
           </button>
           <button
             className="text-blue-700 flex items-center bg-blue-200 px-1 rounded"
@@ -90,23 +90,23 @@ function ViewPageController({ currentPage, setPage, selected }) {
                     )}
                   </div>
                   <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-5 ">
-                    <div className="flex items-start gap-3 md:border-l px-3 justify-center">
+                    <div className="flex items-start gap-3 md:border-l px-3">
                       <p className="text-gray-500 font-semibold w-full ">
                         Program Name :
                       </p>
-                      <p className="text-black font-semibold">
+                      <p className="text-black font-semibold flex justify-start">
                         {courseData.programName}
                       </p>
                     </div>
-                    <div className="flex items-start gap-3 md:border-l px-3 justify-center">
+                    <div className="flex items-start gap-3 md:border-l px-3">
                       <p className="text-gray-500 font-semibold w-full">
                         Course Level :
                       </p>
-                      <p className="text-black font-semibold">
+                      <p className="text-black font-semibold ">
                         {courseData.courseLevel}
                       </p>
                     </div>
-                    <div className="flex items-start gap-3 md:border-l px-3 justify-center">
+                    <div className="flex items-start gap-3 md:border-l px-3">
                       <p className="text-gray-500 font-semibold w-full">
                         preacher :
                       </p>
@@ -114,7 +114,7 @@ function ViewPageController({ currentPage, setPage, selected }) {
                         {courseData.preacher}
                       </p>
                     </div>
-                    <div className="flex items-start gap-3 md:border-l px-3 justify-center">
+                    <div className="flex items-start gap-3 md:border-l px-3">
                       <p className="text-gray-500 font-semibold w-full">
                         mentor :
                       </p>
@@ -122,7 +122,7 @@ function ViewPageController({ currentPage, setPage, selected }) {
                         {courseData.mentor}
                       </p>
                     </div>
-                    <div className="flex items-start gap-3 md:border-l px-3 justify-center">
+                    <div className="flex items-start gap-3 md:border-l px-3">
                       <p className="text-gray-500 font-semibold w-full">
                         coordinator :
                       </p>
@@ -224,7 +224,7 @@ function ViewPageController({ currentPage, setPage, selected }) {
                       />
                     </div>
                   </div>
-                  <div className="mt-20 flex items-center justify-center">
+                  <div className="mt-20 flex items-center">
                     <button
                       type="submit"
                       className={`md:w-[200px] w-[100px] bg-blue-700 text-white font-semibold py-2 text-lg rounded`}

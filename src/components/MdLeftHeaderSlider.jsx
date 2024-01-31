@@ -116,7 +116,7 @@ const Slider = () => {
               <p>
                 <UserIcon className="h-6 w-6" />
               </p>
-              <p>Course Level</p>
+              <p>Volunteers</p>
             </div>
           </Link>
           <Link to={"/admin/information/participants"} onClick={toggleSlider}>
@@ -130,7 +130,7 @@ const Slider = () => {
               <p>
                 <UserGroupIcon className="h-6 w-6" />
               </p>
-              <p>Course Level</p>
+              <p>Participants</p>
             </div>
           </Link>
         </div>
