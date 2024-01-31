@@ -4,7 +4,11 @@ import { Link, useLocation } from "react-router-dom";
 function Header() {
   const { pathname } = useLocation();
   return (
-    <div className="flex items-center bg-white fixed top-0 right-0 left-0 z-[1000] font-nunito-sans font-bold">
+    <div
+      className={`${
+        pathname.startsWith("/admin") ? "flex" : "hidden"
+      } items-center bg-white fixed top-0 right-0 left-0 z-[1000] font-nunito-sans font-bold `}
+    >
       <div className="md:w-[20vw]">
         <p className="text-xl px-2 py-1.5 text-gray-700">Sanjivani</p>
       </div>

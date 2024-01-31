@@ -12,6 +12,8 @@ import Volunteers from "./admin/ModuleInformation/Volunteers/Volunteers";
 import Participants from "./admin/ModuleInformation/Participants/Participants";
 import Home from "./admin/ModuleHome/Home";
 import Settings from "./admin/ModuleSettings/Settings";
+import Attendence from "./participants/attendence/Attendence";
+import ParticipantsActivities from "./participants/activities/ParticipantsActivities";
 
 function App() {
   return (
@@ -40,6 +42,8 @@ function App() {
           <Route path="/admin/home" element={<Home />} />
           <Route path="/admin/dashboard" element={<Dashboard />} />
           <Route path="/admin/settings" element={<Settings />} />
+          <Route path="/attendence" element={<Attendence />} />
+          <Route path="/activities" element={<ParticipantsActivities />} />
 
           <Route path="*" element={<NotFound />} />
         </Routes>

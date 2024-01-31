@@ -9,7 +9,7 @@ import { Link, useLocation } from "react-router-dom";
 
 function BottomNav() {
   const { pathname } = useLocation();
-  if (pathname !== "/")
+  if (pathname.startsWith("/admin"))
     return (
       <div className="fixed bottom-0 left-0 right-0 md:hidden bg-white">
         <div className="flex items-center justify-evenly">
