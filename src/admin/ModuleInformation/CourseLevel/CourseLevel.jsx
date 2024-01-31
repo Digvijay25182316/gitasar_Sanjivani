@@ -176,7 +176,7 @@ function CourseLevel() {
           <div className="md:mx-5 mx-2 bg-white mt-2 md:mt-5 flex flex-col rounded-lg shadow">
             <div className="flex items-center justify-between border-b">
               <p className=" px-2 py-1 font-semibold text-gray-600">
-                Course Levels
+                Course Level
               </p>
               <ViewPageController
                 currentPage={currentPage}
@@ -207,7 +207,7 @@ function CourseLevel() {
                     </th>
                     <th className="font-normal border-r border-b">
                       <div className=" flex items-center w-max py-1">
-                        Course level
+                        Course Name
                         <Dropdown
                           origin={"origin-top-left"}
                           position={"left-0"}
@@ -275,6 +275,11 @@ function CourseLevel() {
                         Attendance Links
                       </div>
                     </th>
+                    <th className="font-normal border-r border-b">
+                      <div className=" flex items-center w-max py-1 px-5">
+                        Activities Links
+                      </div>
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
@@ -298,19 +303,37 @@ function CourseLevel() {
                       <td className="border-l border-r">
                         {courseLevel.status}
                       </td>
-                      <td className="flex items-center gap-5 justify-center ">
-                        <a
-                          href={courseLevel.attendanceUrl}
-                          className=" hover:underline   text-blue-700 flex items-center gap-2 justify-center"
-                        >
-                          <LinkIcon className="h-4 w-4" />
-                          Link
-                        </a>
-                        <CopyClipBoard url={courseLevel.attendanceUrl} />
-                        <QrCode
-                          url={courseLevel.attendanceUrl}
-                          courseCode={courseLevel.programName}
-                        />
+                      <td className="border-r">
+                        <div className="flex items-center gap-5 justify-center">
+                          <a
+                            href={courseLevel.attendanceUrl}
+                            className=" hover:underline   text-blue-700 flex items-center gap-2 justify-center"
+                          >
+                            <LinkIcon className="h-4 w-4" />
+                            Link
+                          </a>
+                          <CopyClipBoard url={courseLevel.attendanceUrl} />
+                          <QrCode
+                            url={courseLevel.attendanceUrl}
+                            courseCode={courseLevel.programName}
+                          />
+                        </div>
+                      </td>
+                      <td>
+                        <div className="flex items-center gap-5 justify-center">
+                          <a
+                            href={courseLevel.attendanceUrl}
+                            className=" hover:underline   text-blue-700 flex items-center gap-2 justify-center"
+                          >
+                            <LinkIcon className="h-4 w-4" />
+                            Link
+                          </a>
+                          <CopyClipBoard url={courseLevel.attendanceUrl} />
+                          <QrCode
+                            url={courseLevel.attendanceUrl}
+                            courseCode={courseLevel.programName}
+                          />
+                        </div>
                       </td>
                     </tr>
                   ))}

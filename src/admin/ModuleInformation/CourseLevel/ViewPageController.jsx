@@ -1,8 +1,6 @@
 import {
   ChevronLeftIcon,
   ChevronRightIcon,
-  EyeIcon,
-  MinusIcon,
   PencilSquareIcon,
   PlusIcon,
   XMarkIcon,
@@ -89,8 +87,8 @@ function ViewPageController({ currentPage, setPage, selected }) {
                       </div>
                     )}
                   </div>
-                  <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-5 ">
-                    <div className="flex items-start gap-3 md:border-l px-3">
+                  <div className="grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-5 ">
+                    <div className="md:border-l px-3">
                       <p className="text-gray-500 font-semibold w-full ">
                         Program Name :
                       </p>
@@ -98,15 +96,16 @@ function ViewPageController({ currentPage, setPage, selected }) {
                         {courseData.programName}
                       </p>
                     </div>
-                    <div className="flex items-start gap-3 md:border-l px-3">
+                    <div className="md:border-l px-3">
                       <p className="text-gray-500 font-semibold w-full">
-                        Course Level :
+                        Course Name :
                       </p>
                       <p className="text-black font-semibold ">
                         {courseData.courseLevel}
                       </p>
                     </div>
-                    <div className="flex items-start gap-3 md:border-l px-3">
+
+                    <div className="md:border-l px-3">
                       <p className="text-gray-500 font-semibold w-full">
                         preacher :
                       </p>
@@ -114,7 +113,7 @@ function ViewPageController({ currentPage, setPage, selected }) {
                         {courseData.preacher}
                       </p>
                     </div>
-                    <div className="flex items-start gap-3 md:border-l px-3">
+                    <div className="md:border-l px-3">
                       <p className="text-gray-500 font-semibold w-full">
                         mentor :
                       </p>
@@ -122,7 +121,7 @@ function ViewPageController({ currentPage, setPage, selected }) {
                         {courseData.mentor}
                       </p>
                     </div>
-                    <div className="flex items-start gap-3 md:border-l px-3">
+                    <div className="md:border-l px-3">
                       <p className="text-gray-500 font-semibold w-full">
                         coordinator :
                       </p>
@@ -147,9 +146,7 @@ function ViewPageController({ currentPage, setPage, selected }) {
                     </button>
                   </div>
 
-                  <div>
-                    <SessionList sessions={courseData.sessions} />
-                  </div>
+                  <SessionList sessions={courseData.sessions} />
                 </div>
               </div>
             </div>

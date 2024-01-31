@@ -275,7 +275,7 @@ function Programs() {
                     </th>
                     <th className="font-normal border-l border-b">
                       <div className=" flex items-center w-max py-1 px-5">
-                        Attendance Links
+                        Activities Links
                       </div>
                     </th>
                   </tr>

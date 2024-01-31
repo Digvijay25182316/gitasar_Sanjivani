@@ -83,10 +83,17 @@ const SessionList = ({ sessions }) => {
               onChange={() => handleCheckboxToggle(item.id)}
             />
 
-            <div className="ml-10">
-              <div className="text-lg font-bold">{item.sessionName}</div>
-              <div className="text-sm text-gray-500">
-                Scheduled Date: {item.scheduledDate}
+            <div className="ml-10 flex md:flex-row flex-col md:items-center gap-1">
+              <div className="flex flex-col items-start">
+                <div className="text-lg font-semibold text-gray-700">
+                  {item.sessionName}
+                </div>
+                <div className="text-sm text-gray-500">
+                  Scheduled Date: {item.scheduledDate}
+                </div>
+              </div>
+              <div className="text-md font-semibold text-gray-600 lg:ml-36">
+                course Name
               </div>
             </div>
             <button className="ml-auto px-2 py-1 bg-blue-500 text-white rounded-md mr-3">
