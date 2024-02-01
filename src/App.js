@@ -14,6 +14,7 @@ import Home from "./admin/ModuleHome/Home";
 import Settings from "./admin/ModuleSettings/Settings";
 import Attendence from "./participants/attendence/Attendence";
 import ParticipantsActivities from "./participants/activities/ParticipantsActivities";
+import ParticipantRegisteration from "./participants/attendence/Registeration";
 
 function App() {
   return (
@@ -44,6 +45,7 @@ function App() {
           <Route path="/admin/settings" element={<Settings />} />
           <Route path="/attendence" element={<Attendence />} />
           <Route path="/activities" element={<ParticipantsActivities />} />
+          <Route path="/registeration" element={<ParticipantRegisteration />} />
 
           <Route path="*" element={<NotFound />} />
         </Routes>

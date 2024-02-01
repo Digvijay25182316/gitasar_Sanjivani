@@ -1,14 +1,15 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 
 function Attendance() {
   const [currentStep, setCurrentStep] = useState(1);
 
   const nextStep = () => {
-    setCurrentStep(currentStep + 1);
+    setCurrentStep(2);
   };
 
   const prevStep = () => {
-    setCurrentStep(currentStep - 1);
+    setCurrentStep(1);
   };
 
   return (
@@ -34,12 +35,14 @@ function Attendance() {
                 >
                   Search
                 </button>
-                <button
-                  className="px-4 py-1.5 text-white text-lg  bg-blue-700 rounded md:w-[150px] w-[100px]"
-                  type="button"
-                >
-                  Register
-                </button>
+                <Link to={"/registeration"}>
+                  <button
+                    className="px-4 py-1.5 text-white text-lg  bg-blue-700 rounded md:w-[150px] w-[100px]"
+                    type="button"
+                  >
+                    Register
+                  </button>
+                </Link>
               </div>
             </div>
           </form>
