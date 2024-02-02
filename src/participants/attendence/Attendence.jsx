@@ -13,9 +13,7 @@ function Attendance() {
     sessions[0]?.id || ""
   );
   const [isyes, setIsYes] = useState([
-    { id: 1, session: "Spirituality master", response: "Yes" },
-    { id: 2, session: "Realising Your Presence", response: "" },
-    { id: 3, session: "Reincarnation Evidences", response: "" },
+    { id: 1, session: "Spirituality master", response: "" },
   ]);
   const [sessionsRSVP, setSessionRSVP] = useState(isyes);
 
