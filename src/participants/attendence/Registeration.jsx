@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 
 const ParticipantRegisteration = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
