@@ -124,9 +124,11 @@ function UploadingFile({ isOpen, setIsOpen }) {
                 </p>
                 <div className="flex items-center gap-6 border px-2 py-2 rounded-xl">
                   <div className="bg-gray-50 w-max p-2 rounded-xl border border-gray-100 shadow">
-                    <span className="relative text-green-200 w-max">
+                    <span className="relative text-green-400 w-max">
                       <DocumentIcon className="h-10 w-10" />
-                      <p className="absolute top-6 text-white left-2">csv</p>
+                      <p className="absolute top-2 text-white left-2 right-2">
+                        csv
+                      </p>
                     </span>
                   </div>
                   <div className="flex flex-col items-start">
