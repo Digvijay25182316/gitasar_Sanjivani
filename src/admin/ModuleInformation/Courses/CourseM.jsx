@@ -11,6 +11,7 @@ import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import Slider from "../../../components/MdLeftHeaderSlider";
 import ProgramModal from "../Programs/ProgramModal";
+import UploadingFile from "./UploadingFile";
 
 function CourseM() {
   const { pathname } = useLocation();
@@ -176,9 +177,9 @@ function CourseM() {
           </div>
         </div>
       </div>
-      <ProgramModal
+      <UploadingFile
         isOpen={OpenPrograms}
-        onClose={() => setOpenPrograms(false)}
+        setIsOpen={() => setOpenPrograms(false)}
       />
     </div>
   );
