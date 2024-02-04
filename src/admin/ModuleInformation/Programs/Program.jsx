@@ -8,7 +8,7 @@ import {
   UserGroupIcon,
   UserIcon,
 } from "@heroicons/react/24/solid";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import Dropdown from "../../../components/BottomNav.jsx/DropDown";
 import ProgramsData from "./data";
@@ -24,6 +24,14 @@ function Programs() {
   const [currentPage, setPage] = useState(1);
   const [selected, setSelected] = useState(false);
   const [selectedItem, setSelectedItem] = useState(0);
+
+  useEffect(() => {
+    if (OpenPrograms) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
+  }, [OpenPrograms]);
 
   function AddFilter(data) {
     setQueryArr((prev) => [...prev, data]);

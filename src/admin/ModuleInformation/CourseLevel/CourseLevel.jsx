@@ -354,10 +354,10 @@ function CourseLevel() {
           >
             <XMarkIcon className="h-5 w-5" />
           </button>
-          <div className="border-b">
+          <div className="border-b p-2 px-5">
             <p className="text-lg font-semibold text-gray-600">Create Course</p>
           </div>
-          <div className="md:w-[50vw] w-[85vw] mt-5">
+          <div className="md:w-[50vw] w-[85vw] p-5 mb-16">
             <form action="">
               <div className="flex flex-col gap-5">
                 <div className="flex flex-col gap-2">
@@ -408,7 +408,7 @@ function CourseLevel() {
                       className="border bg-white px-4 py-1.5 rounded-md transition-colors duration-500 focus:outline-gray-400"
                     />
                   </div>
-                  <div className="flex flex-col gap-2 ">
+                  <div className="flex flex-col gap-2">
                     <label className="font-semibold text-gray-600 ">
                       Expected End Date
                     </label>
@@ -420,8 +420,18 @@ function CourseLevel() {
                     />
                   </div>
                 </div>
-                <div className="flex justify-center">
-                  <button className="font-semibold bg-blue-700 text-white text-lg px-4 py-1 w-[200px] rounded-lg">
+                <div className="absolute bottom-0 left-0 right-0 flex items-center justify-center gap-5 px-5 bg-white rounded-b-2xl">
+                  <button
+                    className="w-full max-w-[250px] text-lg px-4 py-1.5 rounded-md mb-2 border"
+                    type="button"
+                    onClick={() => setOpenCourseLevel(false)}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    className="bg-blue-700 w-full max-w-[250px] text-lg px-4 py-1.5 rounded-md mb-2 text-white"
+                    type="submit"
+                  >
                     Submit
                   </button>
                 </div>

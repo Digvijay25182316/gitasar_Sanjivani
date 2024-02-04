@@ -61,7 +61,7 @@ function ViewPageController({ currentPage, setPage, selected }) {
       <CourseModal isOpen={ViewOpen} setIsOpen={() => setViewOpen(false)}>
         {!AddSession ? (
           <div className="w-[85vw] md:w-[80vw] h-[85vh] md:h-[90vh] flex justify-between">
-            <div className="flex flex-col overflow-y-scroll gap-10 no-scrollbar">
+            <div className="flex flex-col overflow-y-scroll gap-10 m-2 p-3">
               <div className="flex md:flex-row flex-col  items-start md:gap-10 gap-6 ">
                 <p className="text-blue-600 bg-blue-200 w-max p-2 rounded-xl border border-blue-400 shadow">
                   <AcademicCapIcon className="h-20 w-20" />
@@ -160,7 +160,7 @@ function ViewPageController({ currentPage, setPage, selected }) {
           </div>
         ) : (
           <div className="w-[85vw] md:w-[40vw] h-[85vh] md:h-[90vh] flex justify-between">
-            <div className="w-full">
+            <div className="w-full m-2 p-3">
               <div className="border-b">
                 <p className="text-lg font-semibold text-gray-600">
                   Schedule Session
@@ -221,10 +221,17 @@ function ViewPageController({ currentPage, setPage, selected }) {
                       />
                     </div>
                   </div>
-                  <div className="mt-20 flex items-center">
+                  <div className="absolute bottom-0 left-0 right-0 flex items-center justify-center gap-5 px-5 bg-white">
                     <button
+                      className="w-full max-w-[250px] text-lg px-4 py-1.5 rounded-md mb-2 border"
+                      type="button"
+                      onClick={() => setViewOpen(false)}
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      className="bg-blue-700 w-full max-w-[250px] text-lg px-4 py-1.5 rounded-md mb-2 text-white"
                       type="submit"
-                      className={`md:w-[200px] w-[100px] bg-blue-700 text-white font-semibold py-2 text-lg rounded`}
                     >
                       Submit
                     </button>

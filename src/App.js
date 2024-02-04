@@ -18,7 +18,7 @@ import ParticipantRegisteration from "./participants/attendence/Registeration";
 
 function App() {
   return (
-    <div className="pt-10 pb-14 bg-gray-100 min-h-screen">
+    <div className="pt-10 md:pb-4 pb-14 bg-gray-50 min-h-screen">
       <Router>
         <Header />
         <Routes>

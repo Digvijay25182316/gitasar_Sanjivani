@@ -9,9 +9,9 @@ function ProgramModal({ isOpen, onClose, children }) {
           className="fixed top-0 left-0 right-0 bottom-0 z-[1000] backdrop-brightness-50 cursor-pointer flex items-center justify-center"
           onClick={onClose}
         ></div>
-        <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-[1000] bg-white p-5 rounded-2xl">
+        <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-[1000] bg-white rounded-2xl">
           <div className="md:w-[50vw] w-[85vw]">
-            <div className="border-b">
+            <div className="border-b m-5">
               <p className="font-semibold text-gray-600 text-lg">
                 Create Program
               </p>
@@ -22,7 +22,7 @@ function ProgramModal({ isOpen, onClose, children }) {
                 <XMarkIcon className="h-5 w-5" />
               </button>
             </div>
-            <div className="mt-5 overflow-y-scroll h-[82vh] no-scrollbar">
+            <div className="mt-5 overflow-y-scroll h-[82vh] -scroll-mt-5 p-5">
               <form action="" className="text-gray-600 flex flex-col gap-3">
                 <div className="flex flex-col gap-2">
                   <label className="font-semibold">Program Name</label>
@@ -107,13 +107,21 @@ function ProgramModal({ isOpen, onClose, children }) {
                     </select>
                   </div>
                 </div>
-                <div className="flex flex-col gap-2">
+                <div className="flex flex-col gap-2 mb-10">
                   <label className="font-semibold">Location</label>
                   <input
                     type="text"
                     placeholder="NVCC Temple"
                     className="border px-4 py-1.5 rounded-md"
                   />
+                </div>
+                <div className="absolute bottom-0 left-0 right-0 flex items-center justify-center gap-5 px-5 bg-white">
+                  <button className="w-full max-w-[250px] text-lg px-4 py-1.5 rounded-md mb-2 border">
+                    Cancel
+                  </button>
+                  <button className="bg-blue-700 w-full max-w-[250px] text-lg px-4 py-1.5 rounded-md mb-2 text-white">
+                    Submit
+                  </button>
                 </div>
               </form>
             </div>
