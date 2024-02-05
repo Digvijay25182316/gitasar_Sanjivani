@@ -8,6 +8,7 @@ import {
   UserGroupIcon,
   UserIcon,
   XMarkIcon,
+  QueueListIcon,
 } from "@heroicons/react/24/solid";
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
@@ -25,6 +26,7 @@ function CourseLevel() {
   const [OpenCourseLevel, setOpenCourseLevel] = useState(false);
   const [currentPage, setPage] = useState(1);
   const [selected, setSelected] = useState(false);
+  const [createCourseLoading, setCreateCourseLoading] = useState(false);
   const [selectedItem, setSelectedItem] = useState(0);
 
   function AddFilter(data) {
@@ -89,6 +91,20 @@ function CourseLevel() {
                 <PresentationChartBarIcon className="h-6 w-6" />
               </p>
               <p>Activities</p>
+            </div>
+          </Link>
+          <Link to={"/admin/information/mactivities"}>
+            <div
+              className={`flex items-center text-lg ${
+                pathname.startsWith("/admin/information/mactivities")
+                  ? "bg-blue-100 text-blue-700 rounded-lg border-r-4 border-r-blue-700 "
+                  : "text-gray-500"
+              }  px-5 py-1.5 mx-2 lg:mx-5 gap-5`}
+            >
+              <p>
+                <QueueListIcon className="h-6 w-6" />
+              </p>
+              <p>Activities Master</p>
             </div>
           </Link>
           <Link to={"/admin/information/course-level"}>

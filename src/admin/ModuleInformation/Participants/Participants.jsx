@@ -6,15 +6,17 @@ import {
   PresentationChartBarIcon,
   UserGroupIcon,
   UserIcon,
+  QueueListIcon,
 } from "@heroicons/react/24/solid";
 import React, { useState } from "react";
 import Slider from "../../../components/MdLeftHeaderSlider";
 import { Link, useLocation } from "react-router-dom";
+import ParticipantModal from "./ParticipantModal";
 
 function Participants() {
   const { pathname } = useLocation();
   const [queryArr, setQueryArr] = useState([]);
-  const [OpenPrograms, setOpenPrograms] = useState(false);
+  const [OpenParticipant, setOpenParticipants] = useState(false);
   const [currentPage, setPage] = useState(1);
   const [selected, setSelected] = useState(false);
   const [selectedItem, setSelectedItem] = useState(0);
@@ -82,6 +84,20 @@ function Participants() {
                 <PresentationChartBarIcon className="h-6 w-6" />
               </p>
               <p>Activities</p>
+            </div>
+          </Link>
+          <Link to={"/admin/information/mactivities"}>
+            <div
+              className={`flex items-center text-lg ${
+                pathname.startsWith("/admin/information/mactivities")
+                  ? "bg-blue-100 text-blue-700 rounded-lg border-r-4 border-r-blue-700 "
+                  : "text-gray-500"
+              }  px-5 py-1.5 mx-2 lg:mx-5 gap-5`}
+            >
+              <p>
+                <QueueListIcon className="h-6 w-6" />
+              </p>
+              <p>Activities Master</p>
             </div>
           </Link>
           <Link to={"/admin/information/course-level"}>
@@ -161,13 +177,25 @@ function Participants() {
             </div>
             <button
               className="bg-blue-700 text-white md:text-lg md:px-4 md:py-1.5 px-2 py-1 rounded-xl shadow-lg"
-              onClick={() => setOpenPrograms(true)}
+              onClick={() => setOpenParticipants(true)}
             >
-              + New Program
+              + New Participant
             </button>
+          </div>
+          <div className="md:mx-5 mx-2 bg-white mt-2 md:mt-5 flex flex-col rounded-lg shadow">
+            <div className="flex items-center justify-between border-b">
+              <p className=" px-2 py-1 font-semibold text-gray-600">
+                Participants
+              </p>
+            </div>
+            <div className="mx-2 my-1 border rounded-lg overflow-x-scroll no-scrollbar lg:w-[75vw] md:w-[73vw] w-[93vw]"></div>
           </div>
         </div>
       </div>
+      <ParticipantModal
+        isOpen={OpenParticipant}
+        setIsOpen={() => setOpenParticipants(false)}
+      />
     </div>
   );
 }

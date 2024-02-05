@@ -22,7 +22,7 @@ function ProgramModal({ isOpen, onClose, children }) {
                 <XMarkIcon className="h-5 w-5" />
               </button>
             </div>
-            <div className="mt-5 overflow-y-scroll h-[82vh] -scroll-mt-5 p-5">
+            <div className="mt-5 overflow-y-scroll h-[82vh] p-5">
               <form action="" className="text-gray-600 flex flex-col gap-3">
                 <div className="flex flex-col gap-2">
                   <label className="font-semibold">Program Name</label>

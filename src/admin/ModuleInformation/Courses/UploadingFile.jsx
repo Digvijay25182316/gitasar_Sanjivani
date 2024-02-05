@@ -223,6 +223,28 @@ function UploadingFile({ isOpen, setIsOpen }) {
                     Fill the form to add courses
                   </p>
                 </div>
+                <div>
+                  <form action="" className="flex flex-col gap-5">
+                    <div className="flex flex-col gap-2">
+                      <label className="font-semibold">Course Name</label>
+                      <input
+                        type="text"
+                        className="px-4 py-1.5 border rounded-md outline-none focus:border-blue-700"
+                        placeholder="enter course name"
+                      />
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      <label className="font-semibold">
+                        Course Description
+                      </label>
+                      <input
+                        type="text"
+                        className="px-4 py-1.5 border rounded-md outline-none focus:border-blue-700"
+                        placeholder="enter course name"
+                      />
+                    </div>
+                  </form>
+                </div>
               </div>
               <div className="flex items-center justify-between px-4 pt-4 gap-5">
                 <button

@@ -15,6 +15,8 @@ import Settings from "./admin/ModuleSettings/Settings";
 import Attendence from "./participants/attendence/Attendence";
 import ParticipantsActivities from "./participants/activities/ParticipantsActivities";
 import ParticipantRegisteration from "./participants/attendence/Registeration";
+import ActivitiesM from "./admin/ModuleInformation/ActivitiesMaster/Activities";
+import { Toaster } from "react-hot-toast";
 
 function App() {
   return (
@@ -27,6 +29,10 @@ function App() {
           <Route
             path="/admin/information/activities"
             element={<Activities />}
+          />
+          <Route
+            path="/admin/information/mactivities"
+            element={<ActivitiesM />}
           />
           <Route
             path="/admin/information/course-level"
@@ -50,6 +56,7 @@ function App() {
           <Route path="*" element={<NotFound />} />
         </Routes>
         <BottomNav />
+        <Toaster position="top-center" reverseOrder={false} />
       </Router>
     </div>
   );

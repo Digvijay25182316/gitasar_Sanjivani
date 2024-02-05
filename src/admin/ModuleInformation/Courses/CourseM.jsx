@@ -6,11 +6,11 @@ import {
   PresentationChartBarIcon,
   UserGroupIcon,
   UserIcon,
+  QueueListIcon,
 } from "@heroicons/react/24/solid";
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import Slider from "../../../components/MdLeftHeaderSlider";
-import ProgramModal from "../Programs/ProgramModal";
 import UploadingFile from "./UploadingFile";
 
 function CourseM() {
@@ -83,6 +83,20 @@ function CourseM() {
                 <PresentationChartBarIcon className="h-6 w-6" />
               </p>
               <p>Activities</p>
+            </div>
+          </Link>
+          <Link to={"/admin/information/mactivities"}>
+            <div
+              className={`flex items-center text-lg ${
+                pathname.startsWith("/admin/information/activities")
+                  ? "bg-blue-100 text-blue-700 rounded-lg border-r-4 border-r-blue-700 "
+                  : "text-gray-500"
+              }  px-5 py-1.5 mx-2 lg:mx-5 gap-5`}
+            >
+              <p>
+                <QueueListIcon className="h-6 w-6" />
+              </p>
+              <p>Activities Master</p>
             </div>
           </Link>
           <Link to={"/admin/information/course-level"}>

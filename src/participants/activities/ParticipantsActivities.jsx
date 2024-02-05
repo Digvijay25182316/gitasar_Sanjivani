@@ -1,273 +1,121 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
 
-import { useParams } from "react-router-dom";
+function Attendance() {
+  const [sessions, setSessions] = useState([
+    { id: 1, session: "Spirituality master", response: "Yes" },
+    { id: 2, session: "Realising Your Presence", response: "No" },
+    { id: 3, session: "Reincarnation Evidences", response: "Yes" },
+  ]);
+  const [Activities, setSelectedActivities] = useState(sessions[0]?.id || "");
 
-function ParticipantsActivities() {
-  const [currentStep, setCurrentStep] = useState(1);
-  const [error, setError] = useState("");
-  const { levelid } = useParams();
-  const [userData, setUserData] = useState({});
-  const [sessionData, setSessionData] = useState({});
-
-  const nextStep = (page) => {
-    if (page === "register") {
-      setCurrentStep(2);
-    } else {
-      setCurrentStep(3);
-    }
-  };
-
-  const prevStep = () => {
-    setCurrentStep(1);
-  };
-
-  return (
-    <div className="min-h-screen flex justify-center items-center ">
-      <div className="flex flex-col items-center gap-32 mx-5">
-        {currentStep === 2 ? (
-          <Step2
-            sessions={sessionData}
-            userData={userData}
-            prevStep={prevStep}
-          />
-        ) : currentStep === 3 ? (
-          <Step3
-            sessions={sessionData}
-            userData={userData}
-            prevStep={prevStep}
-          />
-        ) : (
-          <Step1 nextStep={nextStep} setUserData={setUserData} />
-        )}
-      </div>
-    </div>
-  );
-}
-
-export default ParticipantsActivities;
-
-function Step1({ nextStep, setUserData }) {
-  const [isError, setIsError] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isNotFound, setNotFound] = useState(false);
-
-  const MobileRef = useRef();
-  const handleSubmit = async (e) => {
+  function handleSubmitActivity(e) {
     e.preventDefault();
-    if (isNotFound) {
-      nextStep("register");
-    } else {
-      nextStep();
-    }
-  };
+    console.log(Activities);
+  }
+
+  const ArrActivities = [
+    "Round chanting 1",
+    "Round chanting 2",
+    "Round chanting 3",
+    "Round chanting 4",
+    "Round chanting 5",
+    "Round chanting 6",
+    "Round chanting 7",
+    "Round chanting 8",
+  ];
+
   return (
-    <div className="bg-white rounded-2xl border min-h-[90vh] flex flex-col items-center justify-center gap-20">
-      <p className="mx-5 text-center text-lg text-red-600">
-        After submitting your phone number you will be redirected to another
-        page
-      </p>
-      <form
-        className="flex flex-col items-center gap-3"
-        ref={MobileRef}
-        onSubmit={handleSubmit}
-      >
-        <div className="flex items-center border my-5 mx-2 gap-3 w-full">
-          <p className="bg-gray-100 py-3 px-3 text-gray-400 border-r ">Phone</p>
-          <input
-            type="tel"
-            name="mobile"
-            placeholder="enter your mobile number"
-            className="focus:outline-none text-lg text-center flex-1"
-          />
+    <div className="container mx-auto my-4 bg-white rounded-2xl border p-6 lg:w-[600px] md:w-[600px] w-[90vw]">
+      <div className="flex flex-col items-center mx-5">
+        <div className="flex md:flex-row flex-col items-center">
+          <form action="" onClick={handleSubmitActivity}>
+            <div className="flex md:flex-row flex-col gap-2 md:items-end items-center">
+              <div className="flex flex-col gap-2 mx-5">
+                <label className="font-semibold text-gray-600">
+                  Phone Number
+                </label>
+                <input
+                  type="text"
+                  className="px-4 py-1.5 border rounded outline-none "
+                  placeholder="8888959287 "
+                />
+              </div>
+              <div className="flex items-end gap-5 ml-2">
+                <button
+                  className="px-4 py-1.5 text-white text-lg  bg-blue-700 rounded md:w-[150px] w-[100px]"
+                  type="submit"
+                >
+                  Search
+                </button>
+                <Link to={"/registeration"}>
+                  <button
+                    className="px-4 py-1.5 text-white text-lg  bg-blue-700 rounded md:w-[150px] w-[100px]"
+                    type="button"
+                  >
+                    Register
+                  </button>
+                </Link>
+              </div>
+            </div>
+          </form>
         </div>
-        <button
-          className="text-white px-4 py-1.5 rounded bg-blue-700 text-lg mb-2"
-          type="submit"
-          disabled={isLoading}
-        >
-          {isLoading ? "Searching ..." : "Submit"}
-        </button>
-      </form>
-    </div>
-  );
-}
-
-function Step2({ sessions, userData, prevStep }) {
-  const [selectedSession, setSelectedSession] = useState(null);
-
-  const { levelid } = useParams();
-
-  const handleRadioChange = (session) => {
-    setSelectedSession(session);
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const body = {
-      sessionId: selectedSession,
-      levelId: Number(levelid),
-      participantId: userData.id,
-    };
-  };
-
-  return (
-    <div className="container mx-auto my-4 bg-white rounded-2xl border">
-      <h2 className="text-lg font-semibold mb-4 border-b px-5 py-2 text-gray-600">
-        Register Page
-      </h2>
-      <div className="mx-5">
-        <form action="" className="flex flex-col gap-5">
-          <div className="flex flex-col md:flex-row gap-5">
-            <div className="flex items-center border ">
-              <label className="bg-gray-100 px-2 py-2 border-r font-semibold text-gray-500">
-                FirstName
-              </label>
-              <input
-                type="text"
-                className="px-4 py-1.5 focus:outline-none"
-                placeholder="enter your name"
-              />
-            </div>
-            <div className="flex items-center border">
-              <label className="bg-gray-100 px-2 py-2 border-r font-semibold text-gray-500">
-                LirstName
-              </label>
-              <input
-                type="text"
-                className="px-4 py-1.5 focus:outline-none"
-                placeholder="enter your name"
-              />
-            </div>
+        <div className="mt-5 flex md:flex-row flex-col items-center gap-5">
+          <div className="font-semibold text-gray-400">
+            program Name:<i className="text-gray-700"> Gitasar Batch 1</i>
           </div>
-          <div className="flex flex-col md:flex-row gap-5">
-            <div className="flex items-center border ">
-              <label className="bg-gray-100 px-2 py-2 border-r font-semibold text-gray-500">
-                Whatsapp
-              </label>
-              <input
-                type="tel"
-                className="px-4 py-1.5 focus:outline-none"
-                placeholder="7620898992"
-              />
-            </div>
-            <div className="flex items-center border">
-              <label className="bg-gray-100 px-5 py-2 border-r font-semibold text-gray-500">
-                Phone
-              </label>
-              <input
-                type="tel"
-                className="px-4 py-1.5 focus:outline-none"
-                placeholder="7620898992"
-              />
-            </div>
+        </div>
+        <div>
+          <div className="my-4 border-t md:w-[550px] w-[80vw] px-5">
+            <p className="font-semibold text-gray-700 text-lg">
+              Select Service
+            </p>
+            <p className="text-sm text-gray-500">Select a service from list</p>
           </div>
-          <div className="grid grid-cols-2 gap-5">
-            <div className="flex flex-col gap-2">
-              <label className="font-semibold text-gray-500">Gender</label>
+          <form className="flex flex-col gap-4">
+            <div className="px-5 flex flex-col gap-2">
+              <label className="font-semibold">select service</label>
               <select
                 type="text"
-                className="px-4 py-1.5 border bg-white rounded focus:outline-none text-gray-700"
+                className="px-4 py-1.5 border rounded outline-none"
               >
                 <option>select</option>
-                <option value={"MALE"}>Male</option>
-                <option value={"FEMALE"}>Female</option>
+                {ArrActivities?.map((item, index) => (
+                  <option value={item} key={index}>
+                    {item}
+                  </option>
+                ))}
               </select>
             </div>
-            <div className="flex flex-col gap-2">
-              <label className="font-semibold text-gray-500">
-                Marital Status
-              </label>
-              <select
+            <div className="px-5 flex flex-col gap-2">
+              <label className="font-semibold">service description</label>
+              <input
                 type="text"
-                className="px-4 py-1.5 border bg-white rounded focus:outline-none text-gray-700"
-              >
-                <option>select</option>
-                <option value={"MARRIED"}>Married</option>
-                <option value={"NONMARRIED"}>Not Married</option>
-              </select>
+                className="px-4 py-1.5 border rounded outline-none"
+                placeholder="Write some description"
+              />
             </div>
-          </div>
-          <div className="grid grid-cols-2 gap-5">
-            <div className="flex flex-col gap-2">
-              <label className="font-semibold text-gray-500">Date</label>
+            <div className="px-5 flex flex-col gap-2">
+              <label htmlFor="start_date" className="font-semibold">
+                service start date
+              </label>
               <input
                 type="date"
-                className="px-4 py-1.5 border bg-white rounded focus:outline-none text-gray-700"
+                id="start_date"
+                name="start_date"
+                className="px-4 py-1.5 border rounded outline-none"
               />
             </div>
-            <div className="flex flex-col gap-2 ">
-              <label className="font-semibold text-gray-500">
-                No. of Childrens
-              </label>
-              <input
-                type="number"
-                className="px-4 py-1.5 border bg-white rounded focus:outline-none text-gray-700"
-                placeholder="number of childrens"
-              />
+            <div className="flex items-center justify-center gap-5 px-5 bg-white mt-10">
+              <button className="bg-blue-700 w-full max-w-[250px] text-lg px-4 py-1.5 rounded-md mb-2 text-white">
+                Submit
+              </button>
             </div>
-          </div>
-          <div className="flex justify-center my-10">
-            <button className="w-[200px] bg-blue-700 text-white font-semibold text-lg py-1.5 rounded ">
-              Submit
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
-  );
-}
-function Step3({ sessions, userData, prevStep }) {
-  const [selectedSession, setSelectedSession] = useState(null);
-
-  const { levelid } = useParams();
-
-  const handleRadioChange = (session) => {
-    setSelectedSession(session);
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const body = {
-      sessionId: selectedSession,
-      levelId: Number(levelid),
-      participantId: userData.id,
-    };
-  };
-
-  return (
-    <div className="h-screen flex items-center">
-      <div className="container mx-auto my-4 bg-white rounded-2xl border">
-        <div className="border-b px-4 py-1.5 text-lg font-semibold text-gray-600 flex items-center justify-between">
-          <p>Give Attendence</p>
-        </div>
-        <div className="p-6 flex flex-col items-center">
-          <div className="flex items-center justify-center gap-5 pb-5 font-semibold text-lg text-gray-600">
-            Your Name
-          </div>
-          <div className="flex items-center gap-5">
-            <div className="font-semibold text-gray-400 md:flex gap-5">
-              Program : <p className="text-gray-600">something field</p>
-            </div>
-          </div>
-          <form className="flex flex-col items-center gap-5 py-5 text-gray-600">
-            <p className="text-lg font-semibold">Select services</p>
-            <div className="flex items-center justify-center border">
-              <label className="flex items-center gap-5 bg-gray-100 py-2 px-3 border-r border-r-gray-200">
-                Services
-              </label>
-              <select
-                type="text"
-                className="bg-white border-none px-4 md:w-[300px] w-[200px] focus:outline-none"
-              >
-                <option>select</option>
-              </select>
-            </div>
-            <button className="text-lg bg-blue-700 text-white w-[200px] rounded-md py-1.5">
-              Submit
-            </button>
           </form>
         </div>
       </div>
     </div>
   );
 }
+
+export default Attendance;
