@@ -22,7 +22,6 @@ function ViewPageController({ currentPage, setPage, selected, id }) {
   const [UpdateOpen, setUpdateOpen] = useState(false);
   const [AddSession, setAddSession] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  // const [selectedSessions, setSelectedSessions] = useState(0);
 
   useEffect(() => {
     (async () => {

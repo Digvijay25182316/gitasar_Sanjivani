@@ -1,18 +1,11 @@
 import {
-  AcademicCapIcon,
-  ArrowTrendingUpIcon,
-  CalendarDaysIcon,
   ChevronRightIcon,
   LinkIcon,
-  PresentationChartBarIcon,
-  UserGroupIcon,
-  UserIcon,
   XMarkIcon,
-  QueueListIcon,
   CubeTransparentIcon,
 } from "@heroicons/react/24/solid";
 import React, { useEffect, useRef, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import Dropdown from "../../../components/BottomNav.jsx/DropDown";
 import CopyClipBoard from "../../../components/BottomNav.jsx/CopyClipBoard";
 import QrCode from "./QrCode";
@@ -125,7 +118,6 @@ function CourseLevel() {
                       currentPage={currentPage}
                       setPage={setPage}
                       selected={selected}
-                      courseData={selectedItem}
                       id={selectedItem}
                     />
                   )}
@@ -248,11 +240,11 @@ function CourseLevel() {
                           <td className="flex justify-center py-5">
                             <input
                               type="checkbox"
-                              value={index + 1}
+                              value={courseLevel.id}
                               className=" checked:text-green-400 text-green-400 cursor-pointer"
                               onChange={onChangeSelect}
                               disabled={selected}
-                              checked={selectedItem === index + 1}
+                              checked={selectedItem === courseLevel.id}
                             />
                           </td>
                           <td className="border-l">
@@ -336,31 +328,9 @@ const CreateCourse = ({ OpenCourseLevel, setOpenCourseLevel }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [programArr, setProgramArr] = useState([]);
   const [createCourseLoading, setCreateCourseLoading] = useState(false);
+  const [isOpenSelection, setIsOpenSelection] = useState(false);
 
   const formRef = useRef();
-
-  const handleChange = async (e) => {
-    if (e.target.value !== "") {
-      try {
-        const response = await fetch(
-          `${SERVER_ENDPOINT}/program/name/${e.target.value}`
-        );
-
-        if (response.ok) {
-          const responseData = await response.json();
-          console.log(responseData);
-          setSingleProgram(responseData);
-        } else {
-          const errorData = await response.json();
-          toast.error(errorData.message);
-        }
-      } catch (error) {
-        toast.error(error.message || error);
-      } finally {
-        setIsLoading(false);
-      }
-    }
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -372,11 +342,14 @@ const CreateCourse = ({ OpenCourseLevel, setOpenCourseLevel }) => {
       toast.error("Please fill in all fields.");
       return;
     }
-    data.number = 3;
+    data.number = 5;
     data.preacher1 = SingleProgram?.preacher;
     data.preacher2 = SingleProgram?.preacher;
     data.mentor = SingleProgram?.mentor;
     data.coordinator = SingleProgram?.coordinator;
+    data.programId = SingleProgram?.id;
+
+    console.log(data);
 
     try {
       setIsLoading(true);
@@ -423,6 +396,11 @@ const CreateCourse = ({ OpenCourseLevel, setOpenCourseLevel }) => {
     fetchPrograms();
   }, []);
 
+  const handleSelectProgram = (item) => {
+    setSingleProgram(item);
+    setIsOpenSelection(false);
+  };
+
   return (
     <CourseModal
       isOpen={OpenCourseLevel}
@@ -441,34 +419,60 @@ const CreateCourse = ({ OpenCourseLevel, setOpenCourseLevel }) => {
         <div className="md:w-[50vw] w-[85vw] p-5 mb-16">
           <form onSubmit={handleSubmit} ref={formRef}>
             <div className="flex flex-col gap-5">
-              <div className="flex flex-col gap-2">
-                <label
+              <div className="flex flex-col gap-3">
+                <p
                   className={`font-semibold ${
                     isLoading ? "text-gray-300" : "text-gray-600"
                   }`}
-                  htmlFor="programName"
                 >
-                  Select Program
-                </label>
-                <select
-                  name="programName"
-                  className={`border bg-white px-4 py-2 rounded-md transition-colors duration-500 ${
-                    isLoading ? "outline-none" : "focus:outline-gray-400"
-                  }`}
-                  disabled={isLoading}
-                  onChange={handleChange}
-                >
-                  <option value="">select</option>
-                  {programArr.length > 0 ? (
-                    programArr.map((item) => (
-                      <option value={item.name} key={item.id}>
-                        {item.name}
-                      </option>
-                    ))
-                  ) : (
-                    <option>NO program to show</option>
-                  )}
-                </select>
+                  Program Name
+                </p>
+                <div className="relative inline-block text-left">
+                  <button
+                    type="button"
+                    onClick={() =>
+                      !isLoading && setIsOpenSelection(!isOpenSelection)
+                    }
+                    className={`inline-flex justify-center w-full px-4 py-2 text-sm font-medium  bg-white border border-gray-300 rounded-md shadow-sm ${
+                      isLoading
+                        ? "text-gray-400"
+                        : "hover:bg-gray-50 focus:outline-none focus:ring-1 text-gray-700"
+                    }`}
+                    id="options-menu"
+                    aria-haspopup="true"
+                    aria-expanded="true"
+                  >
+                    {Object.keys(SingleProgram).length === 0
+                      ? "Select"
+                      : `${SingleProgram?.name}`}
+                  </button>
+                  {!isLoading && isOpenSelection ? (
+                    <div
+                      className="origin-top-right absolute right-0 mt-2 w-full rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none"
+                      role="menu"
+                      aria-orientation="vertical"
+                      aria-labelledby="options-menu"
+                    >
+                      <div className="py-1" role="none">
+                        {programArr.length > 0 ? (
+                          programArr.map((item) => (
+                            <p
+                              value={item.name}
+                              key={item.id}
+                              role="menu"
+                              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                              onClick={() => handleSelectProgram(item)}
+                            >
+                              {item.name}
+                            </p>
+                          ))
+                        ) : (
+                          <p>NO program to show</p>
+                        )}
+                      </div>
+                    </div>
+                  ) : null}
+                </div>
               </div>
               <div className="flex flex-col gap-2">
                 <label
