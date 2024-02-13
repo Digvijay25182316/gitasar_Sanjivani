@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { CheckIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import { SERVER_ENDPOINT } from "../../admin/config/Server";
 
 function Attendance() {
   const [currentStep, setCurrentStep] = useState(1);
@@ -9,6 +10,12 @@ function Attendance() {
     { id: 2, session: "Realising Your Presence", response: "No" },
     { id: 3, session: "Reincarnation Evidences", response: "Yes" },
   ]);
+
+  // useEffect(() => {
+  //   (async () => {
+  //     await fetch(`${SERVER_ENDPOINT}/session/scheduled/`);
+  //   })();
+  // }, []);
   const [sessionsAttendence, setSessionAttendence] = useState(
     sessions[0]?.id || ""
   );

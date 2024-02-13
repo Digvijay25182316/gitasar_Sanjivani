@@ -49,8 +49,11 @@ function App() {
           <Route path="/admin/home" element={<Home />} />
           <Route path="/admin/dashboard" element={<Dashboard />} />
           <Route path="/admin/settings" element={<Settings />} />
-          <Route path="/attendence" element={<Attendence />} />
-          <Route path="/activities" element={<ParticipantsActivities />} />
+          <Route path="/attendence/:courseid" element={<Attendence />} />
+          <Route
+            path="/activities/:programid"
+            element={<ParticipantsActivities />}
+          />
           <Route path="/registeration" element={<ParticipantRegisteration />} />
 
           <Route path="*" element={<NotFound />} />

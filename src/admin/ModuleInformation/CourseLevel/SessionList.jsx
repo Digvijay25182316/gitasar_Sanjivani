@@ -1,108 +1,112 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { SERVER_ENDPOINT } from "../../config/Server";
+import toast from "react-hot-toast";
+import { ClockIcon, CubeTransparentIcon } from "@heroicons/react/24/solid";
 
-const SessionList = ({ sessions }) => {
-  const [items, setItems] = useState(sessions);
+const SessionList = ({ course_level_id }) => {
+  const [items, setItems] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [selectedSession, setSelectedSession] = useState(null);
 
-  const [draggedIndex, setDraggedIndex] = useState(null);
-
-  const handleDragStart = (e, index) => {
-    e.dataTransfer.setData("text/plain", index);
-    setDraggedIndex(index);
-  };
-
-  const handleDragOver = (e) => {
-    e.preventDefault();
-  };
-
-  const handleDrop = (e, targetIndex) => {
-    e.preventDefault();
-
-    const originalIndex = parseInt(e.dataTransfer.getData("text/plain"), 10);
-
-    if (originalIndex === targetIndex) {
-      return;
-    }
-
-    const updatedItems = [...items];
-    const [draggedItem] = updatedItems.splice(originalIndex, 1);
-    updatedItems.splice(targetIndex, 0, draggedItem);
-
-    setItems(updatedItems);
-    setDraggedIndex(null);
-  };
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsLoading(true);
+      try {
+        const response = await fetch(
+          `${SERVER_ENDPOINT}/session/scheduled/level/${course_level_id}`
+        );
+        if (!response.ok) {
+          throw new Error("Failed to fetch data");
+        }
+        const responseData = await response.json();
+        setItems(responseData.content);
+      } catch (error) {
+        toast.error(error.message);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchData();
+  }, [course_level_id]);
 
   const handleCheckboxToggle = (id) => {
-    setItems((prevItems) =>
-      prevItems.map((item) =>
-        item.id === id ? { ...item, checked: !item.checked } : item
-      )
+    setSelectedSession((prevSelectedSession) =>
+      prevSelectedSession === id ? null : id
     );
   };
 
   return (
-    <ul className="space-y-2 py-2 px-2">
-      {items.map((item, index) => (
-        <li
-          key={item.id}
-          className={`relative transition-all ${
-            draggedIndex === index ? "opacity-50 scale-95" : ""
-          }`}
-        >
-          <div className=" flex items-center justify-center border rounded-xl shadow">
-            <div
-              className="cursor-move left-0 top-0 h-full flex items-center space-x-4 ml-3"
-              draggable
-              onDragStart={(e) => handleDragStart(e, index)}
-              onDragOver={handleDragOver}
-              onDrop={(e) => handleDrop(e, index)}
-            >
-              {/* Icon with 6 dots */}
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                stroke="currentColor"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                viewBox="0 0 24 24"
-                className="w-6 h-6"
-              >
-                <circle cx="12" cy="12" r="1"></circle>
-                <circle cx="12" cy="5" r="1"></circle>
-                <circle cx="12" cy="19" r="1"></circle>
-                <circle cx="20" cy="12" r="1"></circle>
-                <circle cx="20" cy="5" r="1"></circle>
-                <circle cx="20" cy="19" r="1"></circle>
-              </svg>
-            </div>
-
-            <input
-              type="checkbox"
-              className="cursor-pointer  ml-4"
-              checked={item.checked}
-              onChange={() => handleCheckboxToggle(item.id)}
-            />
-
-            <div className="ml-10 flex md:flex-row flex-col md:items-center gap-1">
-              <div className="flex flex-col items-start">
-                <div className="text-lg font-semibold text-gray-700">
-                  {item.sessionName}
-                </div>
-                <div className="text-sm text-gray-500">
-                  Scheduled Date: {item.scheduledDate}
-                </div>
-              </div>
-              <div className="text-md font-semibold text-gray-600 lg:ml-36">
-                course Name
-              </div>
-            </div>
-            <button className="ml-auto px-2 py-1 bg-blue-500 text-white rounded-md mr-3">
-              Reschedule
-            </button>
+    <div className="w-full px-5 py-5">
+      {!isLoading ? (
+        <table className="w-full">
+          <thead>
+            <tr>
+              <th className="font-normal border-t border-l border-r">
+                checkbox
+              </th>
+              <th className="font-normal border-t border-l border-r">name</th>
+              <th className="font-normal border-t border-l border-r">
+                scheduledDate
+              </th>
+              <th className="font-normal border-t border-l border-r">
+                courseName
+              </th>
+              <th className="font-normal border-t border-l border-r">
+                sessionName
+              </th>
+              <th className="font-normal border-t border-l border-r">
+                Actions
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {items.map((session) => (
+              <tr key={session.id}>
+                <td className="flex justify-center border-l border-t border-b border-collapse py-3 ">
+                  <label htmlFor={`session_${session.id}`}>
+                    <input
+                      type="checkbox"
+                      name={`session_${session.id}`}
+                      id={`session_${session.id}`}
+                      onChange={() => handleCheckboxToggle(session.id)}
+                      checked={selectedSession === session.id}
+                    />
+                  </label>
+                </td>
+                <td className="border border-gray-300 text-center py-3">
+                  {session.name}
+                </td>
+                <td className="border border-gray-300 text-center py-3">
+                  {session?.startTime
+                    ? new Date(session?.startTime).toUTCString()
+                    : session?.startTime}
+                </td>
+                <td className="border border-gray-300 text-center py-3">
+                  {session.courseName}
+                </td>
+                <td className="border border-gray-300 text-center py-3">
+                  {session.sessionName}
+                </td>
+                <td className="border border-gray-300 py-1 ">
+                  <div className="flex justify-center">
+                    <button className="bg-purple-600 rounded-md text-white px-4 py-1 flex items-center gap-2">
+                      <ClockIcon className="h-5 w-5" />
+                      Reschedule
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      ) : (
+        <div className="flex items-center justify-center">
+          <div className="animate-spin">
+            <CubeTransparentIcon className="h-5 w-5 text-gray-500" />
           </div>
-        </li>
-      ))}
-    </ul>
+        </div>
+      )}
+    </div>
   );
 };
 

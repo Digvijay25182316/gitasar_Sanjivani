@@ -1,44 +1,94 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { SERVER_ENDPOINT } from "../../admin/config/Server";
+import toast from "react-hot-toast";
 
-function Attendance() {
-  const [sessions, setSessions] = useState([
-    { id: 1, session: "Spirituality master", response: "Yes" },
-    { id: 2, session: "Realising Your Presence", response: "No" },
-    { id: 3, session: "Reincarnation Evidences", response: "Yes" },
-  ]);
-  const [Activities, setSelectedActivities] = useState(sessions[0]?.id || "");
+function Activities() {
+  const { programId } = useParams();
+
+  const [isLoading, setIsLoading] = useState(false);
+  const [activitiesArr, setActivitiesArr] = useState([]);
+  const [participant, setParticipant] = useState({});
+  const navigate = useNavigate();
+
+  const [Activities, setSelectedActivities] = useState(0);
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [StartDate, setStartDate] = useState("");
+  const [description, setDescription] = useState("");
 
   function handleSubmitActivity(e) {
     e.preventDefault();
-    console.log(Activities);
+    console.log({
+      activityId: Activities,
+      programId: programId,
+      activityDate: StartDate,
+    });
   }
 
-  const ArrActivities = [
-    "Round chanting 1",
-    "Round chanting 2",
-    "Round chanting 3",
-    "Round chanting 4",
-    "Round chanting 5",
-    "Round chanting 6",
-    "Round chanting 7",
-    "Round chanting 8",
-  ];
+  async function handleSubmitUser(e) {
+    e.preventDefault();
+    if (phoneNumber === "") {
+      toast.error("Enter your phone Number");
+      return;
+    }
+    try {
+      const response = await fetch(
+        `${SERVER_ENDPOINT}/participant/phone/${phoneNumber}`
+      );
+
+      if (response.ok) {
+        const responseData = await response.json();
+        setParticipant(responseData);
+      } else if (response.status === 404) {
+        toast.error(
+          "participant with the phone number does not exists  please register"
+        );
+        navigate("/registeration");
+      } else {
+        const errorData = await response.json();
+        toast.error(errorData.message);
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
+  }
+
+  useEffect(() => {
+    (async () => {
+      setIsLoading(true);
+      try {
+        const response = await fetch(`${SERVER_ENDPOINT}/activity/`);
+        if (response.ok) {
+          const responseData = await response.json();
+          setActivitiesArr(responseData.content);
+        } else {
+          const errorData = await response.json();
+          toast.error(errorData.message);
+        }
+      } catch (error) {
+        toast.error(error.message);
+      } finally {
+        setIsLoading(false);
+      }
+    })();
+  }, []);
 
   return (
     <div className="container mx-auto my-4 bg-white rounded-2xl border p-6 lg:w-[600px] md:w-[600px] w-[90vw]">
       <div className="flex flex-col items-center mx-5">
         <div className="flex md:flex-row flex-col items-center">
-          <form action="" onClick={handleSubmitActivity}>
+          <form onSubmit={handleSubmitUser}>
             <div className="flex md:flex-row flex-col gap-2 md:items-end items-center">
               <div className="flex flex-col gap-2 mx-5">
                 <label className="font-semibold text-gray-600">
                   Phone Number
                 </label>
                 <input
-                  type="text"
+                  type="tel"
                   className="px-4 py-1.5 border rounded outline-none "
                   placeholder="8888959287 "
+                  value={phoneNumber}
+                  onChange={(e) => setPhoneNumber(e.target.value)}
                 />
               </div>
               <div className="flex items-end gap-5 ml-2">
@@ -72,27 +122,28 @@ function Attendance() {
             </p>
             <p className="text-sm text-gray-500">Select a service from list</p>
           </div>
-          <form className="flex flex-col gap-4">
+          <form className="flex flex-col gap-4" onSubmit={handleSubmitActivity}>
             <div className="px-5 flex flex-col gap-2">
-              <label className="font-semibold">select service</label>
+              <label className="font-semibold" htmlFor="activityId">
+                select service
+              </label>
               <select
-                type="text"
-                className="px-4 py-1.5 border rounded outline-none"
+                name="activityId"
+                className="px-4 py-1.5 border rounded outline-none bg-white"
               >
-                <option>select</option>
-                {ArrActivities?.map((item, index) => (
-                  <option value={item} key={index}>
-                    {item}
+                <option value=""> select</option>
+                {activitiesArr?.map((item, index) => (
+                  <option value={item.name} key={index}>
+                    {item.name}
                   </option>
                 ))}
               </select>
             </div>
             <div className="px-5 flex flex-col gap-2">
               <label className="font-semibold">service description</label>
-              <input
-                type="text"
+              <textarea
                 className="px-4 py-1.5 border rounded outline-none"
-                placeholder="Write some description"
+                placeholder="Write some description why did you choose this"
               />
             </div>
             <div className="px-5 flex flex-col gap-2">
@@ -118,4 +169,4 @@ function Attendance() {
   );
 }
 
-export default Attendance;
+export default Activities;

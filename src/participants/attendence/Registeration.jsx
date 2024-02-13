@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { SERVER_ENDPOINT } from "../../admin/config/Server";
+import toast from "react-hot-toast";
 
 const ParticipantRegisteration = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -8,7 +10,7 @@ const ParticipantRegisteration = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [errors, setErrors] = useState({});
-  const { pathname } = useLocation();
+  const navigate = useNavigate();
 
   const [formState, setFormState] = useState({
     firstName: "",
@@ -97,10 +99,48 @@ const ParticipantRegisteration = () => {
     }));
   };
 
+  const handleSubmitEmergency = async (e) => {
+    e.preventDefault();
+    validateStep();
+    const formData = {
+      firstName: formState.firstName,
+      lastName: formState.lastName,
+      dob: formState.dob,
+      waNumber: formState.waNumber,
+      contactNumber: formState.contactNumber,
+      gender: formState.gender,
+    };
+    const header = new Headers();
+    header.append("Content-Type", "application/json");
+    try {
+      setIsLoading(true);
+      const response = await fetch(`${SERVER_ENDPOINT}/participant/create`, {
+        method: "POST",
+        headers: header,
+        body: JSON.stringify(formData),
+      });
+      if (response.ok) {
+        const responseData = await response.json();
+        toast.success(responseData.message);
+      } else {
+        const errorData = await response.json();
+        toast.error(errorData.message);
+      }
+    } catch (error) {
+      toast.error(error.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     validateStep();
-    console.log(errors);
+    // try {
+    //   const response = await fetch(`${SERVER_ENDPOINT}/participant/create`);
+    // } catch (error) {
+
+    // }
   };
   const closeModal = () => {
     setIsModalOpen(false);

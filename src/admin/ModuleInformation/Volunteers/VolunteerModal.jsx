@@ -6,6 +6,7 @@ import { SERVER_ENDPOINT } from "../../config/Server";
 function VolunteersModal({ isOpen, setIsOpen }) {
   const [currentStep, setCurrentStep] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
   const [formData, setformData] = useState({
     firstName: "",
     lastName: "",
@@ -34,12 +35,12 @@ function VolunteersModal({ isOpen, setIsOpen }) {
     });
   };
 
-  function onSubmit(e) {
+  async function onSubmit(e) {
     e.preventDefault();
     const header = new Headers();
     setIsLoading(true);
     header.append("Content-Type", "application/json");
-    fetch(`${SERVER_ENDPOINT}/volunteer/create`, {
+    await fetch(`${SERVER_ENDPOINT}/volunteer/create`, {
       method: "POST",
       headers: header,
       body: JSON.stringify(formData),
@@ -47,10 +48,20 @@ function VolunteersModal({ isOpen, setIsOpen }) {
       .then((data) => {
         if (data.ok) {
           return data.json();
+        } else {
+          setIsError(true);
+          return data.json();
         }
       })
-      .then((data) => toast.success(data.message))
-      .catch((err) => console.log(err))
+      .then((data) => {
+        console.log(data.message);
+        if (isError) {
+          toast.error(data.message);
+        } else {
+          toast.success(data.message);
+        }
+      })
+      .catch((err) => console.log(err.message))
       .finally(() => {
         setIsLoading(false);
       });
@@ -96,11 +107,7 @@ function VolunteersModal({ isOpen, setIsOpen }) {
             ></div>
           </div>
           <div className="md:w-[50vw] w-[85vw] mb-16">
-            <form
-              action=""
-              className="overflow-y-scroll px-5"
-              onSubmit={onSubmit}
-            >
+            <form className="overflow-y-scroll px-5" onSubmit={onSubmit}>
               {currentStep === 1 ? (
                 <>
                   <Step1
@@ -134,7 +141,7 @@ export default VolunteersModal;
 function Step1({ StepState, handleChange, isLoading, setIsOpen, nextStep }) {
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex md:flex-row flex-column items-center gap-5">
+      <div className="flex md:flex-row flex-col md:items-center gap-5">
         <div className="flex flex-col gap-2 w-full">
           <label>First Name</label>
           <input
@@ -178,7 +185,7 @@ function Step1({ StepState, handleChange, isLoading, setIsOpen, nextStep }) {
           name="initiatedName"
         />
       </div>
-      <div className="flex md:flex-row flex-column items-center gap-5">
+      <div className="flex md:flex-row flex-col items-center gap-5">
         <div className="flex flex-col gap-2 w-full">
           <label>WhatsApp Number</label>
           <input
@@ -246,7 +253,7 @@ function Step1({ StepState, handleChange, isLoading, setIsOpen, nextStep }) {
 function Step2({ StepState, handleChange, isLoading, prevStep }) {
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex md:flex-row flex-column items-center gap-5">
+      <div className="flex md:flex-row flex-col items-center gap-5">
         <div className="flex flex-col gap-2 w-full">
           <label>Date Of Birth</label>
           <input
@@ -290,7 +297,7 @@ function Step2({ StepState, handleChange, isLoading, prevStep }) {
           name="address"
         />
       </div>
-      <div className="flex md:flex-row flex-column items-center gap-5">
+      <div className="flex md:flex-row flex-col items-center gap-5">
         <div className="flex flex-col gap-2 w-full">
           <label>Service Interested</label>
           <input
