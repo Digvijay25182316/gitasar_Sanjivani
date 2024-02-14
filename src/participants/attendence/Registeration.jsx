@@ -110,6 +110,7 @@ const ParticipantRegisteration = () => {
       contactNumber: formState.contactNumber,
       gender: formState.gender,
     };
+    console.log(formData);
     const header = new Headers();
     header.append("Content-Type", "application/json");
     try {
@@ -179,7 +180,7 @@ const ParticipantRegisteration = () => {
               setPersonalInfo={handleChange}
               nextStep={nextStep}
               errors={errors}
-              handleSubmit={handleSubmit}
+              handleSubmit={handleSubmitEmergency}
             />
           )}
           {currentStep === 2 && (

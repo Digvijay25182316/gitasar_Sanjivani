@@ -6,6 +6,7 @@ import {
   XMarkIcon,
 } from "@heroicons/react/24/outline";
 import { DocumentIcon } from "@heroicons/react/24/solid";
+import { SERVER_ENDPOINT } from "../../config/Server";
 
 function UploadingFile({ isOpen, setIsOpen }) {
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -61,21 +62,62 @@ function UploadingFile({ isOpen, setIsOpen }) {
       worker: true,
       header: true,
       dynamicTyping: true,
-      step: function (row) {
+      step: async function (row) {
         const rowData = row.data;
-        const headers = row.meta.fields;
-        const rowObject = {};
-        headers.forEach((header) => {
-          rowObject[header] = rowData[header];
-        });
-
-        console.log("Row Object:", rowObject);
+        // Check if Code and description exist
+        if (rowData.Code !== null && rowData.description !== null) {
+          await fetch(`${SERVER_ENDPOINT}/`, {
+            method: "POST",
+            body: JSON.stringify({
+              Code: rowData.Code,
+              description: rowData.description,
+            }),
+            headers: {
+              "Content-Type": "application/json",
+            },
+          });
+        }
+        // Check if sessionName and sessionDescription exist
+        else if (
+          rowData.sessionName !== null &&
+          rowData.sessionDescription !== null
+        ) {
+          console.log({
+            sessionName: rowData.sessionName,
+            sessionDescription: rowData.sessionDescription,
+          });
+        }
+        // If none of the expected fields exist
+        else {
+          console.log("Invalid row data structure:", rowData);
+        }
       },
       complete: function () {
         console.log("All done!");
       },
     });
   };
+
+  // const handleFileUpload = () => {
+  //   Papa.parse(file, {
+  //     worker: true,
+  //     header: true,
+  //     dynamicTyping: true,
+  //     step: function (row) {
+  //       const rowData = row.data;
+  //       const headers = row.meta.fields;
+  //       const rowObject = {};
+  //       headers.forEach((header) => {
+  //         rowObject[header] = rowData[header];
+  //       });
+
+  //       console.log("Row Object:", rowObject);
+  //     },
+  //     complete: function () {
+  //       console.log("All done!");
+  //     },
+  //   });
+  // };
 
   if (isOpen)
     return (

@@ -2,10 +2,10 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { SERVER_ENDPOINT } from "../../admin/config/Server";
 import toast from "react-hot-toast";
+import ProgramCard from "./ProgramCard";
 
 function Activities() {
   const { programId } = useParams();
-
   const [isLoading, setIsLoading] = useState(false);
   const [activitiesArr, setActivitiesArr] = useState([]);
   const [participant, setParticipant] = useState({});
@@ -16,16 +16,46 @@ function Activities() {
   const [StartDate, setStartDate] = useState("");
   const [description, setDescription] = useState("");
 
-  function handleSubmitActivity(e) {
+  const clearForm = () => {
+    setSelectedActivities(0);
+    setPhoneNumber("");
+    setDescription("");
+    setStartDate("");
+  };
+
+  async function handleSubmitActivity(e) {
     e.preventDefault();
-    console.log({
+    const formData = {
+      participantId: participant.id,
       activityId: Activities,
-      programId: programId,
+      programId: Number(programId),
       activityDate: StartDate,
-    });
+    };
+    try {
+      setIsLoading(true);
+      const header = new Headers();
+      header.append("Content-Type", "application/json");
+      const response = await fetch(
+        `${SERVER_ENDPOINT}/participant-activity/register`,
+        { method: "POST", body: JSON.stringify(formData), headers: header }
+      );
+      if (response.ok) {
+        const responseData = await response.json();
+        toast.success(responseData.message);
+        clearForm();
+      } else {
+        const errorData = await response.json();
+        toast.error(errorData.message);
+      }
+    } catch (error) {
+      toast.error(error.message);
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   async function handleSubmitUser(e) {
+    setIsLoading(true);
     e.preventDefault();
     if (phoneNumber === "") {
       toast.error("Enter your phone Number");
@@ -50,6 +80,8 @@ function Activities() {
       }
     } catch (error) {
       toast.error(error.message);
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -93,10 +125,15 @@ function Activities() {
               </div>
               <div className="flex items-end gap-5 ml-2">
                 <button
-                  className="px-4 py-1.5 text-white text-lg  bg-blue-700 rounded md:w-[150px] w-[100px]"
+                  className={`px-4 py-1.5 text-lg  ${
+                    isLoading
+                      ? "bg-blue-400 text-white"
+                      : "bg-blue-700 text-white"
+                  } rounded md:w-[150px] w-[100px]`}
                   type="submit"
+                  disabled={isLoading}
                 >
-                  Search
+                  {isLoading ? "loading..." : "Search"}
                 </button>
                 <Link to={"/registeration"}>
                   <button
@@ -110,12 +147,25 @@ function Activities() {
             </div>
           </form>
         </div>
-        <div className="mt-5 flex md:flex-row flex-col items-center gap-5">
+        <div className={`mt-5 flex md:flex-row flex-col items-center gap-5`}>
+          {Object.keys(participant).length > 0 ? (
+            <div className="flex flex-col font-semibold text-gray-400">
+              Participant Name:
+              <i className="text-gray-700">{`${participant.firstName} ${participant.lastName}`}</i>
+            </div>
+          ) : null}
           <div className="font-semibold text-gray-400">
-            program Name:<i className="text-gray-700"> Gitasar Batch 1</i>
+            program Name:
+            <i className="text-gray-700">
+              <ProgramCard programId={Number(programId)} />
+            </i>
           </div>
         </div>
-        <div>
+        <div
+          className={
+            Object.keys(participant).length === 0 ? "opacity-20" : null
+          }
+        >
           <div className="my-4 border-t md:w-[550px] w-[80vw] px-5">
             <p className="font-semibold text-gray-700 text-lg">
               Select Service
@@ -130,10 +180,14 @@ function Activities() {
               <select
                 name="activityId"
                 className="px-4 py-1.5 border rounded outline-none bg-white"
+                onChange={(e) => {
+                  setSelectedActivities(Number(e.target.value));
+                }}
+                disabled={Object.keys(participant).length === 0}
               >
                 <option value=""> select</option>
                 {activitiesArr?.map((item, index) => (
-                  <option value={item.name} key={index}>
+                  <option value={item.id} key={index}>
                     {item.name}
                   </option>
                 ))}
@@ -144,6 +198,11 @@ function Activities() {
               <textarea
                 className="px-4 py-1.5 border rounded outline-none"
                 placeholder="Write some description why did you choose this"
+                value={description}
+                id="description"
+                name="description"
+                onChange={(e) => setDescription(e.target.value)}
+                disabled={Object.keys(participant).length === 0}
               />
             </div>
             <div className="px-5 flex flex-col gap-2">
@@ -155,11 +214,17 @@ function Activities() {
                 id="start_date"
                 name="start_date"
                 className="px-4 py-1.5 border rounded outline-none"
+                onChange={(e) => setStartDate(e.target.value)}
+                disabled={Object.keys(participant).length === 0}
               />
             </div>
             <div className="flex items-center justify-center gap-5 px-5 bg-white mt-10">
-              <button className="bg-blue-700 w-full max-w-[250px] text-lg px-4 py-1.5 rounded-md mb-2 text-white">
-                Submit
+              <button
+                className="bg-blue-700 w-full max-w-[250px] text-lg px-4 py-1.5 rounded-md mb-2 text-white"
+                type="submit"
+                disabled={Object.keys(participant).length === 0 || isLoading}
+              >
+                {isLoading ? "loading..." : "Submit"}
               </button>
             </div>
           </form>

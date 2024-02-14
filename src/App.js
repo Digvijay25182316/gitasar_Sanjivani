@@ -49,9 +49,9 @@ function App() {
           <Route path="/admin/home" element={<Home />} />
           <Route path="/admin/dashboard" element={<Dashboard />} />
           <Route path="/admin/settings" element={<Settings />} />
-          <Route path="/attendence/:courseid" element={<Attendence />} />
+          <Route path="/attendence/:levelId" element={<Attendence />} />
           <Route
-            path="/activities/:programid"
+            path="/activities/:programId"
             element={<ParticipantsActivities />}
           />
           <Route path="/registeration" element={<ParticipantRegisteration />} />

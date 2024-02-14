@@ -3,7 +3,6 @@ import {
   ArrowTrendingUpIcon,
   CalendarDaysIcon,
   ChevronRightIcon,
-  LinkIcon,
   PresentationChartBarIcon,
   UserGroupIcon,
   UserIcon,
@@ -13,14 +12,13 @@ import {
 import React, { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import Dropdown from "../../../components/BottomNav.jsx/DropDown";
-import ProgramsData from "./data";
-import CopyClipBoard from "../../../components/BottomNav.jsx/CopyClipBoard";
-import QrCode from "./QrCode";
+
 import ProgramModal from "./ProgramModal";
 import Slider from "../../../components/MdLeftHeaderSlider";
-import { FRONTEND_ENDPOINT, SERVER_ENDPOINT } from "../../config/Server";
+import { SERVER_ENDPOINT } from "../../config/Server";
 import toast from "react-hot-toast";
 import ExternalLink from "./ExternalLink";
+import VolunteerDataCard from "./VolunteerDataCard";
 
 function Programs() {
   const { pathname } = useLocation();
@@ -349,11 +347,21 @@ function Programs() {
                             checked={selectedItem === index + 1}
                           />
                         </td>
-                        <td className="border-l">{Programs.id}</td>
-                        <td className="border-l">{Programs.preacher}</td>
-                        <td className="border-l">{Programs.coordinator}</td>
-                        <td className="border-l">{Programs.incharge}</td>
-                        <td className="border-l">{Programs.mentor}</td>
+                        <td className="border-l">{Programs.name}</td>
+                        <td className="border-l">
+                          <VolunteerDataCard volunteer_id={Programs.preacher} />
+                        </td>
+                        <td className="border-l">
+                          <VolunteerDataCard
+                            volunteer_id={Programs.coordinator}
+                          />
+                        </td>
+                        <td className="border-l">
+                          <VolunteerDataCard volunteer_id={Programs.incharge} />
+                        </td>
+                        <td className="border-l">
+                          <VolunteerDataCard volunteer_id={Programs.mentor} />
+                        </td>
                         <td className="border-l">{Programs.audienceType}</td>
                         <td className="border-l border-r">
                           {Programs.location}
