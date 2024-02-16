@@ -6,7 +6,7 @@ import {
   QueueListIcon,
   UserGroupIcon,
   UserIcon,
-} from "@heroicons/react/24/solid";
+} from "@heroicons/react/24/outline";
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
 
@@ -14,12 +14,12 @@ function Sidebar() {
   const { pathname } = useLocation();
   return (
     <div className="md:w-[20vw] md:flex hidden">
-      <div className="fixed left-0 top-10 min-h-screen md:max-w-[19.7vw] w-full bg-white drop-shadow-lg py-10 flex flex-col gap-5 font-nunito-sans text-gray-500 ">
+      <div className="fixed left-0 top-10 min-h-screen md:max-w-[20vw] w-full bg-white py-10 flex flex-col gap-3 font-nunito-sans text-gray-500 border">
         <Link to={"/admin/information/program"}>
           <div
             className={`flex items-center text-lg ${
               pathname.startsWith("/admin/information/program")
-                ? "bg-blue-100 text-blue-700 rounded-lg border-r-4 border-r-blue-700 "
+                ? "bg-gray-100 text-blue-700 border rounded-lg  border-gray-300"
                 : "text-gray-500"
             }  px-5 py-1.5 mx-2 lg:mx-5 gap-5`}
           >
@@ -33,7 +33,7 @@ function Sidebar() {
           <div
             className={`flex items-center text-lg ${
               pathname.startsWith("/admin/information/mcourse")
-                ? "bg-blue-100 text-blue-700 rounded-lg border-r-4 border-r-blue-700 "
+                ? "bg-gray-100 text-blue-700 border rounded-lg  border-gray-300"
                 : "text-gray-500"
             }  px-5 py-1.5 mx-2 lg:mx-5 gap-5`}
           >
@@ -47,7 +47,7 @@ function Sidebar() {
           <div
             className={`flex items-center text-lg ${
               pathname.startsWith("/admin/information/activities")
-                ? "bg-blue-100 text-blue-700 rounded-lg border-r-4 border-r-blue-700 "
+                ? "bg-gray-100 text-blue-700 border rounded-lg  border-gray-300"
                 : "text-gray-500"
             }  px-5 py-1.5 mx-2 lg:mx-5 gap-5`}
           >
@@ -61,7 +61,7 @@ function Sidebar() {
           <div
             className={`flex items-center text-lg ${
               pathname.startsWith("/admin/information/mactivities")
-                ? "bg-blue-100 text-blue-700 rounded-lg border-r-4 border-r-blue-700 "
+                ? "bg-gray-100 text-blue-700 border rounded-lg  border-gray-300"
                 : "text-gray-500"
             }  px-5 py-1.5 mx-2 lg:mx-5 gap-5`}
           >
@@ -75,7 +75,7 @@ function Sidebar() {
           <div
             className={`flex items-center text-lg ${
               pathname.startsWith("/admin/information/course-level")
-                ? "bg-blue-100 text-blue-700 rounded-lg border-r-4 border-r-blue-700 "
+                ? "bg-gray-100 text-blue-700 border rounded-lg  border-gray-300"
                 : "text-gray-500"
             }  px-5 py-1.5 mx-2 lg:mx-5 gap-5`}
           >
@@ -89,7 +89,7 @@ function Sidebar() {
           <div
             className={`flex items-center text-lg ${
               pathname.startsWith("/admin/information/volunteers")
-                ? "bg-blue-100 text-blue-700 rounded-lg border-r-4 border-r-blue-700 "
+                ? "bg-gray-100 text-blue-700 border rounded-lg  border-gray-300"
                 : "text-gray-500"
             }  px-5 py-1.5 mx-2 lg:mx-5 gap-5`}
           >
@@ -103,7 +103,7 @@ function Sidebar() {
           <div
             className={`flex items-center text-lg ${
               pathname.startsWith("/admin/information/participants")
-                ? "bg-blue-100 text-blue-700 rounded-lg border-r-4 border-r-blue-700 "
+                ? "bg-gray-100 text-blue-700 border rounded-lg  border-gray-300"
                 : "text-gray-500"
             }  px-5 py-1.5 mx-2 lg:mx-5 gap-5`}
           >

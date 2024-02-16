@@ -15,41 +15,29 @@ function ParticipantModal({ isOpen, setIsOpen }) {
     waNumber: formRef?.current?.waNumber.value,
     contactNumber: formRef?.current?.contactNumber.value,
   };
-
-  console.log(
-    // formRef?.current?.firstName.value,
-    // formRef?.current?.lastName.value,
-    // formRef?.current?.gender.value,
-    formRef?.current?.dob.value
-    // formRef?.current?.waNumber.value,
-    // formRef?.current?.contactNumber.value
-  );
   async function submitHandler(e) {
     e.preventDefault();
     const header = new Headers();
     console.log(formData);
     header.append("Content-Type", "application/json");
-    // await fetch(`${SERVER_ENDPOINT}/participant/create`, {
-    //   method: "POST",
-    //   headers: header,
-    //   body: JSON.stringify(formData),
-    // })
-    //   .then((data) => {
-    //     if (data.ok) {
-    //       return data.json();
-    //     } else {
-    //       setIsError(true);
-    //       return data.json();
-    //     }
-    //   })
-    //   .then((data) => {
-    //     if (isError) {
-    //       toast.error(data.message);
-    //     } else {
-    //       toast.success(data.message);
-    //     }
-    //   })
-    //   .catch((err) => toast.error(err.message));
+    try {
+      const response = await fetch(`${SERVER_ENDPOINT}/participant/create`, {
+        method: "POST",
+        headers: header,
+        body: JSON.stringify(formData),
+      });
+      if (response.ok) {
+        const responseData = await response.json();
+        toast.success(responseData.message);
+      } else {
+        const errorData = await response.json();
+        toast.error(errorData.message);
+      }
+    } catch (error) {
+      toast.error(error.message);
+    } finally {
+      setisLoading(false);
+    }
   }
 
   // useEffect(() => {

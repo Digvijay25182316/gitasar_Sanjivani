@@ -8,6 +8,7 @@ import {
   UserIcon,
   QueueListIcon,
   CubeTransparentIcon,
+  PlusIcon,
 } from "@heroicons/react/24/solid";
 import React, { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
@@ -16,6 +17,7 @@ import UploadingFile from "./UploadingFile";
 import { SERVER_ENDPOINT } from "../../config/Server";
 import toast from "react-hot-toast";
 import Dropdown from "../../../components/BottomNav.jsx/DropDown";
+import Sidebar from "../../../components/BottomNav.jsx/Sidebar";
 
 function CourseM() {
   const { pathname } = useLocation();
@@ -75,110 +77,11 @@ function CourseM() {
     setSelected(false);
   }
   return (
-    <div className="flex items-center max-w-screen bg-white">
+    <div className="flex items-center max-w-screen bg-gray-50">
       <div className="md:w-[20vw] md:flex hidden">
-        <div className="fixed left-0 top-10 min-h-screen md:max-w-[19.7vw] w-full bg-white drop-shadow-lg py-10 flex flex-col gap-5 font-nunito-sans text-gray-500 ">
-          <Link to={"/admin/information/program"}>
-            <div
-              className={`flex items-center text-lg ${
-                pathname.startsWith("/admin/information/program")
-                  ? "bg-blue-100 text-blue-700 rounded-lg border-r-4 border-r-blue-700 "
-                  : "text-gray-500"
-              }  px-5 py-1.5 mx-2 lg:mx-5 gap-5`}
-            >
-              <p>
-                <CalendarDaysIcon className="h-6 w-6" />
-              </p>
-              <p>Programs</p>
-            </div>
-          </Link>
-          <Link to={"/admin/information/mcourse"}>
-            <div
-              className={`flex items-center text-lg ${
-                pathname.startsWith("/admin/information/mcourse")
-                  ? "bg-blue-100 text-blue-700 rounded-lg border-r-4 border-r-blue-700 "
-                  : "text-gray-500"
-              }  px-5 py-1.5 mx-2 lg:mx-5 gap-5`}
-            >
-              <p>
-                <AcademicCapIcon className="h-6 w-6" />
-              </p>
-              <p>Course Master</p>
-            </div>
-          </Link>
-          <Link to={"/admin/information/activities"}>
-            <div
-              className={`flex items-center text-lg ${
-                pathname.startsWith("/admin/information/activities")
-                  ? "bg-blue-100 text-blue-700 rounded-lg border-r-4 border-r-blue-700 "
-                  : "text-gray-500"
-              }  px-5 py-1.5 mx-2 lg:mx-5 gap-5`}
-            >
-              <p>
-                <PresentationChartBarIcon className="h-6 w-6" />
-              </p>
-              <p>Activities</p>
-            </div>
-          </Link>
-          <Link to={"/admin/information/mactivities"}>
-            <div
-              className={`flex items-center text-lg ${
-                pathname.startsWith("/admin/information/activities")
-                  ? "bg-blue-100 text-blue-700 rounded-lg border-r-4 border-r-blue-700 "
-                  : "text-gray-500"
-              }  px-5 py-1.5 mx-2 lg:mx-5 gap-5`}
-            >
-              <p>
-                <QueueListIcon className="h-6 w-6" />
-              </p>
-              <p>Activities Master</p>
-            </div>
-          </Link>
-          <Link to={"/admin/information/course-level"}>
-            <div
-              className={`flex items-center text-lg ${
-                pathname.startsWith("/admin/information/course-level")
-                  ? "bg-blue-100 text-blue-700 rounded-lg border-r-4 border-r-blue-700 "
-                  : "text-gray-500"
-              }  px-5 py-1.5 mx-2 lg:mx-5 gap-5`}
-            >
-              <p>
-                <ArrowTrendingUpIcon className="h-6 w-6" />
-              </p>
-              <p>Course Level</p>
-            </div>
-          </Link>
-          <Link to={"/admin/information/volunteers"}>
-            <div
-              className={`flex items-center text-lg ${
-                pathname.startsWith("/admin/information/volunteers")
-                  ? "bg-blue-100 text-blue-700 rounded-lg border-r-4 border-r-blue-700 "
-                  : "text-gray-500"
-              }  px-5 py-1.5 mx-2 lg:mx-5 gap-5`}
-            >
-              <p>
-                <UserIcon className="h-6 w-6" />
-              </p>
-              <p>Volunteers</p>
-            </div>
-          </Link>
-          <Link to={"/admin/information/participants"}>
-            <div
-              className={`flex items-center text-lg ${
-                pathname.startsWith("/admin/information/participants")
-                  ? "bg-blue-100 text-blue-700 rounded-lg border-r-4 border-r-blue-700 "
-                  : "text-gray-500"
-              }  px-5 py-1.5 mx-2 lg:mx-5 gap-5`}
-            >
-              <p>
-                <UserGroupIcon className="h-6 w-6" />
-              </p>
-              <p>Participants</p>
-            </div>
-          </Link>
-        </div>
+        <Sidebar />
       </div>
-      <div className="md:w-[80vw] bg-gray-50 min-h-screen w-screen">
+      <div className="md:w-[79.5vw] min-h-screen w-screen">
         {isLoading ? (
           <div className="h-screen flex items-center justify-center">
             <div className="animate-spin">
@@ -204,41 +107,33 @@ function CourseM() {
                   </div>
                 ))}
             </div>
-            <div className="flex items-center bg-white md:mx-5 mx-2 mt-2 md:px-5 px-2 md:py-5 py-2 rounded-2xl justify-between">
-              <div className="flex items-center gap-3">
-                <button
-                  className="px-2 border py-1 rounded-md transition-all duration-300 text-gray-600 font-semibold hover:bg-gray-100 shadow hover:scale-105 text-sm"
-                  onClick={ClearSelection}
-                >
-                  clear selection
-                </button>
-                <button className="px-2 border py-1 rounded-md transition-all duration-300 bg-red-100 text-red-600 font-semibold hover:bg-red-200 shadow hover:scale-105 text-sm">
-                  Delete
-                </button>
+            <div className="flex items-center justify-between md:mx-5 py-2 px-2">
+              <div className="flex items-center gap-3 bg-white text-gray-700 px-2 py-1 border rounded">
+                <button onClick={ClearSelection}>clear selection</button>
               </div>
               <button
-                className="bg-blue-700 text-white md:text-lg md:px-4 md:py-1.5 px-2 py-1 rounded-xl shadow-lg"
                 onClick={() => setOpenPrograms(true)}
+                className="flex items-center gap-2 bg-white px-4 py-1.5 border border-gray-300 rounded text-blue-800"
               >
-                + New Course
+                <PlusIcon className="h-4 w-4" /> New Course
               </button>
             </div>
-            <div className="md:mx-5 mx-2 bg-white mt-2 md:mt-5 flex flex-col rounded-lg shadow">
+            <div className="md:mx-5 mx-2 bg-white flex flex-col rounded border">
               <div className="flex items-center justify-between border-b">
                 <p className=" px-2 py-1 font-semibold text-gray-600">
                   Courses Master
                 </p>
               </div>
-              <div className="mx-2 my-1 border rounded-lg overflow-x-scroll no-scrollbar lg:w-[75vw] md:w-[73vw] w-[93vw]">
+              <div className="overflow-x-scroll lg:overflow-hidden">
                 <table className="w-full">
-                  <thead>
+                  <thead className="bg-gray-50">
                     <tr>
-                      <th className="font-normal border-r border-b py-1">
+                      <th className="border-b px-6 font-semibold py-1">
                         Select
                       </th>
 
-                      <th className="font-normal border-r border-b">
-                        <div className=" flex items-center w-max py-1">
+                      <th className="border-b px-6 font-semibold py-1">
+                        <div className=" flex items-center py-1 w-max">
                           Course Name
                           <Dropdown
                             origin={"origin-top-left"}
@@ -250,8 +145,8 @@ function CourseM() {
                           />
                         </div>
                       </th>
-                      <th className="font-normal border-r border-b">
-                        <div className=" flex items-center w-max py-1">
+                      <th className="border-b px-6 font-semibold py-1">
+                        <div className=" flex items-center py-1 w-max">
                           Course description
                           <Dropdown
                             origin={"origin-top-left"}
@@ -280,8 +175,8 @@ function CourseM() {
                             checked={selectedItem === index + 1}
                           />
                         </td>
-                        <td className="border-l">{courseLevel?.name}</td>
-                        <td className="border-l">{courseLevel?.description}</td>
+                        <td className="px-10">{courseLevel?.name}</td>
+                        <td className="px-10">{courseLevel?.description}</td>
                       </tr>
                     ))}
                   </tbody>

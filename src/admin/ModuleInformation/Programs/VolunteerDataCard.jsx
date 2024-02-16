@@ -6,6 +6,7 @@ import { CubeTransparentIcon } from "@heroicons/react/24/solid";
 function VolunteerDataCard({ volunteer_id }) {
   const [volunteerData, setVolunteerData] = useState({});
   const [isLoading, setIsLoading] = useState(false);
+
   useEffect(() => {
     (async () => {
       setIsLoading(true);
@@ -15,18 +16,34 @@ function VolunteerDataCard({ volunteer_id }) {
         );
         if (response.ok) {
           const responseData = await response.json();
-          setVolunteerData(responseData);
+          // Check if responseData is empty
+          if (
+            Object.keys(responseData).length === 0 &&
+            responseData.constructor === Object
+          ) {
+            // Handle empty response
+            console.log("Empty response received");
+            // Optionally, set default data or handle the empty case
+            setVolunteerData({});
+          } else {
+            setVolunteerData(responseData);
+          }
         } else {
           const errorData = await response.json();
-          toast.error(errorData.message);
+          toast.error(errorData.message || "An error occurred");
         }
       } catch (error) {
-        toast.error(error.message || error);
+        console.error(error);
+        // Remove the error toast when response is empty
+        if (error.message !== "Unexpected end of JSON input") {
+          toast.error("An error occurred while fetching data");
+        }
       } finally {
         setIsLoading(false);
       }
     })();
   }, [volunteer_id]);
+
   return (
     <>
       {isLoading ? (
@@ -37,9 +54,15 @@ function VolunteerDataCard({ volunteer_id }) {
         </div>
       ) : (
         <div>
-          {volunteerData?.initiatedName
-            ? volunteerData?.initiatedName
-            : `${volunteerData?.firstName} ${volunteerData?.lastName}`}
+          {Object.keys(volunteerData).length === 0 ? (
+            <div>No data available</div>
+          ) : (
+            <div>
+              {volunteerData?.initiatedName
+                ? volunteerData?.initiatedName
+                : `${volunteerData?.firstName} ${volunteerData?.lastName}`}
+            </div>
+          )}
         </div>
       )}
     </>

@@ -7,19 +7,19 @@ function Header() {
     <div
       className={`${
         pathname.startsWith("/admin") ? "flex" : "hidden"
-      } items-center bg-white fixed top-0 right-0 left-0 z-[1000] font-nunito-sans font-bold `}
+      } items-center bg-white fixed top-0 right-0 left-0 z-[1000] font-nunito-sans font-bold border-b py-2`}
     >
       <div className="md:w-[20vw]">
-        <p className="text-xl px-2 py-1.5 text-gray-700">Sanjivani</p>
+        <p className="text-xl px-5 py-1.5 text-gray-700">Sanjivani</p>
       </div>
       <div className="md:w-[80vw] font-normal">
-        <nav className="md:flex items-center hidden">
+        <nav className="md:flex items-center hidden gap-5">
           <Link to={"/admin/information/program"}>
             <p
-              className={` transition-colors duration-500 py-2 md:px-5 ${
+              className={` transition-colors duration-500 py-1 md:px-5 ${
                 pathname.startsWith("/admin/information")
-                  ? "text-blue-700 border-b-2 border-b-blue-700 bg-blue-100"
-                  : "text-gray-400"
+                  ? "text-white bg-blue-700 border border-blue-600 rounded-md"
+                  : "text-gray-400 rounded-md"
               } text-lg`}
             >
               Information
@@ -27,10 +27,10 @@ function Header() {
           </Link>
           <Link to={"/admin/dashboard"}>
             <p
-              className={` transition-colors duration-500 py-2 md:px-5 ${
+              className={` transition-colors duration-500 py-1 md:px-5 ${
                 pathname.startsWith("/admin/dashboard")
-                  ? "text-blue-700 border-b-2 border-b-blue-700 bg-blue-100"
-                  : "text-gray-400"
+                  ? "text-white bg-blue-700 border border-blue-600 rounded-md"
+                  : "text-gray-400 rounded-md"
               } text-lg`}
             >
               Dashboard
@@ -38,10 +38,10 @@ function Header() {
           </Link>
           <Link to={"/admin/home"}>
             <p
-              className={` transition-colors duration-500 py-2 md:px-5 ${
+              className={` transition-colors duration-500 py-1 md:px-5 ${
                 pathname.startsWith("/admin/home")
-                  ? "text-blue-700 border-b-2 border-b-blue-700 bg-blue-100"
-                  : "text-gray-400"
+                  ? "text-white bg-blue-700 border border-blue-600 rounded-md"
+                  : "text-gray-400 rounded-md"
               } text-lg`}
             >
               Home
@@ -49,10 +49,10 @@ function Header() {
           </Link>
           <Link to={"/admin/settings"}>
             <p
-              className={` transition-colors duration-500 py-2 md:px-5 ${
+              className={` transition-colors duration-500 py-1 md:px-5 ${
                 pathname.startsWith("/admin/settings")
-                  ? "text-blue-700 border-b-2 border-b-blue-700 bg-blue-100"
-                  : "text-gray-400"
+                  ? "text-white bg-blue-700 border border-blue-600 rounded-md"
+                  : "text-gray-400 rounded-md"
               } text-lg`}
             >
               settings

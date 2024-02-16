@@ -1,9 +1,9 @@
 import {
+  AdjustmentsHorizontalIcon,
   ArrowLongDownIcon,
   ArrowLongUpIcon,
-  EllipsisVerticalIcon,
   XMarkIcon,
-} from "@heroicons/react/24/solid";
+} from "@heroicons/react/24/outline";
 import React, { useState } from "react";
 
 const Dropdown = ({
@@ -41,7 +41,7 @@ const Dropdown = ({
               setIsSort(false);
             }}
             type="button"
-            className="p-1 transition-colors duration-300 hover:bg-gray-100 ml-2 rounded-full"
+            className="p-1 transition-colors duration-300 hover:bg-gray-200 ml-2 rounded-full"
           >
             <ArrowLongDownIcon className="h-4 w-4" />
           </button>
@@ -51,7 +51,7 @@ const Dropdown = ({
               setIsSort(true);
             }}
             type="button"
-            className="p-1 transition-colors duration-300 hover:bg-gray-100 ml-2 rounded-full"
+            className="p-1 transition-colors duration-300 hover:bg-gray-200 ml-2 rounded-full"
           >
             <ArrowLongUpIcon className="h-4 w-4" />
           </button>
@@ -59,8 +59,12 @@ const Dropdown = ({
 
         <div className="flex items-center">
           {!selected ? (
-            <button onClick={toggleDropdown} type="button">
-              <EllipsisVerticalIcon className="h-6 w-6" />
+            <button
+              onClick={toggleDropdown}
+              type="button"
+              className="text-gray-600"
+            >
+              <AdjustmentsHorizontalIcon className="h-5 w-5" />
             </button>
           ) : (
             <button
@@ -93,7 +97,7 @@ const Dropdown = ({
               placeholder="search..."
               value={formstate}
               onChange={(e) => setFormState(e.target.value)}
-              className="border  py-1 rounded-md border-blue-200 outline-none"
+              className="border py-1 rounded-md border-blue-200 outline-none font-normal px-1"
             />
             <div className="flex items-center gap-5">
               <button

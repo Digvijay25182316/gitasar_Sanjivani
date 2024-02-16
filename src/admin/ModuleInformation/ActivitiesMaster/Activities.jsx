@@ -1,18 +1,12 @@
 import React, { useState } from "react";
-import ViewPageController from "../CourseLevel/ViewPageController";
+
 import {
-  AcademicCapIcon,
-  ArrowTrendingUpIcon,
-  CalendarDaysIcon,
   ChevronRightIcon,
   CubeTransparentIcon,
-  PresentationChartBarIcon,
-  QueueListIcon,
-  UserGroupIcon,
-  UserIcon,
+  PlusIcon,
 } from "@heroicons/react/24/solid";
 import Slider from "../../../components/MdLeftHeaderSlider";
-import { Link, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import ActivityModal from "./ActivityModal";
 import Dropdown from "../../../components/BottomNav.jsx/DropDown";
 import { SERVER_ENDPOINT } from "../../config/Server";
@@ -29,6 +23,7 @@ function ActivitiesM() {
   const [createCourseLoading, setCreateCourseLoading] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [selectedItem, setSelectedItem] = useState(0);
+
   useState(() => {
     (async () => {
       setIsLoading(true);
@@ -70,7 +65,7 @@ function ActivitiesM() {
   return (
     <div className="flex items-center max-w-screen bg-white">
       <Sidebar />
-      <div className="md:w-[80vw] bg-gray-50 min-h-screen w-screen">
+      <div className="md:w-[79.5vw] min-h-screen w-screen">
         {!isLoading ? (
           <div className="flex flex-col">
             <div className="flex items-center">
@@ -90,96 +85,78 @@ function ActivitiesM() {
                   </div>
                 ))}
             </div>
-            <div className="flex items-center bg-white md:mx-5 mx-2 mt-2 md:px-5 px-2 md:py-5 py-2 rounded-2xl justify-between">
-              <div className="flex items-center gap-3">
-                <button
-                  className="px-2 border py-1 rounded-md transition-all duration-300 text-gray-600 font-semibold hover:bg-gray-100 shadow hover:scale-105 text-sm"
-                  onClick={ClearSelection}
-                >
-                  clear selection
-                </button>
-                <button className="px-2 border py-1 rounded-md transition-all duration-300 bg-red-100 text-red-600 font-semibold hover:bg-red-200 shadow hover:scale-105 text-sm">
-                  Delete
-                </button>
+            <div className="flex items-center justify-between md:mx-5 py-2 px-2">
+              <div className="flex items-center gap-3 bg-white text-gray-700 px-2 py-1 border rounded">
+                <button onClick={ClearSelection}>clear selection</button>
               </div>
               <button
-                className="bg-blue-700 text-white md:text-lg md:px-4 md:py-1.5 px-2 py-1 rounded-xl shadow-lg"
                 onClick={() => setOpenActivityModal(true)}
+                className="flex items-center gap-2 bg-white px-4 py-1.5 border border-gray-300 rounded text-blue-800"
               >
-                + New Course
+                <PlusIcon className="h-4 w-4" /> New Activity
               </button>
             </div>
-            <div className="md:mx-5 mx-2 bg-white mt-2 md:mt-5 flex flex-col rounded-lg shadow">
+            <div className="md:mx-5 mx-2 bg-white flex flex-col rounded border">
               <div className="flex items-center justify-between border-b">
                 <p className=" px-2 py-1 font-semibold text-gray-600">
                   Activity master
                 </p>
               </div>
-              <div className="mx-2 my-1 border rounded-lg overflow-x-scroll no-scrollbar lg:w-[75vw] md:w-[73vw] w-[93vw]">
-                <div className="w-full">
-                  <table className="w-full">
-                    <thead>
-                      <tr>
-                        <th className="font-normal border-r border-b py-1">
-                          Select
-                        </th>
-                        <th className="font-normal border-r border-b">
-                          <div className=" flex items-center w-full py-1">
-                            Activity Name
-                            <Dropdown
-                              origin={"origin-top-left"}
-                              position={"left-0"}
-                              setvalue={AddFilter}
-                              fieldname={"programName"}
-                              selected={doesFieldExists(
-                                queryArr,
-                                "programName"
-                              )}
-                              removeFilter={() =>
-                                removeObjectByKey("programName")
-                              }
-                            />
-                          </div>
-                        </th>
-                        <th className="font-normal border-r border-b">
-                          <div className=" flex items-center w-full py-1">
-                            Activity Description
-                            <Dropdown
-                              origin={"origin-top-left"}
-                              position={"left-0"}
-                              setvalue={AddFilter}
-                              fieldname={"courseCode"}
-                              selected={doesFieldExists(queryArr, "courseCode")}
-                              removeFilter={() =>
-                                removeObjectByKey("courseCode")
-                              }
-                            />
-                          </div>
-                        </th>
+
+              <div className="overflow-x-scroll">
+                <table className="w-full">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th className="border-b px-6 font-semibold py-1">
+                        Select
+                      </th>
+                      <th className="border-b px-6 font-semibold py-1">
+                        <div className=" flex items-center w-full">
+                          Activity Name
+                          <Dropdown
+                            origin={"origin-top-left"}
+                            position={"left-0"}
+                            setvalue={AddFilter}
+                            fieldname={"programName"}
+                            selected={doesFieldExists(queryArr, "programName")}
+                            removeFilter={() =>
+                              removeObjectByKey("programName")
+                            }
+                          />
+                        </div>
+                      </th>
+                      <th className="border-b px-6 font-semibold py-1">
+                        <div className=" flex items-center w-full py-1">
+                          Activity Description
+                          <Dropdown
+                            origin={"origin-top-left"}
+                            position={"left-0"}
+                            setvalue={AddFilter}
+                            fieldname={"courseCode"}
+                            selected={doesFieldExists(queryArr, "courseCode")}
+                            removeFilter={() => removeObjectByKey("courseCode")}
+                          />
+                        </div>
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {activitiesArr?.map((acitivity, index) => (
+                      <tr key={index} className="border-b">
+                        <td className="flex justify-center py-5">
+                          <input
+                            type="checkbox"
+                            id=""
+                            value={index}
+                            className=" checked:text-green-400 text-green-400"
+                          />
+                        </td>
+                        <td className="px-10">{acitivity.name}</td>
+                        <td className="px-10">{acitivity.description}</td>
                       </tr>
-                    </thead>
-                    <tbody>
-                      {activitiesArr?.map((acitivity, index) => (
-                        <tr key={index}>
-                          <td className="border-b flex justify-center py-5">
-                            <input
-                              type="checkbox"
-                              id=""
-                              value={index}
-                              className=" checked:text-green-400 text-green-400"
-                            />
-                          </td>
-                          <td className="border-l border-b">
-                            {acitivity.name}
-                          </td>
-                          <td className="border-l border-b">
-                            {acitivity.description}
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
+                    ))}
+                  </tbody>
+                </table>
               </div>
             </div>
           </div>

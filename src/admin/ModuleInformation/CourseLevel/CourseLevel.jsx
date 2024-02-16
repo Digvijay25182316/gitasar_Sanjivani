@@ -3,6 +3,7 @@ import {
   LinkIcon,
   XMarkIcon,
   CubeTransparentIcon,
+  PlusIcon,
 } from "@heroicons/react/24/solid";
 import React, { useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
@@ -15,6 +16,7 @@ import Slider from "../../../components/MdLeftHeaderSlider";
 import { FRONTEND_ENDPOINT, SERVER_ENDPOINT } from "../../config/Server";
 import toast from "react-hot-toast";
 import Sidebar from "../../../components/BottomNav.jsx/Sidebar";
+import VolunteerDataCard from "./VolunteerDataCard";
 
 function CourseLevel() {
   const { pathname } = useLocation();
@@ -69,7 +71,7 @@ function CourseLevel() {
     <>
       <div className="flex items-center max-w-screen bg-white">
         <Sidebar />
-        <div className="md:w-[80vw] bg-gray-50 min-h-screen w-screen">
+        <div className="md:w-[79.5vw] bg-gray-50 min-h-screen w-screen">
           {!isLoading ? (
             <div className="flex flex-col">
               <div className="flex items-center">
@@ -89,26 +91,18 @@ function CourseLevel() {
                     </div>
                   ))}
               </div>
-              <div className="flex items-center bg-white md:mx-5 mx-2 mt-2 md:px-5 px-2 md:py-5 py-2 rounded-2xl justify-between">
-                <div className="flex items-center gap-3">
-                  <button
-                    className="px-2 border py-1 rounded-md transition-all duration-300 text-gray-600 font-semibold hover:bg-gray-100 shadow hover:scale-105 text-sm"
-                    onClick={ClearSelection}
-                  >
-                    clear selection
-                  </button>
-                  <button className="px-2 border py-1 rounded-md transition-all duration-300 bg-red-100 text-red-600 font-semibold hover:bg-red-200 shadow hover:scale-105 text-sm">
-                    Delete
-                  </button>
+              <div className="flex items-center justify-between md:mx-5 py-2 px-2">
+                <div className="flex items-center gap-3 bg-white text-gray-700 px-2 py-1 border rounded">
+                  <button onClick={ClearSelection}>clear selection</button>
                 </div>
                 <button
-                  className="bg-blue-700 text-white md:text-lg md:px-4 md:py-1.5 px-2 py-1 rounded-xl shadow-lg"
                   onClick={() => setOpenCourseLevel(true)}
+                  className="flex items-center gap-2 bg-white px-4 py-1.5 border border-gray-300 rounded text-blue-800"
                 >
-                  + New Course
+                  <PlusIcon className="h-4 w-4" /> New Course
                 </button>
               </div>
-              <div className="md:mx-5 mx-2 bg-white mt-2 md:mt-5 flex flex-col rounded-lg shadow">
+              <div className="md:mx-5 mx-2 bg-white flex flex-col rounded border">
                 <div className="flex items-center justify-between border-b">
                   <p className=" px-2 py-1 font-semibold text-gray-600">
                     Course Level
@@ -122,14 +116,14 @@ function CourseLevel() {
                     />
                   )}
                 </div>
-                <div className="mx-2 my-1 border rounded-lg overflow-x-scroll no-scrollbar lg:w-[75vw] md:w-[73vw] w-[93vw]">
-                  <table>
-                    <thead>
+                <div className="overflow-x-scroll">
+                  <table className="w-full">
+                    <thead className="bg-gray-50">
                       <tr>
-                        <th className="font-normal border-r border-b py-1">
+                        <th className="border-b px-6 font-semibold py-1">
                           Select
                         </th>
-                        <th className="font-normal border-r border-b">
+                        <th className="border-b px-6 font-semibold py-1">
                           <div className=" flex items-center w-max py-1">
                             Program Name
                             <Dropdown
@@ -147,7 +141,7 @@ function CourseLevel() {
                             />
                           </div>
                         </th>
-                        <th className="font-normal border-r border-b">
+                        <th className="border-b px-6 font-semibold py-1">
                           <div className=" flex items-center w-max py-1">
                             Course Name
                             <Dropdown
@@ -165,7 +159,7 @@ function CourseLevel() {
                             />
                           </div>
                         </th>
-                        <th className="font-normal border-r border-b">
+                        <th className="border-b px-6 font-semibold py-1">
                           <div className=" flex items-center w-max py-1">
                             preacher
                             <Dropdown
@@ -178,7 +172,7 @@ function CourseLevel() {
                             />
                           </div>
                         </th>
-                        <th className="font-normal border-r border-b">
+                        <th className="border-b px-6 font-semibold py-1">
                           <div className=" flex items-center w-max py-1">
                             mentor
                             <Dropdown
@@ -191,7 +185,7 @@ function CourseLevel() {
                             />
                           </div>
                         </th>
-                        <th className="font-normal border-r border-b">
+                        <th className="border-b px-6 font-semibold py-1">
                           <div className=" flex items-center w-max py-1">
                             coordinator
                             <Dropdown
@@ -209,7 +203,7 @@ function CourseLevel() {
                             />
                           </div>
                         </th>
-                        <th className="font-normal border-r border-b">
+                        <th className="border-b px-6 font-semibold py-1">
                           <div className=" flex items-center w-max py-1">
                             Status
                             <Dropdown
@@ -222,12 +216,12 @@ function CourseLevel() {
                             />
                           </div>
                         </th>
-                        <th className="font-normal border-r border-b">
+                        <th className="border-b px-6 font-semibold py-1">
                           <div className=" flex items-center w-max py-1 px-5">
                             Attendance Links
                           </div>
                         </th>
-                        <th className="font-normal border-r border-b">
+                        <th className="border-b px-6 font-semibold py-1">
                           <div className=" flex items-center w-max py-1 px-5">
                             Activities Links
                           </div>
@@ -247,19 +241,61 @@ function CourseLevel() {
                               checked={selectedItem === courseLevel.id}
                             />
                           </td>
-                          <td className="border-l">
-                            {courseLevel?.programName}
+                          <td className="text-center">
+                            {courseLevel?.programName ? (
+                              <div>{courseLevel?.programName}</div>
+                            ) : (
+                              <i className="text-gray-500">null</i>
+                            )}
                           </td>
-                          <td className="border-l">{courseLevel?.name}</td>
-                          <td className="border-l">{courseLevel?.preacher1}</td>
-                          <td className="border-l">{courseLevel?.mentor}</td>
-                          <td className="border-l">
-                            {courseLevel?.coordinator}
+                          <td className="text-center">
+                            {courseLevel?.name ? (
+                              <div>{courseLevel?.name}</div>
+                            ) : (
+                              <i className="text-gray-500">null</i>
+                            )}
                           </td>
-                          <td className="border-l border-r">
-                            {courseLevel?.status}
+                          <td className="text-center">
+                            {courseLevel?.preacher1 ? (
+                              <div>
+                                <VolunteerDataCard
+                                  volunteer_id={courseLevel?.preacher1}
+                                />
+                              </div>
+                            ) : (
+                              <i className="text-gray-500">null</i>
+                            )}
                           </td>
-                          <td className="border-r">
+                          <td className="text-center">
+                            {courseLevel?.mentor ? (
+                              <div>
+                                <VolunteerDataCard
+                                  volunteer_id={courseLevel?.mentor}
+                                />
+                              </div>
+                            ) : (
+                              <i className="text-gray-500">null</i>
+                            )}
+                          </td>
+                          <td className="text-center">
+                            {courseLevel?.coordinator ? (
+                              <div>
+                                <VolunteerDataCard
+                                  volunteer_id={courseLevel?.coordinator}
+                                />
+                              </div>
+                            ) : (
+                              <i className="text-gray-500">null</i>
+                            )}
+                          </td>
+                          <td className="text-center">
+                            {courseLevel?.status ? (
+                              <div>{courseLevel?.status}</div>
+                            ) : (
+                              <i className="text-gray-500">null</i>
+                            )}
+                          </td>
+                          <td className="text-center">
                             <div className="flex items-center gap-5 justify-center">
                               <a
                                 href={`${FRONTEND_ENDPOINT}/attendence/${courseLevel?.id}`}

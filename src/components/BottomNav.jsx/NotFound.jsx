@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 
 function NotFound() {
   return (
-    <div className="flex flex-col items-center min-h-screen justify-center gap-5">
+    <div className="flex flex-col items-center h-[80vh] justify-center gap-5">
       <div className="flex flex-col items-center text-gray-500">
         <p className="text-red-600 bg-red-200 rounded-full p-5 w-max">
           <ExclamationTriangleIcon className="h-20 w-20" />

@@ -10,13 +10,14 @@ function ProgramModal({ isOpen, onClose, children }) {
   const formData = {
     name: formRef?.current?.name?.value,
     description: formRef?.current?.description?.value,
-    incharge: formRef?.current?.incharge?.value,
-    preacher: formRef?.current?.preacher?.value,
-    mentor: formRef?.current?.mentor?.value,
-    coordinator: formRef?.current?.coordinator?.value,
-    audienceType: formRef?.current?.audienceType?.value,
+    incharge: Number(formRef?.current?.incharge?.value),
+    preacher: Number(formRef?.current?.preacher?.value),
+    mentor: Number(formRef?.current?.mentor?.value),
+    coordinator: Number(formRef?.current?.coordinator?.value),
+    audienceType: "CHILDREN",
     location: formRef?.current?.location?.value,
   };
+  console.log(formData);
 
   async function submitHandler(e) {
     e.preventDefault();

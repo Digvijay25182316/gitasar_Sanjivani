@@ -1,15 +1,16 @@
 import React, { useState } from "react";
-import { XMarkIcon } from "@heroicons/react/24/outline";
+
 import {
   AcademicCapIcon,
   ArrowTrendingUpIcon,
-  Bars3BottomLeftIcon,
   CalendarDaysIcon,
   PresentationChartBarIcon,
+  QueueListIcon,
   UserGroupIcon,
   UserIcon,
-} from "@heroicons/react/24/solid";
+} from "@heroicons/react/24/outline";
 import { Link, useLocation } from "react-router-dom";
+import MenuIcon from "../assets/MenuIcon.svg";
 
 const Slider = () => {
   const { pathname } = useLocation();
@@ -20,40 +21,32 @@ const Slider = () => {
   };
 
   return (
-    <div>
+    <div className="md:hidden">
       <button
         className={`rounded-full focus:outline-none md:hidden p-2`}
         onClick={toggleSlider}
       >
-        <Bars3BottomLeftIcon className="h-6 w-6" />
+        <img src={MenuIcon} alt="Menu" className="h-6 w-6" />
       </button>
-      <div
-        className={
-          isSliderOpen
-            ? "fixed top-0 left-0 right-0 bottom-0 min-h-screen z-[1000] backdrop-brightness-50 cursor-pointer flex items-center justify-center"
-            : ""
-        }
-        onClick={toggleSlider}
-      ></div>
       <aside
-        className={`fixed top-0 left-0 h-full sm:w-2/5 w-4/5 shadow-lg bg-white text-white transition-transform z-[2000] ${
+        className={`fixed top-0 left-0 w-full bg-white transition-transform z-[2000] ${
           isSliderOpen
             ? "transform translate-x-0"
             : "transform -translate-x-full"
         } transition-transform duration-300 ease-in-out backdrop-brightness-50`}
       >
-        <button
-          className="absolute top-4 right-4 text-blue-700 bg-blue-100 border border-blue-200 focus:outline-none hover:bg-blue-100 p-2 rounded-full text-xl drop-shadow-lg"
-          onClick={toggleSlider}
-        >
-          <XMarkIcon className="h-6 w-6" />
-        </button>
-        <div className="py-10 flex flex-col gap-5 pt-16">
-          <Link to={"/admin/information/program"} onClick={toggleSlider}>
+        <div className="fixed left-0 top-10 min-h-screen screen w-full bg-white py-10 flex flex-col gap-3 font-nunito-sans text-gray-500 border">
+          <button
+            className={`rounded-full focus:outline-none md:hidden px-5 py-2 absolute top-0 right-0`}
+            onClick={toggleSlider}
+          >
+            <img src={MenuIcon} alt="Menu" className="h-6 w-6" />
+          </button>
+          <Link to={"/admin/information/program"}>
             <div
               className={`flex items-center text-lg ${
                 pathname.startsWith("/admin/information/program")
-                  ? "bg-blue-100 text-blue-700 rounded-lg border-r-4 border-r-blue-700 "
+                  ? "bg-gray-100 text-blue-700 border rounded-lg  border-gray-300"
                   : "text-gray-500"
               }  px-5 py-1.5 mx-2 lg:mx-5 gap-5`}
             >
@@ -63,11 +56,11 @@ const Slider = () => {
               <p>Programs</p>
             </div>
           </Link>
-          <Link to={"/admin/information/mcourse"} onClick={toggleSlider}>
+          <Link to={"/admin/information/mcourse"}>
             <div
               className={`flex items-center text-lg ${
                 pathname.startsWith("/admin/information/mcourse")
-                  ? "bg-blue-100 text-blue-700 rounded-lg border-r-4 border-r-blue-700 "
+                  ? "bg-gray-100 text-blue-700 border rounded-lg  border-gray-300"
                   : "text-gray-500"
               }  px-5 py-1.5 mx-2 lg:mx-5 gap-5`}
             >
@@ -77,11 +70,11 @@ const Slider = () => {
               <p>Course Master</p>
             </div>
           </Link>
-          <Link to={"/admin/information/activities"} onClick={toggleSlider}>
+          <Link to={"/admin/information/activities"}>
             <div
               className={`flex items-center text-lg ${
                 pathname.startsWith("/admin/information/activities")
-                  ? "bg-blue-100 text-blue-700 rounded-lg border-r-4 border-r-blue-700 "
+                  ? "bg-gray-100 text-blue-700 border rounded-lg  border-gray-300"
                   : "text-gray-500"
               }  px-5 py-1.5 mx-2 lg:mx-5 gap-5`}
             >
@@ -91,11 +84,25 @@ const Slider = () => {
               <p>Activities</p>
             </div>
           </Link>
-          <Link to={"/admin/information/course-level"} onClick={toggleSlider}>
+          <Link to={"/admin/information/mactivities"}>
+            <div
+              className={`flex items-center text-lg ${
+                pathname.startsWith("/admin/information/mactivities")
+                  ? "bg-gray-100 text-blue-700 border rounded-lg  border-gray-300"
+                  : "text-gray-500"
+              }  px-5 py-1.5 mx-2 lg:mx-5 gap-5`}
+            >
+              <p>
+                <QueueListIcon className="h-6 w-6" />
+              </p>
+              <p>Activities Master</p>
+            </div>
+          </Link>
+          <Link to={"/admin/information/course-level"}>
             <div
               className={`flex items-center text-lg ${
                 pathname.startsWith("/admin/information/course-level")
-                  ? "bg-blue-100 text-blue-700 rounded-lg border-r-4 border-r-blue-700 "
+                  ? "bg-gray-100 text-blue-700 border rounded-lg  border-gray-300"
                   : "text-gray-500"
               }  px-5 py-1.5 mx-2 lg:mx-5 gap-5`}
             >
@@ -105,11 +112,11 @@ const Slider = () => {
               <p>Course Level</p>
             </div>
           </Link>
-          <Link to={"/admin/information/volunteers"} onClick={toggleSlider}>
+          <Link to={"/admin/information/volunteers"}>
             <div
               className={`flex items-center text-lg ${
                 pathname.startsWith("/admin/information/volunteers")
-                  ? "bg-blue-100 text-blue-700 rounded-lg border-r-4 border-r-blue-700 "
+                  ? "bg-gray-100 text-blue-700 border rounded-lg  border-gray-300"
                   : "text-gray-500"
               }  px-5 py-1.5 mx-2 lg:mx-5 gap-5`}
             >
@@ -119,11 +126,11 @@ const Slider = () => {
               <p>Volunteers</p>
             </div>
           </Link>
-          <Link to={"/admin/information/participants"} onClick={toggleSlider}>
+          <Link to={"/admin/information/participants"}>
             <div
               className={`flex items-center text-lg ${
                 pathname.startsWith("/admin/information/participants")
-                  ? "bg-blue-100 text-blue-700 rounded-lg border-r-4 border-r-blue-700 "
+                  ? "bg-gray-100 text-blue-700 border rounded-lg  border-gray-300"
                   : "text-gray-500"
               }  px-5 py-1.5 mx-2 lg:mx-5 gap-5`}
             >

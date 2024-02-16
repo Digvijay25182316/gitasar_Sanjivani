@@ -13,6 +13,7 @@ function Attendance() {
   const [isLoading, setIsLoading] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState("");
   const [sessionsAttendence, setSessionAttendence] = useState(0);
+  console.log(sessions);
   const [isyes, setIsYes] = useState([
     { id: 1, session: "Spirituality master", response: "" },
   ]);
@@ -164,34 +165,23 @@ function Attendance() {
                 >
                   {isLoading ? "Loading..." : "Search"}
                 </button>
-                <Link to={"/registeration"}>
-                  <button
-                    className="px-4 py-1.5 text-white text-lg  bg-blue-700 rounded md:w-[150px] w-[100px]"
-                    type="button"
-                  >
-                    Register
-                  </button>
-                </Link>
               </div>
             </div>
           </form>
         </div>
         {Object.keys(Participant).length > 0 && (
-          <div className="font-semibold text-gray-400">
-            course Name:
+          <div className="font-semibold text-gray-400 mt-5">
             <i className="text-gray-700">
-              {" "}
               {`${Participant.firstName} ${Participant.lastName}`}
             </i>
           </div>
         )}
-        <div className="mt-5 flex md:flex-row flex-col items-center gap-5">
+        <div className="mt-5 flex flex-col items-center gap-5">
+          <div className="font-semibold text-gray-400 w-max">
+            <i className="text-gray-700"> {levelObject.programName}</i>
+          </div>
           <div className="font-semibold text-gray-400">
             course Name:<i className="text-gray-700"> {levelObject.name}</i>
-          </div>
-          <div className="font-semibold text-gray-400 w-max">
-            program Name:
-            <i className="text-gray-700"> {levelObject.programName}</i>
           </div>
         </div>
         <div

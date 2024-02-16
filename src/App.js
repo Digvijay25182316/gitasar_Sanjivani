@@ -20,7 +20,7 @@ import { Toaster } from "react-hot-toast";
 
 function App() {
   return (
-    <div className="pt-10 md:pb-4 pb-14 bg-gray-50 min-h-screen">
+    <div className="pt-14 md:pb-4 pb-14 bg-gray-50 min-h-screen">
       <Router>
         <Header />
         <Routes>
