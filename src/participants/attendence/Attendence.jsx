@@ -11,8 +11,10 @@ function Attendance() {
   const [levelObject, setLevelObject] = useState({});
   const [Participant, setParticipant] = useState({});
   const [isLoading, setIsLoading] = useState(false);
+  const [isOpenSelection, setIsOpenSelection] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState("");
   const [sessionsAttendence, setSessionAttendence] = useState(0);
+  const [SingleSession, setSingleSession] = useState({});
   console.log(sessions);
   const [isyes, setIsYes] = useState([
     { id: 1, session: "Spirituality master", response: "" },
@@ -139,6 +141,11 @@ function Attendance() {
     }
   }
 
+  const handleSelectProgram = (item) => {
+    setSingleSession(item);
+    setIsOpenSelection(false);
+  };
+
   return (
     <div className="container mx-auto my-4 bg-white rounded-2xl border p-6 lg:w-[600px] md:w-[600px] w-[90vw]">
       <div className="flex flex-col items-center mx-5">
@@ -243,27 +250,52 @@ function Attendance() {
                       </p>
                     </label>
                   </div>
-                  {sessions.length > 1 ? (
-                    <>
-                      <p className="text-center text-lg">or</p>
-                      <div className="flex flex-col gap-2 px-5">
-                        <label className="font-semibold text-gray-800">
-                          * select from previous sessions
-                        </label>
-                        <select
-                          onChange={(e) => setSessionAttendence(e.target.value)}
-                          className="border outline-none px-4 py-1.5 rounded"
-                        >
-                          <option value="">select</option>
-                          {sessions?.map((item, index) => (
-                            <option value={item.id} key={index}>
-                              {item.name}
-                            </option>
-                          ))}
-                        </select>
+                  <div className="relative inline-block text-left w-full mt-10 min-w-[200px]">
+                    <button
+                      type="button"
+                      onClick={() =>
+                        !isLoading && setIsOpenSelection(!isOpenSelection)
+                      }
+                      className={`inline-flex justify-center w-full px-4 py-2 text-sm font-medium  bg-white border border-gray-300 rounded-md shadow-sm ${
+                        isLoading
+                          ? "text-gray-400"
+                          : "hover:bg-gray-50 focus:outline-none focus:ring-1 text-gray-700"
+                      }`}
+                      id="options-menu"
+                      aria-haspopup="true"
+                      aria-expanded="true"
+                    >
+                      {Object.keys(SingleSession).length === 0
+                        ? "Select Previous Session"
+                        : `${SingleSession?.name}`}
+                    </button>
+                    {!isLoading && isOpenSelection ? (
+                      <div
+                        className="origin-top-right absolute right-0 mt-2 w-full rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none"
+                        role="menu"
+                        aria-orientation="vertical"
+                        aria-labelledby="options-menu"
+                      >
+                        <div className="py-1" role="none">
+                          {sessions.length > 0 ? (
+                            sessions.map((item) => (
+                              <p
+                                value={item.name}
+                                key={item.id}
+                                role="menu"
+                                className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                onClick={() => handleSelectProgram(item)}
+                              >
+                                {item.name}
+                              </p>
+                            ))
+                          ) : (
+                            <p>NO program to show</p>
+                          )}
+                        </div>
                       </div>
-                    </>
-                  ) : null}
+                    ) : null}
+                  </div>
                   <div className="flex justify-center mt-5">
                     <button
                       className="px-4 py-1.5 bg-blue-700 text-white rounded "

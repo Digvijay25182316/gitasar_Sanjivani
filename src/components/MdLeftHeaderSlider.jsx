@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import {
   AcademicCapIcon,
   ArrowTrendingUpIcon,
+  Bars3Icon,
   CalendarDaysIcon,
   PresentationChartBarIcon,
   QueueListIcon,
@@ -26,7 +27,7 @@ const Slider = () => {
         className={`rounded-full focus:outline-none md:hidden p-2`}
         onClick={toggleSlider}
       >
-        <img src={MenuIcon} alt="Menu" className="h-6 w-6" />
+        <Bars3Icon className="h-6 w-6" />
       </button>
       <aside
         className={`fixed top-0 left-0 w-full bg-white transition-transform z-[2000] ${

@@ -42,7 +42,7 @@ function ActivitiesM() {
         setIsLoading(false);
       }
     })();
-  }, []);
+  }, [OpenActivityModal]);
 
   function AddFilter(data) {
     setQueryArr((prev) => [...prev, data]);
@@ -63,7 +63,7 @@ function ActivitiesM() {
     setSelected(false);
   }
   return (
-    <div className="flex items-center max-w-screen bg-white">
+    <div className="flex items-center max-w-screen">
       <Sidebar />
       <div className="md:w-[79.5vw] min-h-screen w-screen">
         {!isLoading ? (
@@ -104,59 +104,72 @@ function ActivitiesM() {
               </div>
 
               <div className="overflow-x-scroll">
-                <table className="w-full">
-                  <thead className="bg-gray-50">
-                    <tr>
-                      <th className="border-b px-6 font-semibold py-1">
-                        Select
-                      </th>
-                      <th className="border-b px-6 font-semibold py-1">
-                        <div className=" flex items-center w-full">
-                          Activity Name
-                          <Dropdown
-                            origin={"origin-top-left"}
-                            position={"left-0"}
-                            setvalue={AddFilter}
-                            fieldname={"programName"}
-                            selected={doesFieldExists(queryArr, "programName")}
-                            removeFilter={() =>
-                              removeObjectByKey("programName")
-                            }
-                          />
-                        </div>
-                      </th>
-                      <th className="border-b px-6 font-semibold py-1">
-                        <div className=" flex items-center w-full py-1">
-                          Activity Description
-                          <Dropdown
-                            origin={"origin-top-left"}
-                            position={"left-0"}
-                            setvalue={AddFilter}
-                            fieldname={"courseCode"}
-                            selected={doesFieldExists(queryArr, "courseCode")}
-                            removeFilter={() => removeObjectByKey("courseCode")}
-                          />
-                        </div>
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {activitiesArr?.map((acitivity, index) => (
-                      <tr key={index} className="border-b">
-                        <td className="flex justify-center py-5">
-                          <input
-                            type="checkbox"
-                            id=""
-                            value={index}
-                            className=" checked:text-green-400 text-green-400"
-                          />
-                        </td>
-                        <td className="px-10">{acitivity.name}</td>
-                        <td className="px-10">{acitivity.description}</td>
+                {activitiesArr?.length > 0 ? (
+                  <table className="w-full">
+                    <thead className="bg-gray-50">
+                      <tr>
+                        <th className="border-b px-6 font-semibold py-1">
+                          Select
+                        </th>
+                        <th className="border-b px-6 font-semibold py-1">
+                          <div className=" flex items-center w-full">
+                            Activity Name
+                            <Dropdown
+                              origin={"origin-top-left"}
+                              position={"left-0"}
+                              setvalue={AddFilter}
+                              fieldname={"programName"}
+                              selected={doesFieldExists(
+                                queryArr,
+                                "programName"
+                              )}
+                              removeFilter={() =>
+                                removeObjectByKey("programName")
+                              }
+                            />
+                          </div>
+                        </th>
+                        <th className="border-b px-6 font-semibold py-1">
+                          <div className=" flex items-center w-full py-1">
+                            Activity Description
+                            <Dropdown
+                              origin={"origin-top-left"}
+                              position={"left-0"}
+                              setvalue={AddFilter}
+                              fieldname={"courseCode"}
+                              selected={doesFieldExists(queryArr, "courseCode")}
+                              removeFilter={() =>
+                                removeObjectByKey("courseCode")
+                              }
+                            />
+                          </div>
+                        </th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
+                    </thead>
+                    <tbody>
+                      {activitiesArr?.map((acitivity, index) => (
+                        <tr key={index} className="border-b">
+                          <td className="flex justify-center py-5">
+                            <input
+                              type="checkbox"
+                              id=""
+                              value={index}
+                              className=" checked:text-green-400 text-green-400"
+                              onChange={onChangeSelect}
+                            />
+                          </td>
+                          <td className="px-10">{acitivity.name}</td>
+                          <td className="px-10">{acitivity.description}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                ) : (
+                  <div className="text-center text-gray-400 my-10">
+                    {" "}
+                    No Activities Found
+                  </div>
+                )}
               </div>
             </div>
           </div>

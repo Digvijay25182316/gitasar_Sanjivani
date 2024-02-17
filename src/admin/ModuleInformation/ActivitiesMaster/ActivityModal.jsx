@@ -27,6 +27,7 @@ function ActivityModal({ isOpen, onClose }) {
       if (response.ok) {
         const responseData = await response.json();
         toast.success(responseData.message);
+        onClose();
       } else {
         const errorData = await response.json();
         toast.error(errorData.message);

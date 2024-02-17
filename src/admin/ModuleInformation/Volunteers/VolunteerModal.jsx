@@ -38,33 +38,31 @@ function VolunteersModal({ isOpen, setIsOpen }) {
   async function onSubmit(e) {
     e.preventDefault();
     const header = new Headers();
+    if (formData?.dob !== "") {
+      const date = new Date(formData.dob).toISOString();
+      formData.dob = date;
+    }
     setIsLoading(true);
     header.append("Content-Type", "application/json");
-    await fetch(`${SERVER_ENDPOINT}/volunteer/create`, {
-      method: "POST",
-      headers: header,
-      body: JSON.stringify(formData),
-    })
-      .then((data) => {
-        if (data.ok) {
-          return data.json();
-        } else {
-          setIsError(true);
-          return data.json();
-        }
-      })
-      .then((data) => {
-        console.log(data.message);
-        if (isError) {
-          toast.error(data.message);
-        } else {
-          toast.success(data.message);
-        }
-      })
-      .catch((err) => console.log(err.message))
-      .finally(() => {
-        setIsLoading(false);
+    try {
+      const response = await fetch(`${SERVER_ENDPOINT}/volunteer/create`, {
+        method: "POST",
+        headers: header,
+        body: JSON.stringify(formData),
       });
+      if (response.ok) {
+        const responseData = await response.json();
+        toast.success(responseData.message);
+        setIsOpen();
+      } else {
+        const errorData = await response.json();
+        toast.error(errorData.message);
+      }
+    } catch (error) {
+      toast.error(error.message);
+    } finally {
+      setIsLoading(false);
+    }
   }
   if (isOpen) {
     return (

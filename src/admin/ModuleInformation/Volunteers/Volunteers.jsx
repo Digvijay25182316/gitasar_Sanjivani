@@ -1,23 +1,17 @@
 import {
-  AcademicCapIcon,
-  ArrowTrendingUpIcon,
-  CalendarDaysIcon,
   ChevronRightIcon,
-  PresentationChartBarIcon,
-  UserGroupIcon,
-  UserIcon,
-  QueueListIcon,
   CubeTransparentIcon,
   PlusIcon,
 } from "@heroicons/react/24/solid";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Slider from "../../../components/MdLeftHeaderSlider";
-import { Link, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import VolunteersModal from "./VolunteerModal";
 import { SERVER_ENDPOINT } from "../../config/Server";
 import Dropdown from "../../../components/BottomNav.jsx/DropDown";
 import toast from "react-hot-toast";
 import Sidebar from "../../../components/BottomNav.jsx/Sidebar";
+import { ArrowLeftIcon, ArrowRightIcon } from "@heroicons/react/24/outline";
 
 function Volunteers() {
   const { pathname } = useLocation();
@@ -47,7 +41,7 @@ function Volunteers() {
         setIsLoading(false);
       }
     })();
-  }, []);
+  }, [OpenActivities]);
 
   function AddFilter(data) {
     setQueryArr((prev) => [...prev, data]);
@@ -59,10 +53,12 @@ function Volunteers() {
   function removeObjectByKey(data) {
     setQueryArr(queryArr.filter((item) => !Object.keys(item).includes(data)));
   }
+
   function onChangeSelect(e) {
     setSelectedItem(Number(e.target.value));
     setSelected(true);
   }
+
   function ClearSelection() {
     setSelectedItem(0);
     setSelected(false);
@@ -113,213 +109,221 @@ function Volunteers() {
                 </p>
               </div>
               <div className="overflow-x-scroll">
-                <table>
-                  <thead className="bg-gray-50">
-                    <tr>
-                      <th className="border-b px-6 font-semibold py-1">
-                        Select
-                      </th>
-
-                      <th className="border-b px-6 font-semibold py-1">
-                        <div className=" flex items-center w-max py-1">
-                          First Name
-                          <Dropdown
-                            origin={"origin-top-left"}
-                            position={"left-0"}
-                            setvalue={AddFilter}
-                            fieldname={"firstName"}
-                            selected={doesFieldExists(queryArr, "firstName")}
-                            removeFilter={() => removeObjectByKey("firstName")}
-                          />
-                        </div>
-                      </th>
-                      <th className="border-b px-6 font-semibold py-1">
-                        <div className=" flex items-center w-max py-1">
-                          Last Name
-                          <Dropdown
-                            origin={"origin-top-left"}
-                            position={"left-0"}
-                            setvalue={AddFilter}
-                            fieldname={"lastName"}
-                            selected={doesFieldExists(queryArr, "lastName")}
-                            removeFilter={() => removeObjectByKey("lastName")}
-                          />
-                        </div>
-                      </th>
-                      <th className="border-b px-6 font-semibold py-1">
-                        <div className=" flex items-center w-max py-1">
-                          Initiated Name
-                          <Dropdown
-                            origin={"origin-top-left"}
-                            position={"left-0"}
-                            setvalue={AddFilter}
-                            fieldname={"initiatedName"}
-                            selected={doesFieldExists(
-                              queryArr,
-                              "initiatedName"
-                            )}
-                            removeFilter={() =>
-                              removeObjectByKey("initiatedName")
-                            }
-                          />
-                        </div>
-                      </th>
-                      <th className="border-b px-6 font-semibold py-1">
-                        <div className=" flex items-center w-max py-1">
-                          Contact Number
-                          <Dropdown
-                            origin={"origin-top-left"}
-                            position={"left-0"}
-                            setvalue={AddFilter}
-                            fieldname={"contactNumber"}
-                            selected={doesFieldExists(
-                              queryArr,
-                              "contactNumber"
-                            )}
-                            removeFilter={() =>
-                              removeObjectByKey("contactNumber")
-                            }
-                          />
-                        </div>
-                      </th>
-                      <th className="border-b px-6 font-semibold py-1">
-                        <div className=" flex items-center w-max py-1">
-                          dob
-                          <Dropdown
-                            origin={"origin-top-left"}
-                            position={"left-0"}
-                            setvalue={AddFilter}
-                            fieldname={"dob"}
-                            selected={doesFieldExists(queryArr, "dob")}
-                            removeFilter={() => removeObjectByKey("dob")}
-                          />
-                        </div>
-                      </th>
-                      <th className="border-b px-6 font-semibold py-1">
-                        <div className=" flex items-center w-max py-1">
-                          gender
-                          <Dropdown
-                            origin={"origin-top-right"}
-                            position={"right-0"}
-                            setvalue={AddFilter}
-                            fieldname={"gender"}
-                            selected={doesFieldExists(queryArr, "gender")}
-                            removeFilter={() => removeObjectByKey("gender")}
-                          />
-                        </div>
-                      </th>
-                      <th className="border-b px-6 font-semibold py-1">
-                        <div className=" flex items-center w-max py-1">
-                          Current Service
-                          <Dropdown
-                            origin={"origin-top-left"}
-                            position={"left-0"}
-                            setvalue={AddFilter}
-                            fieldname={"currentService"}
-                            selected={doesFieldExists(
-                              queryArr,
-                              "currentService"
-                            )}
-                            removeFilter={() =>
-                              removeObjectByKey("currentService")
-                            }
-                          />
-                        </div>
-                      </th>
-                      <th className="border-b px-6 font-semibold py-1">
-                        <div className=" flex items-center w-max py-1">
-                          interested Service
-                          <Dropdown
-                            origin={"origin-top-left"}
-                            position={"left-0"}
-                            setvalue={AddFilter}
-                            fieldname={"serviceInterested"}
-                            selected={doesFieldExists(
-                              queryArr,
-                              "serviceInterested"
-                            )}
-                            removeFilter={() =>
-                              removeObjectByKey("serviceInterested")
-                            }
-                          />
-                        </div>
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {VolunteerData?.map((volunteer, index) => (
-                      <tr key={index + 1} className="border-b">
-                        <td className="flex justify-center py-5">
-                          <input
-                            type="checkbox"
-                            value={index + 1}
-                            className=" checked:text-green-400 text-green-400 cursor-pointer"
-                            onChange={onChangeSelect}
-                            disabled={selected}
-                            checked={selectedItem === index + 1}
-                          />
-                        </td>
-
-                        <td className="text-center">
-                          {volunteer?.firstName ? (
-                            <div>{volunteer.firstName}</div>
-                          ) : (
-                            <i className="text-gray-500">null</i>
-                          )}
-                        </td>
-                        <td className="text-center">
-                          {volunteer?.lastName ? (
-                            <div>{volunteer.lastName}</div>
-                          ) : (
-                            <i className="text-gray-500">null</i>
-                          )}
-                        </td>
-                        <td className="text-center">
-                          {volunteer?.initiatedName ? (
-                            <div>{volunteer.initiatedName}</div>
-                          ) : (
-                            <i className="text-gray-500">null</i>
-                          )}
-                        </td>
-                        <td className="text-center">
-                          {volunteer?.contactNumber ? (
-                            <div>{volunteer.contactNumber}</div>
-                          ) : (
-                            <i className="text-gray-500">null</i>
-                          )}
-                        </td>
-                        <td className="text-center">
-                          {volunteer?.dob ? (
-                            <div>{volunteer.dob}</div>
-                          ) : (
-                            <i className="text-gray-500">null</i>
-                          )}
-                        </td>
-                        <td className="text-center">
-                          {volunteer?.gender ? (
-                            <div>{volunteer.gender}</div>
-                          ) : (
-                            <i className="text-gray-500">null</i>
-                          )}
-                        </td>
-                        <td className="text-center">
-                          {volunteer?.currentServices ? (
-                            <div>{volunteer.currentServices}</div>
-                          ) : (
-                            <i className="text-gray-500">null</i>
-                          )}
-                        </td>
-                        <td className="text-center">
-                          {volunteer?.serviceInterests ? (
-                            <div>{volunteer.serviceInterests}</div>
-                          ) : (
-                            <i className="text-gray-500">null</i>
-                          )}
-                        </td>
+                {VolunteerData?.length > 0 ? (
+                  <table>
+                    <thead className="bg-gray-50">
+                      <tr>
+                        <th className="border-b px-6 font-semibold py-1">
+                          Select
+                        </th>
+                        <th className="border-b px-6 font-semibold py-1">
+                          <div className=" flex items-center w-max py-1">
+                            First Name
+                            <Dropdown
+                              origin={"origin-top-left"}
+                              position={"left-0"}
+                              setvalue={AddFilter}
+                              fieldname={"firstName"}
+                              selected={doesFieldExists(queryArr, "firstName")}
+                              removeFilter={() =>
+                                removeObjectByKey("firstName")
+                              }
+                            />
+                          </div>
+                        </th>
+                        <th className="border-b px-6 font-semibold py-1">
+                          <div className=" flex items-center w-max py-1">
+                            Last Name
+                            <Dropdown
+                              origin={"origin-top-left"}
+                              position={"left-0"}
+                              setvalue={AddFilter}
+                              fieldname={"lastName"}
+                              selected={doesFieldExists(queryArr, "lastName")}
+                              removeFilter={() => removeObjectByKey("lastName")}
+                            />
+                          </div>
+                        </th>
+                        <th className="border-b px-6 font-semibold py-1">
+                          <div className=" flex items-center w-max py-1">
+                            Initiated Name
+                            <Dropdown
+                              origin={"origin-top-left"}
+                              position={"left-0"}
+                              setvalue={AddFilter}
+                              fieldname={"initiatedName"}
+                              selected={doesFieldExists(
+                                queryArr,
+                                "initiatedName"
+                              )}
+                              removeFilter={() =>
+                                removeObjectByKey("initiatedName")
+                              }
+                            />
+                          </div>
+                        </th>
+                        <th className="border-b px-6 font-semibold py-1">
+                          <div className=" flex items-center w-max py-1">
+                            Contact Number
+                            <Dropdown
+                              origin={"origin-top-left"}
+                              position={"left-0"}
+                              setvalue={AddFilter}
+                              fieldname={"contactNumber"}
+                              selected={doesFieldExists(
+                                queryArr,
+                                "contactNumber"
+                              )}
+                              removeFilter={() =>
+                                removeObjectByKey("contactNumber")
+                              }
+                            />
+                          </div>
+                        </th>
+                        <th className="border-b px-6 font-semibold py-1">
+                          <div className=" flex items-center w-max py-1">
+                            dob
+                            <Dropdown
+                              origin={"origin-top-left"}
+                              position={"left-0"}
+                              setvalue={AddFilter}
+                              fieldname={"dob"}
+                              selected={doesFieldExists(queryArr, "dob")}
+                              removeFilter={() => removeObjectByKey("dob")}
+                            />
+                          </div>
+                        </th>
+                        <th className="border-b px-6 font-semibold py-1">
+                          <div className=" flex items-center w-max py-1">
+                            gender
+                            <Dropdown
+                              origin={"origin-top-right"}
+                              position={"right-0"}
+                              setvalue={AddFilter}
+                              fieldname={"gender"}
+                              selected={doesFieldExists(queryArr, "gender")}
+                              removeFilter={() => removeObjectByKey("gender")}
+                            />
+                          </div>
+                        </th>
+                        <th className="border-b px-6 font-semibold py-1">
+                          <div className=" flex items-center w-max py-1">
+                            Current Service
+                            <Dropdown
+                              origin={"origin-top-left"}
+                              position={"left-0"}
+                              setvalue={AddFilter}
+                              fieldname={"currentService"}
+                              selected={doesFieldExists(
+                                queryArr,
+                                "currentService"
+                              )}
+                              removeFilter={() =>
+                                removeObjectByKey("currentService")
+                              }
+                            />
+                          </div>
+                        </th>
+                        <th className="border-b px-6 font-semibold py-1">
+                          <div className=" flex items-center w-max py-1">
+                            interested Service
+                            <Dropdown
+                              origin={"origin-top-left"}
+                              position={"left-0"}
+                              setvalue={AddFilter}
+                              fieldname={"serviceInterested"}
+                              selected={doesFieldExists(
+                                queryArr,
+                                "serviceInterested"
+                              )}
+                              removeFilter={() =>
+                                removeObjectByKey("serviceInterested")
+                              }
+                            />
+                          </div>
+                        </th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
+                    </thead>
+                    <tbody>
+                      {VolunteerData?.map((volunteer, index) => (
+                        <tr key={index + 1} className="border-b">
+                          <td className="flex justify-center py-5">
+                            <input
+                              type="checkbox"
+                              value={index + 1}
+                              className=" checked:text-green-400 text-green-400 cursor-pointer"
+                              onChange={onChangeSelect}
+                              disabled={selected}
+                              checked={selectedItem === index + 1}
+                            />
+                          </td>
+
+                          <td className="text-center">
+                            {volunteer?.firstName ? (
+                              <div>{volunteer.firstName}</div>
+                            ) : (
+                              <i className="text-gray-500">null</i>
+                            )}
+                          </td>
+                          <td className="text-center">
+                            {volunteer?.lastName ? (
+                              <div>{volunteer.lastName}</div>
+                            ) : (
+                              <i className="text-gray-500">null</i>
+                            )}
+                          </td>
+                          <td className="text-center">
+                            {volunteer?.initiatedName ? (
+                              <div>{volunteer.initiatedName}</div>
+                            ) : (
+                              <i className="text-gray-500">null</i>
+                            )}
+                          </td>
+                          <td className="text-center">
+                            {volunteer?.contactNumber ? (
+                              <div>{volunteer.contactNumber}</div>
+                            ) : (
+                              <i className="text-gray-500">null</i>
+                            )}
+                          </td>
+                          <td className="text-center">
+                            {volunteer?.dob ? (
+                              <div>{volunteer.dob}</div>
+                            ) : (
+                              <i className="text-gray-500">null</i>
+                            )}
+                          </td>
+                          <td className="text-center">
+                            {volunteer?.gender ? (
+                              <div>{volunteer.gender}</div>
+                            ) : (
+                              <i className="text-gray-500">null</i>
+                            )}
+                          </td>
+                          <td className="text-center">
+                            {volunteer?.currentServices ? (
+                              <div>{volunteer.currentServices}</div>
+                            ) : (
+                              <i className="text-gray-500">null</i>
+                            )}
+                          </td>
+                          <td className="text-center">
+                            {volunteer?.serviceInterests ? (
+                              <div>{volunteer.serviceInterests}</div>
+                            ) : (
+                              <i className="text-gray-500">null</i>
+                            )}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                ) : (
+                  <div className="text-center text-gray-400 my-10">
+                    {" "}
+                    No Volunteers Found
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -330,6 +334,17 @@ function Volunteers() {
             </div>
           </div>
         )}
+        <div className="mx-5 flex items-center justify-between mt-6">
+          <button className="px-4 py-1.5 rounded border bg-white shadow flex items-center justify-center gap-2">
+            <ArrowLeftIcon className="h-5 w-5" />
+            PREV
+          </button>
+          <div></div>
+          <button className="px-4 py-1.5 rounded border bg-white shadow flex items-center justify-center gap-2">
+            NEXT
+            <ArrowRightIcon className="h-5 w-5" />
+          </button>
+        </div>
       </div>
       <VolunteersModal
         isOpen={OpenActivities}

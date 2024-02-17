@@ -58,66 +58,83 @@ function UploadingFile({ isOpen, setIsOpen }) {
   };
 
   const handleFileUpload = () => {
+    const errorArr = [];
+    const success = [];
     Papa.parse(file, {
-      worker: true,
+      download: true,
       header: true,
       dynamicTyping: true,
       step: async function (row) {
+        // Accessing Code, Description, SessionName, and SessionDescription from each row
         const rowData = row.data;
-        // Check if Code and description exist
-        if (rowData.Code !== null && rowData.description !== null) {
-          await fetch(`${SERVER_ENDPOINT}/`, {
+        try {
+          const response = await fetch(`${SERVER_ENDPOINT}/course/create`, {
             method: "POST",
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-              Code: rowData.Code,
+              code: rowData.code,
+              name: rowData.name,
               description: rowData.description,
             }),
-            headers: {
-              "Content-Type": "application/json",
-            },
           });
+          if (response.ok) {
+            const SessionResponse = await fetch(
+              `${SERVER_ENDPOINT}/session/create/`,
+              {
+                method: "POST",
+                body: JSON.stringify({
+                  code: "DYSNP",
+                  name: rowData.SessionName,
+                  description: rowData.SessionDescription,
+                  courseCode: rowData.code,
+                  durationInMinutes: 20,
+                }),
+                headers: { "Content-Type": "application/json" },
+              }
+            );
+            if (SessionResponse.ok) {
+              console.log("done");
+            }
+          } else {
+            const errorData = await response.json();
+            if (errorData.status === 400) {
+              const SessionResponse = await fetch(
+                `${SERVER_ENDPOINT}/session/create`,
+                {
+                  method: "POST",
+                  body: JSON.stringify({
+                    code: rowData.sessionCode,
+                    name: rowData.SessionName,
+                    description: rowData.SessionDescription,
+                    courseCode: rowData.code,
+                    durationInMinutes: rowData.durationInMinutes,
+                  }),
+                  headers: { "Content-Type": "application/json" },
+                }
+              );
+              if (SessionResponse.ok) {
+                console.log("done");
+              }
+            }
+          }
+        } catch (error) {
+          errorArr.push(error);
         }
-        // Check if sessionName and sessionDescription exist
-        else if (
-          rowData.sessionName !== null &&
-          rowData.sessionDescription !== null
-        ) {
-          console.log({
-            sessionName: rowData.sessionName,
-            sessionDescription: rowData.sessionDescription,
-          });
-        }
-        // If none of the expected fields exist
-        else {
-          console.log("Invalid row data structure:", rowData);
-        }
+        const { Code, description, SessionName, SessionDescription } = row.data;
+        console.log("Code:", Code);
+        console.log("Description:", description);
+        console.log("SessionName:", SessionName);
+        console.log("SessionDescription:", SessionDescription);
+      },
+      error: function (error) {
+        console.error("Error during parsing:", error);
       },
       complete: function () {
         console.log("All done!");
+        console.log(errorArr);
       },
     });
   };
-
-  // const handleFileUpload = () => {
-  //   Papa.parse(file, {
-  //     worker: true,
-  //     header: true,
-  //     dynamicTyping: true,
-  //     step: function (row) {
-  //       const rowData = row.data;
-  //       const headers = row.meta.fields;
-  //       const rowObject = {};
-  //       headers.forEach((header) => {
-  //         rowObject[header] = rowData[header];
-  //       });
-
-  //       console.log("Row Object:", rowObject);
-  //     },
-  //     complete: function () {
-  //       console.log("All done!");
-  //     },
-  //   });
-  // };
 
   if (isOpen)
     return (
@@ -132,7 +149,7 @@ function UploadingFile({ isOpen, setIsOpen }) {
               onClick={() => setIsFormOpen(false)}
               className={`text-lg py-1.5 ${
                 !isFormOpen
-                  ? "bg-gray-100 border-t border-t-blue-400 text-blue-700"
+                  ? " border border-blue-400 text-blue-700 rounded"
                   : "bg-white text-gray-500"
               } w-full`}
             >
@@ -142,7 +159,7 @@ function UploadingFile({ isOpen, setIsOpen }) {
               onClick={() => setIsFormOpen(true)}
               className={`text-lg py-1.5 ${
                 isFormOpen
-                  ? "bg-gray-100 border-t border-t-blue-400 text-blue-700"
+                  ? " border border-blue-400 text-blue-700 rounded"
                   : "bg-white text-gray-500"
               } w-full`}
             >

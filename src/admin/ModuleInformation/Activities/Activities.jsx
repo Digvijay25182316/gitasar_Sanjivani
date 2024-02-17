@@ -118,209 +118,224 @@ function Activities() {
                 </p>
               </div>
               <div className="overflow-x-scroll">
-                <table className="w-full">
-                  <thead className="bg-gray-50">
-                    <tr>
-                      <th className="border-b px-6 font-semibold py-1">
-                        Select
-                      </th>
-                      <th className="border-b px-6 font-semibold py-1">
-                        <div className=" flex items-center w-max py-1">
-                          Program Name
-                          <Dropdown
-                            origin={"origin-top-left"}
-                            position={"left-0"}
-                            setvalue={AddFilter}
-                            fieldname={"programName"}
-                            selected={doesFieldExists(queryArr, "programName")}
-                            removeFilter={() =>
-                              removeObjectByKey("programName")
-                            }
-                          />
-                        </div>
-                      </th>
-                      <th className="border-b px-6 font-semibold py-1">
-                        <div className=" flex items-center w-max py-1">
-                          Course Code
-                          <Dropdown
-                            origin={"origin-top-left"}
-                            position={"left-0"}
-                            setvalue={AddFilter}
-                            fieldname={"courseCode"}
-                            selected={doesFieldExists(queryArr, "courseCode")}
-                            removeFilter={() => removeObjectByKey("courseCode")}
-                          />
-                        </div>
-                      </th>
-                      <th className="border-b px-6 font-semibold py-1">
-                        <div className=" flex items-center w-max py-1">
-                          Session Name
-                          <Dropdown
-                            origin={"origin-top-left"}
-                            position={"left-0"}
-                            setvalue={AddFilter}
-                            fieldname={"sessionName"}
-                            selected={doesFieldExists(queryArr, "sessionName")}
-                            removeFilter={() =>
-                              removeObjectByKey("sessionName")
-                            }
-                          />
-                        </div>
-                      </th>
-                      <th className="border-b px-6 font-semibold py-1">
-                        <div className=" flex items-center w-max py-1">
-                          Activity
-                          <Dropdown
-                            origin={"origin-top-left"}
-                            position={"left-0"}
-                            setvalue={AddFilter}
-                            fieldname={"typeofActivity"}
-                            selected={doesFieldExists(
-                              queryArr,
-                              "typeofActivity"
-                            )}
-                            removeFilter={() =>
-                              removeObjectByKey("typeofActivity")
-                            }
-                          />
-                        </div>
-                      </th>
-                      <th className="border-b px-6 font-semibold py-1">
-                        <div className=" flex items-center w-max py-1">
-                          Phone
-                          <Dropdown
-                            origin={"origin-top-left"}
-                            position={"left-0"}
-                            setvalue={AddFilter}
-                            fieldname={"participantContactNumber"}
-                            selected={doesFieldExists(
-                              queryArr,
-                              "participantContactNumber"
-                            )}
-                            removeFilter={() =>
-                              removeObjectByKey("participantContactNumber")
-                            }
-                          />
-                        </div>
-                      </th>
-                      <th className="border-b px-6 font-semibold py-1">
-                        <div className=" flex items-center w-max py-1">
-                          First Name
-                          <Dropdown
-                            origin={"origin-top-right"}
-                            position={"right-0"}
-                            setvalue={AddFilter}
-                            fieldname={"participantFirstName"}
-                            selected={doesFieldExists(
-                              queryArr,
-                              "participantFirstName"
-                            )}
-                            removeFilter={() =>
-                              removeObjectByKey("participantFirstName")
-                            }
-                          />
-                        </div>
-                      </th>
-                      <th className="border-b px-6 font-semibold py-1">
-                        <div className=" flex items-center w-max py-1">
-                          Last Name
-                          <Dropdown
-                            origin={"origin-top-right"}
-                            position={"right-0"}
-                            setvalue={AddFilter}
-                            fieldname={"participantLastName"}
-                            selected={doesFieldExists(
-                              queryArr,
-                              "participantLastName"
-                            )}
-                            removeFilter={() =>
-                              removeObjectByKey("participantLastName")
-                            }
-                          />
-                        </div>
-                      </th>
-                      <th className="border-b px-6 font-semibold py-1">
-                        <div className=" flex items-center w-max py-1">
-                          date
-                          <Dropdown
-                            origin={"origin-top-right"}
-                            position={"right-0"}
-                            setvalue={AddFilter}
-                            fieldname={"created"}
-                            selected={doesFieldExists(queryArr, "created")}
-                            removeFilter={() => removeObjectByKey("created")}
-                          />
-                        </div>
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {ActivityArr?.map((activity, index) => (
-                      <tr key={index} className="border-b">
-                        <td className="flex justify-center py-5">
-                          <input
-                            type="checkbox"
-                            id=""
-                            value={index}
-                            className=" checked:text-green-400 text-green-400"
-                          />
-                        </td>
-                        <td className="text-center">
-                          {activity?.programName ? (
-                            <div>{activity.programName}</div>
-                          ) : (
-                            <i className="text-gray-500">Null</i>
-                          )}
-                        </td>
-                        <td className="text-center">
-                          {activity?.courseCode ? (
-                            <div>{activity.courseCode}</div>
-                          ) : (
-                            <i className="text-gray-500">Null</i>
-                          )}
-                        </td>
-                        <td className="text-center">
-                          {activity?.sessionName ? (
-                            <div>{activity.sessionName}</div>
-                          ) : (
-                            <i className="text-gray-500">Null</i>
-                          )}
-                        </td>
-                        <td className="text-center">
-                          {activity?.typeofActivity ? (
-                            <div>{activity.typeofActivity}</div>
-                          ) : (
-                            <i className="text-gray-500">Null</i>
-                          )}
-                        </td>
-                        <td className="text-center">
-                          {activity?.participantContactNumber ? (
-                            <div>{activity.participantContactNumber}</div>
-                          ) : (
-                            <i className="text-gray-500">Null</i>
-                          )}
-                        </td>
-                        <td className="text-center">
-                          {activity?.participantFirstName ? (
-                            <div>{activity.participantFirstName}</div>
-                          ) : (
-                            <i className="text-gray-500">Null</i>
-                          )}
-                        </td>
-                        <td className="text-center">
-                          {activity?.participantLastName ? (
-                            <div>{activity.participantLastName}</div>
-                          ) : (
-                            <i className="text-gray-500">Null</i>
-                          )}
-                        </td>
-                        <td className="text-center">
-                          <DateCard date={activity.created} />
-                        </td>
+                {ActivityArr?.length > 0 ? (
+                  <table className="w-full">
+                    <thead className="bg-gray-50">
+                      <tr>
+                        <th className="border-b px-6 font-semibold py-1">
+                          Select
+                        </th>
+                        <th className="border-b px-6 font-semibold py-1">
+                          <div className=" flex items-center w-max py-1">
+                            Program Name
+                            <Dropdown
+                              origin={"origin-top-left"}
+                              position={"left-0"}
+                              setvalue={AddFilter}
+                              fieldname={"programName"}
+                              selected={doesFieldExists(
+                                queryArr,
+                                "programName"
+                              )}
+                              removeFilter={() =>
+                                removeObjectByKey("programName")
+                              }
+                            />
+                          </div>
+                        </th>
+                        <th className="border-b px-6 font-semibold py-1">
+                          <div className=" flex items-center w-max py-1">
+                            Course Code
+                            <Dropdown
+                              origin={"origin-top-left"}
+                              position={"left-0"}
+                              setvalue={AddFilter}
+                              fieldname={"courseCode"}
+                              selected={doesFieldExists(queryArr, "courseCode")}
+                              removeFilter={() =>
+                                removeObjectByKey("courseCode")
+                              }
+                            />
+                          </div>
+                        </th>
+                        <th className="border-b px-6 font-semibold py-1">
+                          <div className=" flex items-center w-max py-1">
+                            Session Name
+                            <Dropdown
+                              origin={"origin-top-left"}
+                              position={"left-0"}
+                              setvalue={AddFilter}
+                              fieldname={"sessionName"}
+                              selected={doesFieldExists(
+                                queryArr,
+                                "sessionName"
+                              )}
+                              removeFilter={() =>
+                                removeObjectByKey("sessionName")
+                              }
+                            />
+                          </div>
+                        </th>
+                        <th className="border-b px-6 font-semibold py-1">
+                          <div className=" flex items-center w-max py-1">
+                            Activity
+                            <Dropdown
+                              origin={"origin-top-left"}
+                              position={"left-0"}
+                              setvalue={AddFilter}
+                              fieldname={"typeofActivity"}
+                              selected={doesFieldExists(
+                                queryArr,
+                                "typeofActivity"
+                              )}
+                              removeFilter={() =>
+                                removeObjectByKey("typeofActivity")
+                              }
+                            />
+                          </div>
+                        </th>
+                        <th className="border-b px-6 font-semibold py-1">
+                          <div className=" flex items-center w-max py-1">
+                            Phone
+                            <Dropdown
+                              origin={"origin-top-left"}
+                              position={"left-0"}
+                              setvalue={AddFilter}
+                              fieldname={"participantContactNumber"}
+                              selected={doesFieldExists(
+                                queryArr,
+                                "participantContactNumber"
+                              )}
+                              removeFilter={() =>
+                                removeObjectByKey("participantContactNumber")
+                              }
+                            />
+                          </div>
+                        </th>
+                        <th className="border-b px-6 font-semibold py-1">
+                          <div className=" flex items-center w-max py-1">
+                            First Name
+                            <Dropdown
+                              origin={"origin-top-right"}
+                              position={"right-0"}
+                              setvalue={AddFilter}
+                              fieldname={"participantFirstName"}
+                              selected={doesFieldExists(
+                                queryArr,
+                                "participantFirstName"
+                              )}
+                              removeFilter={() =>
+                                removeObjectByKey("participantFirstName")
+                              }
+                            />
+                          </div>
+                        </th>
+                        <th className="border-b px-6 font-semibold py-1">
+                          <div className=" flex items-center w-max py-1">
+                            Last Name
+                            <Dropdown
+                              origin={"origin-top-right"}
+                              position={"right-0"}
+                              setvalue={AddFilter}
+                              fieldname={"participantLastName"}
+                              selected={doesFieldExists(
+                                queryArr,
+                                "participantLastName"
+                              )}
+                              removeFilter={() =>
+                                removeObjectByKey("participantLastName")
+                              }
+                            />
+                          </div>
+                        </th>
+                        <th className="border-b px-6 font-semibold py-1">
+                          <div className=" flex items-center w-max py-1">
+                            date
+                            <Dropdown
+                              origin={"origin-top-right"}
+                              position={"right-0"}
+                              setvalue={AddFilter}
+                              fieldname={"created"}
+                              selected={doesFieldExists(queryArr, "created")}
+                              removeFilter={() => removeObjectByKey("created")}
+                            />
+                          </div>
+                        </th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
+                    </thead>
+                    <tbody>
+                      {ActivityArr?.map((activity, index) => (
+                        <tr key={index} className="border-b">
+                          <td className="flex justify-center py-5">
+                            <input
+                              type="checkbox"
+                              id=""
+                              value={index}
+                              className=" checked:text-green-400 text-green-400"
+                            />
+                          </td>
+                          <td className="text-center">
+                            {activity?.programName ? (
+                              <div>{activity.programName}</div>
+                            ) : (
+                              <i className="text-gray-500">Null</i>
+                            )}
+                          </td>
+                          <td className="text-center">
+                            {activity?.courseCode ? (
+                              <div>{activity.courseCode}</div>
+                            ) : (
+                              <i className="text-gray-500">Null</i>
+                            )}
+                          </td>
+                          <td className="text-center">
+                            {activity?.sessionName ? (
+                              <div>{activity.sessionName}</div>
+                            ) : (
+                              <i className="text-gray-500">Null</i>
+                            )}
+                          </td>
+                          <td className="text-center">
+                            {activity?.typeofActivity ? (
+                              <div>{activity.typeofActivity}</div>
+                            ) : (
+                              <i className="text-gray-500">Null</i>
+                            )}
+                          </td>
+                          <td className="text-center">
+                            {activity?.participantContactNumber ? (
+                              <div>{activity.participantContactNumber}</div>
+                            ) : (
+                              <i className="text-gray-500">Null</i>
+                            )}
+                          </td>
+                          <td className="text-center">
+                            {activity?.participantFirstName ? (
+                              <div>{activity.participantFirstName}</div>
+                            ) : (
+                              <i className="text-gray-500">Null</i>
+                            )}
+                          </td>
+                          <td className="text-center">
+                            {activity?.participantLastName ? (
+                              <div>{activity.participantLastName}</div>
+                            ) : (
+                              <i className="text-gray-500">Null</i>
+                            )}
+                          </td>
+                          <td className="text-center">
+                            <DateCard date={activity.created} />
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                ) : (
+                  <div className="text-center text-gray-400 my-10">
+                    {" "}
+                    No Activities Found
+                  </div>
+                )}
               </div>
             </div>
           </div>

@@ -1,50 +1,106 @@
-import { XMarkIcon } from "@heroicons/react/24/solid";
-import React, { useEffect, useRef, useState } from "react";
+import { ChevronDownIcon, XMarkIcon } from "@heroicons/react/24/solid";
+import React, { useEffect, useState } from "react";
 import { SERVER_ENDPOINT } from "../../config/Server";
 import toast from "react-hot-toast";
+
+const AudienceType = [
+  { name: "all", value: "ALL" },
+  { name: "children", value: "CHILDREN" },
+  { name: "boys", value: "BOYS" },
+  { name: "girls", value: "GIRLS" },
+  { name: "family", value: "FAMILY" },
+  { name: "couple", value: "COUPLE" },
+];
+const ProgramType = ["TempleProgram", "SocietyProgram", "CollegeProgram"];
 
 function ProgramModal({ isOpen, onClose, children }) {
   const [isError, setIsError] = useState(false);
   const [volunteerArr, setVolunteerArr] = useState([]);
-  const formRef = useRef();
+
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
+  const [audienceType, setAudienceType] = useState("ALL");
+  const [programType, setProgramType] = useState("TempleProgram");
+  const [incharge, setIncharge] = useState(0);
+  const [preacher, setPreacher] = useState(0);
+  const [mentor, setMentor] = useState(0);
+  const [coordinator, setCoordinator] = useState(0);
+  const [location, setLocation] = useState("");
   const formData = {
-    name: formRef?.current?.name?.value,
-    description: formRef?.current?.description?.value,
-    incharge: Number(formRef?.current?.incharge?.value),
-    preacher: Number(formRef?.current?.preacher?.value),
-    mentor: Number(formRef?.current?.mentor?.value),
-    coordinator: Number(formRef?.current?.coordinator?.value),
-    audienceType: "CHILDREN",
-    location: formRef?.current?.location?.value,
+    name: name,
+    description: description,
+    incharge: incharge,
+    preacher: preacher,
+    mentor: mentor,
+    coordinator: coordinator,
+    audienceType: audienceType,
+    programType: programType,
+    location: location,
   };
-  console.log(formData);
 
   async function submitHandler(e) {
     e.preventDefault();
     const header = new Headers();
-    console.log(formData);
     header.append("Content-Type", "application/json");
-    await fetch(`${SERVER_ENDPOINT}/program/create`, {
-      method: "POST",
-      headers: header,
-      body: JSON.stringify(formData),
-    })
-      .then((data) => {
-        if (data.ok) {
-          return data.json();
-        } else {
-          setIsError(true);
-          return data.json();
-        }
-      })
-      .then((data) => {
-        if (isError) {
-          toast.error(data.message);
-        } else {
-          toast.success(data.message);
-        }
-      })
-      .catch((err) => toast.error(err.message));
+    if (
+      mentor === 0 ||
+      coordinator === 0 ||
+      preacher === 0 ||
+      incharge === 0 ||
+      name === "" ||
+      description === "" ||
+      location === ""
+    ) {
+      toast.error("fill all the fields");
+      return;
+    }
+    try {
+      const response = await fetch(`${SERVER_ENDPOINT}/program/create`, {
+        method: "POST",
+        headers: header,
+        body: JSON.stringify(formData),
+      });
+      if (response.ok) {
+        const responseData = await response.json();
+        toast.success(responseData.message);
+        onClose();
+      } else {
+        const errorData = await response.json();
+        toast.error(errorData.error);
+      }
+    } catch (error) {
+      toast.error(error);
+    } finally {
+      setIncharge(0);
+      setMentor(0);
+      setCoordinator(0);
+      setIncharge(0);
+      setName("");
+      setDescription("");
+      setLocation("");
+    }
+
+    // await fetch(`${SERVER_ENDPOINT}/program/create`, {
+    //   method: "POST",
+    //   headers: header,
+    //   body: JSON.stringify(formData),
+    // })
+    //   .then((data) => {
+    //     if (data.ok) {
+    //       return data.json();
+    //     } else {
+    //       setIsError(true);
+    //       return data.json();
+    //     }
+    //   })
+    //   .then((data) => {
+    //     if (isError) {
+    //       toast.error(data.message);
+    //     } else {
+    //       toast.success(data.message);
+    //     }
+    //   })
+    //   .catch((err) => toast.error(err.message));
   }
 
   useEffect(() => {
@@ -64,12 +120,18 @@ function ProgramModal({ isOpen, onClose, children }) {
     })();
   }, [isError]);
 
+  const clear = () => {
+    setIsError();
+    setVolunteerArr([]);
+    onClose();
+  };
+
   if (isOpen)
     return (
       <>
         <div
           className="fixed top-0 left-0 right-0 bottom-0 z-[1000] backdrop-brightness-50 cursor-pointer flex items-center justify-center"
-          onClick={onClose}
+          onClick={clear}
         ></div>
         <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-[1000] bg-white rounded-2xl">
           <div className="md:w-[50vw] w-[85vw]">
@@ -79,7 +141,7 @@ function ProgramModal({ isOpen, onClose, children }) {
               </p>
               <button
                 className="absolute top-2 right-2 bg-red-200 text-red-700 p-2 rounded-full"
-                onClick={onClose}
+                onClick={clear}
               >
                 <XMarkIcon className="h-5 w-5" />
               </button>
@@ -88,7 +150,6 @@ function ProgramModal({ isOpen, onClose, children }) {
               <form
                 className="text-gray-600 flex flex-col gap-3"
                 onSubmit={submitHandler}
-                ref={formRef}
               >
                 <div className="flex flex-col gap-2">
                   <label className="font-semibold">Program Name</label>
@@ -97,6 +158,9 @@ function ProgramModal({ isOpen, onClose, children }) {
                     placeholder="Gitasar Batch 1"
                     name="name"
                     className="border bg-white px-4 py-1.5 rounded-md transition-colors duration-500 focus:outline-gray-400"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    required
                   />
                 </div>
                 <div className="flex flex-col gap-2">
@@ -105,77 +169,49 @@ function ProgramModal({ isOpen, onClose, children }) {
                     placeholder="your description"
                     className="border bg-white px-4 py-1.5 rounded-md transition-colors duration-500 focus:outline-gray-400"
                     name="description"
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                    required
                   />
                 </div>
                 <div className="grid md:grid-cols-2 grid-cols-1 md:gap-5 gap-3">
-                  <div className="flex flex-col gap-2">
-                    <label className="font-semibold">Program Incharge</label>
-                    <select
-                      name="incharge"
-                      className="border bg-white px-4 py-1.5 rounded-md transition-colors duration-500 focus:outline-gray-400"
-                    >
-                      {volunteerArr?.map((volunteer, index) => (
-                        <option value={volunteer.id} key={index}>
-                          {volunteer.initiatedName
-                            ? volunteer.initiatedName
-                            : `${volunteer.firstName} ${volunteer.lastName}`}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                  <div className="flex flex-col gap-2">
-                    <label className="font-semibold">Program Coordinator</label>
-                    <select
-                      className="border bg-white px-4 py-1.5 rounded-md transition-colors duration-500 focus:outline-gray-400"
-                      name="coordinator"
-                    >
-                      {volunteerArr?.map((volunteer, index) => (
-                        <option value={volunteer.id} key={index}>
-                          {volunteer.initiatedName
-                            ? volunteer.initiatedName
-                            : `${volunteer.firstName} ${volunteer.lastName}`}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                  <div className="flex flex-col gap-2">
-                    <label className="font-semibold">Program Preacher</label>
-                    <select
-                      className="border bg-white px-4 py-1.5 rounded-md transition-colors duration-500 focus:outline-gray-400"
-                      name="preacher"
-                    >
-                      {volunteerArr?.map((volunteer, index) => (
-                        <option value={volunteer.id} key={index}>
-                          {volunteer.initiatedName
-                            ? volunteer.initiatedName
-                            : `${volunteer.firstName} ${volunteer.lastName}`}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                  <div className="flex flex-col gap-2">
-                    <label className="font-semibold">Program Mentor</label>
-                    <select
-                      className="border bg-white px-4 py-1.5 rounded-md transition-colors duration-500 focus:outline-gray-400"
-                      name="mentor"
-                    >
-                      {volunteerArr?.map((volunteer, index) => (
-                        <option value={volunteer.id} key={index}>
-                          {volunteer.initiatedName
-                            ? volunteer.initiatedName
-                            : `${volunteer.firstName} ${volunteer.lastName}`}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
+                  <SelectVolunteerInput
+                    volunteerArr={volunteerArr}
+                    isLoading={false}
+                    label={"Incharge"}
+                    setVolunteer={setIncharge}
+                  />
+                  <SelectVolunteerInput
+                    volunteerArr={volunteerArr}
+                    isLoading={false}
+                    label={"Program Coordinator"}
+                    setVolunteer={setCoordinator}
+                  />
+                  <SelectVolunteerInput
+                    volunteerArr={volunteerArr}
+                    isLoading={false}
+                    label={"Program Preacher"}
+                    setVolunteer={setPreacher}
+                  />
+                  <SelectVolunteerInput
+                    volunteerArr={volunteerArr}
+                    isLoading={false}
+                    label={"Program Mentor"}
+                    setVolunteer={setMentor}
+                  />
+
                   <div className="flex flex-col gap-2">
                     <label className="font-semibold">Audience Type</label>
                     <select
                       className="border bg-white px-4 py-1.5 rounded-md transition-colors duration-500 focus:outline-gray-400"
                       name="audienceType"
+                      onChange={(e) => setAudienceType(e.target.value)}
                     >
-                      <option value="children">option1</option>
-                      <option value="">option2</option>
+                      {AudienceType?.map((type, index) => (
+                        <option value={type.value} key={index}>
+                          {type.name}
+                        </option>
+                      ))}
                     </select>
                   </div>
                   <div className="flex flex-col gap-2">
@@ -183,9 +219,13 @@ function ProgramModal({ isOpen, onClose, children }) {
                     <select
                       className="border bg-white px-4 py-1.5 rounded-md transition-colors duration-500 focus:outline-gray-400"
                       name="programType"
+                      onChange={(e) => setProgramType(e.target.value)}
                     >
-                      <option value="">option1</option>
-                      <option value="">option2</option>
+                      {ProgramType?.map((type, index) => (
+                        <option value={type} key={index}>
+                          {type}
+                        </option>
+                      ))}
                     </select>
                   </div>
                 </div>
@@ -196,6 +236,8 @@ function ProgramModal({ isOpen, onClose, children }) {
                     placeholder="NVCC Temple"
                     name="location"
                     className="border px-4 py-1.5 rounded-md"
+                    value={location}
+                    onChange={(e) => setLocation(e.target.value)}
                   />
                 </div>
                 <div className="absolute bottom-0 left-0 right-0 flex items-center justify-center gap-5 px-5 bg-white">
@@ -221,3 +263,85 @@ function ProgramModal({ isOpen, onClose, children }) {
 }
 
 export default ProgramModal;
+
+function SelectVolunteerInput({
+  volunteerArr,
+  isLoading,
+  label,
+  setVolunteer,
+}) {
+  const [isOpenSelection, setIsOpenSelection] = useState(false);
+  const [selectedVolunteer, setSelectedVolunteer] = useState({});
+  return (
+    <>
+      <div className="flex flex-col gap-2">
+        <p
+          className={`font-semibold ${
+            isLoading ? "text-gray-300" : "text-gray-600"
+          }`}
+        >
+          {label}
+        </p>
+        <div className="relative inline-block text-left">
+          <button
+            type="button"
+            onClick={() => !isLoading && setIsOpenSelection(!isOpenSelection)}
+            className={`inline-flex items-center justify-between w-full px-4 py-2 text-sm font-medium  bg-white border border-gray-300 rounded-md shadow-sm ${
+              isLoading
+                ? "text-gray-400"
+                : "hover:bg-gray-50 focus:outline-none focus:ring-1 text-gray-700"
+            }`}
+            id="options-menu"
+            aria-haspopup="true"
+            aria-expanded="true"
+          >
+            <p>
+              {Object.keys(selectedVolunteer).length === 0
+                ? "Select"
+                : `${
+                    selectedVolunteer?.initialName
+                      ? selectedVolunteer?.initialName
+                      : `${selectedVolunteer?.firstName} ${selectedVolunteer?.lastName}`
+                  }`}
+            </p>
+            <p>
+              <ChevronDownIcon className="h-3 w-3 text-black" />
+            </p>
+          </button>
+          {!isLoading && isOpenSelection ? (
+            <div
+              className="origin-top-right absolute right-0 mt-2 w-full rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-[100]"
+              role="menu"
+              aria-orientation="vertical"
+              aria-labelledby="options-menu"
+            >
+              <div className="py-1" role="none">
+                {volunteerArr?.length > 0 ? (
+                  volunteerArr.map((item) => (
+                    <p
+                      value={item.id}
+                      key={item.id}
+                      role="menu"
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      onClick={() => {
+                        setSelectedVolunteer(item);
+                        setIsOpenSelection(false);
+                        setVolunteer(item.id);
+                      }}
+                    >
+                      {item?.initialName
+                        ? item?.initialName
+                        : `${item.firstName} ${item.lastName}`}
+                    </p>
+                  ))
+                ) : (
+                  <p>NO Volunteer to show</p>
+                )}
+              </div>
+            </div>
+          ) : null}
+        </div>
+      </div>
+    </>
+  );
+}

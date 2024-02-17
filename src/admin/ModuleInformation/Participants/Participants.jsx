@@ -9,6 +9,7 @@ import { useLocation } from "react-router-dom";
 import ParticipantModal from "./ParticipantModal";
 import { SERVER_ENDPOINT } from "../../config/Server";
 import toast from "react-hot-toast";
+import Slider from "../../../components/MdLeftHeaderSlider";
 
 function Participants() {
   const { pathname } = useLocation();
@@ -66,6 +67,7 @@ function Participants() {
         <div className="md:w-[79.5vw] bg-gray-50 min-h-screen w-screen">
           <div className="flex flex-col">
             <div className="flex items-center">
+              <Slider />
               {pathname
                 ?.split("/")
                 .filter((item) => item !== "") // Filter out empty segments
@@ -99,83 +101,92 @@ function Participants() {
                 </p>
               </div>
               <div className="overflow-x-scroll">
-                <table className="w-full">
-                  <thead className="bg-gray-50">
-                    <tr>
-                      <th className="border-b px-6 font-semibold py-1">
-                        select
-                      </th>
+                {ParicipantArr?.length > 0 ? (
+                  <table className="w-full">
+                    <thead className="bg-gray-50">
+                      <tr>
+                        <th className="border-b px-6 font-semibold py-1">
+                          select
+                        </th>
 
-                      <th className="border-b px-6 font-semibold py-1">
-                        First Name
-                      </th>
+                        <th className="border-b px-6 font-semibold py-1">
+                          First Name
+                        </th>
 
-                      <th className="border-b px-6 font-semibold py-1">
-                        Last Name
-                      </th>
+                        <th className="border-b px-6 font-semibold py-1">
+                          Last Name
+                        </th>
 
-                      <th className="border-b px-6 font-semibold py-1">
-                        Phone
-                      </th>
+                        <th className="border-b px-6 font-semibold py-1">
+                          Phone
+                        </th>
 
-                      <th className="border-b px-6 font-semibold py-1">Dob</th>
+                        <th className="border-b px-6 font-semibold py-1">
+                          Dob
+                        </th>
 
-                      <th className="border-b px-6 font-semibold py-1">
-                        Gender
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {ParicipantArr?.map((item, index) => (
-                      <tr key={index} className="border-b">
-                        <td className="flex justify-center py-5">
-                          <input
-                            type="checkbox"
-                            id=""
-                            value={index}
-                            className=" checked:text-green-400 text-green-400"
-                          />
-                        </td>
-                        <td className="text-center">
-                          {item?.firstName ? (
-                            <div>{item.firstName}</div>
-                          ) : (
-                            <i className="text-gray-500">null</i>
-                          )}
-                        </td>
-                        <td className="text-center">
-                          {item?.lastName ? (
-                            <div>{item.lastName}</div>
-                          ) : (
-                            <i className="text-gray-500">null</i>
-                          )}
-                        </td>
-                        <td className="text-center">
-                          {item?.contactNumber ? (
-                            <div>{item.contactNumber}</div>
-                          ) : (
-                            <i className="text-gray-500">null</i>
-                          )}
-                        </td>
-
-                        <td className="text-center">
-                          {item?.dob ? (
-                            <div>{item.dob}</div>
-                          ) : (
-                            <i className="text-gray-500">null</i>
-                          )}
-                        </td>
-                        <td className="text-center">
-                          {item?.gender ? (
-                            <div>{item.gender}</div>
-                          ) : (
-                            <i className="text-gray-500">null</i>
-                          )}
-                        </td>
+                        <th className="border-b px-6 font-semibold py-1">
+                          Gender
+                        </th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
+                    </thead>
+                    <tbody>
+                      {ParicipantArr?.map((item, index) => (
+                        <tr key={index} className="border-b">
+                          <td className="flex justify-center py-5">
+                            <input
+                              type="checkbox"
+                              id=""
+                              value={index}
+                              className=" checked:text-green-400 text-green-400"
+                            />
+                          </td>
+                          <td className="text-center">
+                            {item?.firstName ? (
+                              <div>{item.firstName}</div>
+                            ) : (
+                              <i className="text-gray-500">null</i>
+                            )}
+                          </td>
+                          <td className="text-center">
+                            {item?.lastName ? (
+                              <div>{item.lastName}</div>
+                            ) : (
+                              <i className="text-gray-500">null</i>
+                            )}
+                          </td>
+                          <td className="text-center">
+                            {item?.contactNumber ? (
+                              <div>{item.contactNumber}</div>
+                            ) : (
+                              <i className="text-gray-500">null</i>
+                            )}
+                          </td>
+
+                          <td className="text-center">
+                            {item?.dob ? (
+                              <div>{item.dob}</div>
+                            ) : (
+                              <i className="text-gray-500">null</i>
+                            )}
+                          </td>
+                          <td className="text-center">
+                            {item?.gender ? (
+                              <div>{item.gender}</div>
+                            ) : (
+                              <i className="text-gray-500">null</i>
+                            )}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                ) : (
+                  <div className="text-center text-gray-400 my-10">
+                    {" "}
+                    No Participants Found
+                  </div>
+                )}
               </div>
             </div>
           </div>

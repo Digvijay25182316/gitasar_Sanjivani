@@ -125,62 +125,72 @@ function CourseM() {
                 </p>
               </div>
               <div className="overflow-x-scroll lg:overflow-hidden">
-                <table className="w-full">
-                  <thead className="bg-gray-50">
-                    <tr>
-                      <th className="border-b px-6 font-semibold py-1">
-                        Select
-                      </th>
+                {coursesArr?.length > 0 ? (
+                  <table className="w-full">
+                    <thead className="bg-gray-50">
+                      <tr>
+                        <th className="border-b px-6 font-semibold py-1">
+                          Select
+                        </th>
 
-                      <th className="border-b px-6 font-semibold py-1">
-                        <div className=" flex items-center py-1 w-max">
-                          Course Name
-                          <Dropdown
-                            origin={"origin-top-left"}
-                            position={"left-0"}
-                            setvalue={AddFilter}
-                            fieldname={"name"}
-                            selected={doesFieldExists(queryArr, "name")}
-                            removeFilter={() => removeObjectByKey("name")}
-                          />
-                        </div>
-                      </th>
-                      <th className="border-b px-6 font-semibold py-1">
-                        <div className=" flex items-center py-1 w-max">
-                          Course description
-                          <Dropdown
-                            origin={"origin-top-left"}
-                            position={"left-0"}
-                            setvalue={AddFilter}
-                            fieldname={"description"}
-                            selected={doesFieldExists(queryArr, "description")}
-                            removeFilter={() =>
-                              removeObjectByKey("description")
-                            }
-                          />
-                        </div>
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {coursesArr?.map((courseLevel, index) => (
-                      <tr key={index + 1} className="border-b w-full">
-                        <td className="flex justify-center py-5">
-                          <input
-                            type="checkbox"
-                            value={index + 1}
-                            className=" checked:text-green-400 text-green-400 cursor-pointer"
-                            onChange={onChangeSelect}
-                            disabled={selected}
-                            checked={selectedItem === index + 1}
-                          />
-                        </td>
-                        <td className="px-10">{courseLevel?.name}</td>
-                        <td className="px-10">{courseLevel?.description}</td>
+                        <th className="border-b px-6 font-semibold py-1">
+                          <div className=" flex items-center py-1 w-max">
+                            Course Name
+                            <Dropdown
+                              origin={"origin-top-left"}
+                              position={"left-0"}
+                              setvalue={AddFilter}
+                              fieldname={"name"}
+                              selected={doesFieldExists(queryArr, "name")}
+                              removeFilter={() => removeObjectByKey("name")}
+                            />
+                          </div>
+                        </th>
+                        <th className="border-b px-6 font-semibold py-1">
+                          <div className=" flex items-center py-1 w-max">
+                            Course description
+                            <Dropdown
+                              origin={"origin-top-left"}
+                              position={"left-0"}
+                              setvalue={AddFilter}
+                              fieldname={"description"}
+                              selected={doesFieldExists(
+                                queryArr,
+                                "description"
+                              )}
+                              removeFilter={() =>
+                                removeObjectByKey("description")
+                              }
+                            />
+                          </div>
+                        </th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
+                    </thead>
+                    <tbody>
+                      {coursesArr?.map((courseLevel, index) => (
+                        <tr key={index + 1} className="border-b w-full">
+                          <td className="flex justify-center py-5">
+                            <input
+                              type="checkbox"
+                              value={index + 1}
+                              className=" checked:text-green-400 text-green-400 cursor-pointer"
+                              onChange={onChangeSelect}
+                              disabled={selected}
+                              checked={selectedItem === index + 1}
+                            />
+                          </td>
+                          <td className="px-10">{courseLevel?.name}</td>
+                          <td className="px-10">{courseLevel?.description}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                ) : (
+                  <div className="text-center text-gray-400 my-10">
+                    {" "}
+                    No Courses Found
+                  </div>
+                )}
               </div>
             </div>
           </div>
