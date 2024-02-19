@@ -1,4 +1,4 @@
-import { XMarkIcon } from "@heroicons/react/24/solid";
+import { ChevronDownIcon, XMarkIcon } from "@heroicons/react/24/solid";
 import React, { useEffect, useState } from "react";
 import { SERVER_ENDPOINT } from "../../config/Server";
 import toast from "react-hot-toast";
@@ -32,11 +32,10 @@ function ScheduleSessions({ courseData, onCancel, onClose }) {
   const handleChangeSession = async (e) => {
     try {
       setLoadingSessions(true);
-      const response = await fetch(
-        `${SERVER_ENDPOINT}/session/course/${e.target.value}`
-      );
+      const response = await fetch(`${SERVER_ENDPOINT}/session/course/${e}`);
       if (response.ok) {
         const responseData = await response.json();
+        console.log(responseData);
         setSessionsData(responseData.content);
       } else {
         const errorData = await response.json();
@@ -123,8 +122,24 @@ function ScheduleSessions({ courseData, onCancel, onClose }) {
                 />
               </div>
 
-              <div className="flex flex-col gap-5">
-                <div className="flex flex-col gap-2 px-5">
+              <div className="flex flex-col gap-5 px-5">
+                <SelectCourse
+                  isLoading={loadingSessions}
+                  TypeArr={coursesArr}
+                  setType={handleChangeSession}
+                  label={"select course"}
+                />
+                {loadingSessions ? (
+                  <>...loading</>
+                ) : (
+                  <SelectCourse
+                    isLoading={loadingSessions}
+                    TypeArr={sessionsData}
+                    setType={setSelectedSessions}
+                    label={"select session"}
+                  />
+                )}
+                {/* <div className="flex flex-col gap-2 px-5">
                   <label
                     className="font-semibold text-gray-600"
                     htmlFor="levelId"
@@ -145,8 +160,8 @@ function ScheduleSessions({ courseData, onCancel, onClose }) {
                       </option>
                     ))}
                   </select>
-                </div>
-                <div className="flex flex-col gap-2 px-5" htmlFor="sessionId">
+                </div> */}
+                {/* <div className="flex flex-col gap-2 px-5" htmlFor="sessionId">
                   <label className="font-semibold text-gray-600">
                     Select Session
                   </label>
@@ -166,7 +181,7 @@ function ScheduleSessions({ courseData, onCancel, onClose }) {
                       ))}
                     </select>
                   )}
-                </div>
+                </div> */}
               </div>
 
               <div className="flex flex-col gap-2 px-5">
@@ -224,3 +239,144 @@ function ScheduleSessions({ courseData, onCancel, onClose }) {
 }
 
 export default ScheduleSessions;
+
+const SelectCourse = ({ isLoading, label, TypeArr, setType }) => {
+  const [isOpenSelection, setIsOpenSelection] = useState(false);
+  const [selectedType, setSelectedType] = useState({});
+  return (
+    <>
+      <div className="flex flex-col gap-2">
+        <p
+          className={`font-semibold ${
+            isLoading ? "text-gray-300" : "text-gray-600"
+          }`}
+        >
+          {label}
+        </p>
+        <div className="relative inline-block text-left">
+          <button
+            type="button"
+            onClick={() => !isLoading && setIsOpenSelection(!isOpenSelection)}
+            className={`inline-flex items-center justify-between w-full px-4 py-2 text-sm font-medium  bg-white border border-gray-300 rounded-md shadow-sm ${
+              isLoading
+                ? "text-gray-400"
+                : "hover:bg-gray-50 focus:outline-none focus:ring-1 text-gray-700"
+            }`}
+            id="options-menu"
+            aria-haspopup="true"
+            aria-expanded="true"
+          >
+            <p>
+              {Object.keys(selectedType).length === 0
+                ? "Select"
+                : `${selectedType?.name}`}
+            </p>
+            <p>
+              <ChevronDownIcon className="h-3 w-3 text-black" />
+            </p>
+          </button>
+          {!isLoading && isOpenSelection ? (
+            <div
+              className="origin-top-right absolute right-0 mt-2 w-full rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-[100]"
+              role="menu"
+              aria-orientation="vertical"
+              aria-labelledby="options-menu"
+            >
+              <div className="py-1" role="none">
+                {TypeArr?.length > 0 ? (
+                  TypeArr.map((item, index) => (
+                    <p
+                      value={item.code}
+                      key={index}
+                      role="menu"
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      onClick={() => {
+                        setSelectedType(item);
+                        setIsOpenSelection(false);
+                        setType(item.code);
+                      }}
+                    >
+                      {item?.name}
+                    </p>
+                  ))
+                ) : (
+                  <p>NO Volunteer to show</p>
+                )}
+              </div>
+            </div>
+          ) : null}
+        </div>
+      </div>
+    </>
+  );
+};
+const SelectSession = ({ isLoading, label, TypeArr, setType }) => {
+  const [isOpenSelection, setIsOpenSelection] = useState(false);
+  const [selectedType, setSelectedType] = useState({});
+  return (
+    <>
+      <div className="flex flex-col gap-2">
+        <p
+          className={`font-semibold ${
+            isLoading ? "text-gray-300" : "text-gray-600"
+          }`}
+        >
+          {label}
+        </p>
+        <div className="relative inline-block text-left">
+          <button
+            type="button"
+            onClick={() => !isLoading && setIsOpenSelection(!isOpenSelection)}
+            className={`inline-flex items-center justify-between w-full px-4 py-2 text-sm font-medium  bg-white border border-gray-300 rounded-md shadow-sm ${
+              isLoading
+                ? "text-gray-400"
+                : "hover:bg-gray-50 focus:outline-none focus:ring-1 text-gray-700"
+            }`}
+            id="options-menu"
+            aria-haspopup="true"
+            aria-expanded="true"
+          >
+            <p>
+              {Object.keys(selectedType).length === 0
+                ? "Select"
+                : `${selectedType?.name}`}
+            </p>
+            <p>
+              <ChevronDownIcon className="h-3 w-3 text-black" />
+            </p>
+          </button>
+          {!isLoading && isOpenSelection ? (
+            <div
+              className="origin-top-right absolute right-0 mt-2 w-full rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-[100]"
+              role="menu"
+              aria-orientation="vertical"
+              aria-labelledby="options-menu"
+            >
+              <div className="py-1" role="none">
+                {TypeArr?.length > 0 ? (
+                  TypeArr.map((item, index) => (
+                    <p
+                      value={item.id}
+                      key={index}
+                      role="menu"
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      onClick={() => {
+                        setSelectedType(item);
+                        setIsOpenSelection(false);
+                        setType(item.id);
+                      }}
+                    >
+                      {item?.name}
+                    </p>
+                  ))
+                ) : (
+                  <p>NO Volunteer to show</p>
+                )}
+              </div>
+            </div>
+          ) : null}
+        </div>
+      </div>
+    </>
+  );
+};

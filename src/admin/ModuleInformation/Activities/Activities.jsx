@@ -11,6 +11,7 @@ import toast from "react-hot-toast";
 import DateCard from "./DateCard";
 import { CubeTransparentIcon } from "@heroicons/react/24/outline";
 import Sidebar from "../../../components/BottomNav.jsx/Sidebar";
+import DateDisplay from "../../../components/DateDisplay";
 
 function Activities() {
   const { pathname } = useLocation();
@@ -287,8 +288,8 @@ function Activities() {
                             )}
                           </td>
                           <td className="text-center">
-                            {activity?.typeofActivity ? (
-                              <div>{activity.typeofActivity}</div>
+                            {activity?.activityName ? (
+                              <div>{activity.activityName}</div>
                             ) : (
                               <i className="text-gray-500">Null</i>
                             )}
@@ -315,7 +316,7 @@ function Activities() {
                             )}
                           </td>
                           <td className="text-center">
-                            {activity.activityDate}
+                            <DateDisplay dateString={activity.activityDate} />
                           </td>
                         </tr>
                       ))}

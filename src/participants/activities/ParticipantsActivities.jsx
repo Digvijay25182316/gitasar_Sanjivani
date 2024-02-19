@@ -33,8 +33,9 @@ function Activities() {
       participantId: participant.id,
       activityId: Activities,
       programId: Number(programId),
-      activityDate: StartDate,
+      activityDate: new Date(StartDate).toISOString(),
     };
+
     try {
       setIsLoading(true);
       const header = new Headers();
