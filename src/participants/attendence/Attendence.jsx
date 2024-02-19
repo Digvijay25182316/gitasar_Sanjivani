@@ -18,13 +18,13 @@ function Attendance() {
   const [sessionsAttendence, setSessionAttendence] = useState(0);
   const [SingleSession, setSingleSession] = useState({});
   const [LatestSession, setLatestSession] = useState({});
+  console.log(LatestSession);
 
   const storeToLocalStorage = (item) => {
     localStorage.setItem("phoneNumber", item);
   };
 
   const navigate = useNavigate();
-  console.log(sessions);
 
   useEffect(() => {
     (async () => {
@@ -68,9 +68,9 @@ function Attendance() {
       } catch (error) {
         toast.error(error.message);
       } finally {
-        setFutureSessions(future);
-        setSessions(past.splice(1));
         setLatestSession(past[0]);
+        setSessions(past.splice(1));
+        setFutureSessions(future);
       }
     })();
   }, [levelId]);
@@ -118,15 +118,12 @@ function Attendance() {
 
   async function handleSubmitAttendance(e) {
     e.preventDefault();
-
     const formData = {
       scheduledSessionId: sessionsAttendence,
       participantId: Participant.id,
       levelId: Number(levelId),
       programId: levelObject.programId,
     };
-    console.log(formData);
-
     try {
       const header = new Headers();
       header.append("Content-Type", "application/json");
@@ -185,7 +182,7 @@ function Attendance() {
         </div>
         {Object.keys(Participant).length > 0 && (
           <div className="font-semibold text-gray-400 mt-5">
-            <i className="text-gray-700">
+            <i className="text-red-700">
               {`${Participant.firstName} ${Participant.lastName}`}
             </i>
           </div>

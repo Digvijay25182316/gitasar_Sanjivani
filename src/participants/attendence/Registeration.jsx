@@ -199,6 +199,7 @@ const ParticipantRegisteration = () => {
         Participant Registeration
       </h1>
       <div className="md:min-w-3xl mx-2 bg-white p-5 md:p-10 rounded-3xl shadow-lg shadow-purple-200">
+        <p>You are not registered</p>
         <div className="flex items-center gap-8 justify-center">
           <p
             className={` border-8 transition-colors duration-500 ${

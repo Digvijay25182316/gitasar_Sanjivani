@@ -8,6 +8,7 @@ const SessionList = ({ course_level_id }) => {
   const [items, setItems] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [selectedSession, setSelectedSession] = useState(null);
+  const [isExpanded, setIsExpanded] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
