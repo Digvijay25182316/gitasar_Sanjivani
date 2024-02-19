@@ -52,6 +52,7 @@ function Activities() {
         if (response.ok) {
           const responseData = await response.json();
           setActivityArr(responseData.content);
+          console.log(responseData);
         } else {
           const errorData = await response.json();
           toast.error(errorData.message);
@@ -314,7 +315,7 @@ function Activities() {
                             )}
                           </td>
                           <td className="text-center">
-                            <DateCard date={activity.created} />
+                            {activity.activityDate}
                           </td>
                         </tr>
                       ))}
