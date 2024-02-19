@@ -37,7 +37,7 @@ function CourseLevel() {
         const response = await fetch(`${SERVER_ENDPOINT}/level/`);
         if (response.ok) {
           const responseData = await response.json();
-
+          console.log(responseData);
           setCoursesArr(responseData.content);
         } else {
           const errorData = await response.json();

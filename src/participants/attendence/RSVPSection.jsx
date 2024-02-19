@@ -8,17 +8,17 @@ function RSVPSection({ levelData, participantData, futureSessions }) {
   const [isLoading, setIsLoading] = useState(false);
   const [sessionsRSVP, setSessionRSVP] = useState({});
   const [isYes, setIsYes] = useState(false);
+  console.log(futureSessions, participantData);
 
   useEffect(() => {
     (async () => {
       setIsLoading(true);
       try {
         const response = await fetch(
-          `${SERVER_ENDPOINT}/rsvp/find/?participantId=${participantData.id}&scheduledSessionId=${futureSessions[0].id}`
+          `${SERVER_ENDPOINT}/rsvp/find/?participantId=${participantData.id}&scheduledSessionId=${futureSessions[0].sessionId}`
         );
         if (response.ok) {
           const responseData = await response.json();
-          console.log(responseData);
           setSessionRSVP(responseData);
         } else {
           if (response.status === 404) {
@@ -39,13 +39,17 @@ function RSVPSection({ levelData, participantData, futureSessions }) {
   async function handleSubmitRSVP(answer) {
     setIsLoading(true);
     const header = new Headers();
+    header.append("Content-Type", "application/json");
+
     const RSVP = {
       scheduledSessionId: futureSessions[0].id,
       participantId: participantData.id,
       levelId: levelData.id,
       programId: levelData.programId,
+      scheduledSessionName: futureSessions[0].name,
       rsvp: answer,
     };
+    console.log(RSVP);
 
     try {
       const response = await fetch(`${SERVER_ENDPOINT}/rsvp/mark`, {
@@ -53,15 +57,14 @@ function RSVPSection({ levelData, participantData, futureSessions }) {
         headers: header,
         body: JSON.stringify(RSVP),
       });
-      console.log(response);
-      // if (response.ok) {
-      //   const responseData = await response.json();
-      //   toast.success(responseData.message);
-      //   setIsYes(!isYes);
-      // } else {
-      //   const errorData = await response.json();
-      //   toast.error(errorData);
-      // }
+      if (response.ok) {
+        // const responseData = await response.json();
+        toast.success("marked successfully");
+        // setIsYes(!isYes);
+      } else {
+        const errorData = await response.json();
+        toast.error(errorData);
+      }
     } catch (error) {
       toast.error(error);
     } finally {

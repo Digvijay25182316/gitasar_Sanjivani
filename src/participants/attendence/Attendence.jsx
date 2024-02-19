@@ -24,6 +24,7 @@ function Attendance() {
   };
 
   const navigate = useNavigate();
+  console.log(sessions);
 
   useEffect(() => {
     (async () => {
@@ -52,7 +53,7 @@ function Attendance() {
         );
         if (response.ok) {
           const responseData = await response.json();
-          setSessions(responseData.content);
+          console.log(responseData);
           responseData?.content?.forEach((session, index) => {
             if (new Date(session.startTime) > new Date()) {
               future.push(session);
@@ -124,6 +125,7 @@ function Attendance() {
       levelId: Number(levelId),
       programId: levelObject.programId,
     };
+    console.log(formData);
 
     try {
       const header = new Headers();
@@ -242,14 +244,13 @@ function Attendance() {
                     <p className="px-5 text-gray-800 font-semibold">
                       * latest session
                     </p>
-
                     <label className="flex items-center gap-5">
                       <input
                         type="radio"
                         name="sessionAttendence"
                         checked={sessionsAttendence === LatestSession?.id}
                         onChange={(e) => {
-                          setSessionAttendence(sessions[0].id);
+                          setSessionAttendence(LatestSession?.id);
                           setSingleSession({});
                         }}
                         readOnly={isLoading}
@@ -301,7 +302,7 @@ function Attendance() {
                               </p>
                             ))
                           ) : (
-                            <p>NO Sessions to show</p>
+                            <p>NO Sessions to show You can check in rsvp</p>
                           )}
                         </div>
                       </div>
@@ -332,7 +333,9 @@ function Attendance() {
                 participantData={Participant}
               />
             ) : (
-              <p>No future sessions</p>
+              <div className="px-5 py-10 text-gray-500 border w-full text-center">
+                No future sessions to show
+              </div>
             )}
           </>
         )}
