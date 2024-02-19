@@ -16,8 +16,9 @@ import Slider from "../../../components/MdLeftHeaderSlider";
 import UploadingFile from "./UploadingFile";
 import { SERVER_ENDPOINT } from "../../config/Server";
 import toast from "react-hot-toast";
-import Dropdown from "../../../components/BottomNav.jsx/DropDown";
+import CourseDetailsCard from "./courseDetailsCard";
 import Sidebar from "../../../components/BottomNav.jsx/Sidebar";
+import DownloadCSVFile from "./DownloadEmptyCSV";
 
 function CourseM() {
   const { pathname } = useLocation();
@@ -28,33 +29,25 @@ function CourseM() {
   const [currentPage, setPage] = useState(1);
   const [selected, setSelected] = useState(false);
   const [selectedItem, setSelectedItem] = useState(0);
-  const [coursesArr, setCoursesArr] = useState([]);
+  const [SessionArr, setSessionArr] = useState([]);
 
   useEffect(() => {
     (async () => {
       setIsLoading(true);
-      fetch(`${SERVER_ENDPOINT}/course/`)
-        .then((data) => {
-          if (data.ok) {
-            return data.json();
-          } else {
-            setIsError(true);
-            return data.json();
-          }
-        })
-        .then((data) => {
-          if (isError) {
-            toast.error(data.message);
-          } else {
-            setCoursesArr(data.content);
-          }
-        })
-        .catch((err) => {
-          toast.error(err.message);
-        })
-        .finally(() => {
-          setIsLoading(false);
-        });
+      try {
+        const response = await fetch(`${SERVER_ENDPOINT}/session/`);
+        if (response.ok) {
+          const responseData = await response.json();
+          setSessionArr(responseData.content);
+        } else {
+          const errorData = await response.json();
+          toast.error(errorData.message);
+        }
+      } catch (error) {
+        toast.error(error.message);
+      } finally {
+        setIsLoading(false);
+      }
     })();
   }, [isError, setIsError]);
 
@@ -111,6 +104,7 @@ function CourseM() {
               <div className="flex items-center gap-3 bg-white text-gray-700 px-2 py-1 border rounded">
                 <button onClick={ClearSelection}>clear selection</button>
               </div>
+              <DownloadCSVFile />
               <button
                 onClick={() => setOpenPrograms(true)}
                 className="flex items-center gap-2 bg-white px-4 py-1.5 border border-gray-300 rounded text-blue-800"
@@ -124,8 +118,8 @@ function CourseM() {
                   Courses Master
                 </p>
               </div>
-              <div className="overflow-x-scroll lg:overflow-hidden">
-                {coursesArr?.length > 0 ? (
+              <div className="overflow-x-scroll ">
+                {SessionArr?.length > 0 ? (
                   <table className="w-full">
                     <thead className="bg-gray-50">
                       <tr>
@@ -136,51 +130,97 @@ function CourseM() {
                         <th className="border-b px-6 font-semibold py-1">
                           <div className=" flex items-center py-1 w-max">
                             Course Name
-                            <Dropdown
-                              origin={"origin-top-left"}
-                              position={"left-0"}
-                              setvalue={AddFilter}
-                              fieldname={"name"}
-                              selected={doesFieldExists(queryArr, "name")}
-                              removeFilter={() => removeObjectByKey("name")}
-                            />
                           </div>
                         </th>
                         <th className="border-b px-6 font-semibold py-1">
                           <div className=" flex items-center py-1 w-max">
                             Course description
-                            <Dropdown
-                              origin={"origin-top-left"}
-                              position={"left-0"}
-                              setvalue={AddFilter}
-                              fieldname={"description"}
-                              selected={doesFieldExists(
-                                queryArr,
-                                "description"
-                              )}
-                              removeFilter={() =>
-                                removeObjectByKey("description")
-                              }
-                            />
+                          </div>
+                        </th>
+                        <th className="border-b px-6 font-semibold py-1">
+                          <div className=" flex items-center py-1 w-max">
+                            Course code
+                          </div>
+                        </th>
+                        <th className="border-b px-6 font-semibold py-1">
+                          <div className=" flex items-center py-1 w-max">
+                            session code
+                          </div>
+                        </th>
+                        <th className="border-b px-6 font-semibold py-1">
+                          <div className=" flex items-center py-1 w-max">
+                            session Name
+                          </div>
+                        </th>
+                        <th className="border-b px-6 font-semibold py-1">
+                          <div className=" flex items-center py-1 w-max">
+                            session description
+                          </div>
+                        </th>
+                        <th className="border-b px-6 font-semibold py-1">
+                          <div className=" flex items-center py-1 w-max">
+                            session duration(min)
                           </div>
                         </th>
                       </tr>
                     </thead>
                     <tbody>
-                      {coursesArr?.map((courseLevel, index) => (
+                      {SessionArr?.map((session, index) => (
                         <tr key={index + 1} className="border-b w-full">
                           <td className="flex justify-center py-5">
                             <input
                               type="checkbox"
-                              value={index + 1}
+                              value={session.id}
                               className=" checked:text-green-400 text-green-400 cursor-pointer"
                               onChange={onChangeSelect}
                               disabled={selected}
-                              checked={selectedItem === index + 1}
+                              checked={selectedItem === session.id}
                             />
                           </td>
-                          <td className="px-10">{courseLevel?.name}</td>
-                          <td className="px-10">{courseLevel?.description}</td>
+                          <td className="px-10">
+                            <div className=" line-clamp-2 w-full">
+                              <CourseDetailsCard
+                                courseCode={session.courseCode}
+                                fieldName={"name"}
+                              />
+                            </div>
+                          </td>
+                          <td className="px-10">
+                            <div className=" line-clamp-2 w-full">
+                              <CourseDetailsCard
+                                courseCode={session.courseCode}
+                                fieldName={"description"}
+                              />
+                            </div>
+                          </td>
+                          <td className="px-10">
+                            <div className=" line-clamp-2 w-full">
+                              <CourseDetailsCard
+                                courseCode={session.courseCode}
+                                fieldName={"code"}
+                              />
+                            </div>
+                          </td>
+                          <td className="px-10">
+                            <div className=" line-clamp-2 w-full">
+                              {session?.code}
+                            </div>
+                          </td>
+                          <td className="px-10">
+                            <div className=" line-clamp-2 w-full">
+                              {session?.name}
+                            </div>
+                          </td>
+                          <td className="px-10">
+                            <div className=" line-clamp-2 w-full">
+                              {session?.description}
+                            </div>
+                          </td>
+                          <td className="px-10">
+                            <div className=" line-clamp-2 w-full">
+                              {session?.durationInMinutes}
+                            </div>
+                          </td>
                         </tr>
                       ))}
                     </tbody>

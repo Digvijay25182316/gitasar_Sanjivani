@@ -2,12 +2,10 @@ import { XMarkIcon } from "@heroicons/react/24/solid";
 import React, { useState } from "react";
 import toast from "react-hot-toast";
 import { SERVER_ENDPOINT } from "../../config/Server";
+import { ArrowLeftIcon, ArrowRightIcon } from "@heroicons/react/24/outline";
 
 function VolunteersModal({ isOpen, setIsOpen }) {
-  const [currentStep, setCurrentStep] = useState(1);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isError, setIsError] = useState(false);
-  const [formData, setformData] = useState({
+  const INITIAL_STATE = {
     firstName: "",
     lastName: "",
     initiatedName: "",
@@ -19,7 +17,10 @@ function VolunteersModal({ isOpen, setIsOpen }) {
     address: "",
     serviceInterests: "",
     currentServices: "",
-  });
+  };
+  const [currentStep, setCurrentStep] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
+  const [formData, setformData] = useState(INITIAL_STATE);
 
   function nextStep() {
     setCurrentStep((prev) => prev + 1);
@@ -62,6 +63,8 @@ function VolunteersModal({ isOpen, setIsOpen }) {
       toast.error(error.message);
     } finally {
       setIsLoading(false);
+      setformData(INITIAL_STATE);
+      setCurrentStep(1);
     }
   }
   if (isOpen) {
@@ -229,7 +232,7 @@ function Step1({ StepState, handleChange, isLoading, setIsOpen, nextStep }) {
       </div>
       <div className="absolute bottom-0 left-0 right-0 flex items-center justify-center gap-5 px-5 bg-white rounded-b-2xl">
         <button
-          className="w-full max-w-[250px] text-lg px-4 py-1.5 rounded-md mb-2 border"
+          className="w-full max-w-[250px] text-lg px-4 py-1.5 rounded-md mb-2 border border-gray-300 hover:bg-gray-100"
           type="button"
           onClick={setIsOpen}
           disabled={isLoading}
@@ -237,12 +240,13 @@ function Step1({ StepState, handleChange, isLoading, setIsOpen, nextStep }) {
           Cancel
         </button>
         <button
-          className={`w-full max-w-[250px] text-lg px-4 py-1.5 rounded-md mb-2 border bg-gray-400`}
+          className={`w-full max-w-[250px] text-lg px-4 py-1.5 rounded-md mb-2 border border-blue-400 bg-blue-300 flex items-center justify-center md:gap-6 gap-3`}
           type="button"
           onClick={nextStep}
           disabled={isLoading}
         >
           Next
+          <ArrowRightIcon className="h-5 w-5" />
         </button>
       </div>
     </div>
@@ -322,12 +326,13 @@ function Step2({ StepState, handleChange, isLoading, prevStep }) {
         </div>
         <div className="absolute bottom-0 left-0 right-0 flex items-center justify-center gap-5 px-5 bg-white rounded-b-2xl">
           <button
-            className={`w-full max-w-[250px] text-lg px-4 py-1.5 rounded-md mb-2 border`}
+            className={`w-full max-w-[250px] text-lg px-4 py-1.5 rounded-md mb-2 border flex items-center md:gap-6 gap-3 justify-center`}
             type="button"
             onClick={prevStep}
             disabled={isLoading}
           >
-            Prev
+            <ArrowLeftIcon className="h-5 w-5" />
+            Previous
           </button>
 
           <button

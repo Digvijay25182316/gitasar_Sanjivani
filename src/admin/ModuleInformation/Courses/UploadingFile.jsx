@@ -7,11 +7,30 @@ import {
 } from "@heroicons/react/24/outline";
 import { DocumentIcon } from "@heroicons/react/24/solid";
 import { SERVER_ENDPOINT } from "../../config/Server";
+import toast from "react-hot-toast";
+import AddSessions from "./Dinamicsessions";
 
 function UploadingFile({ isOpen, setIsOpen }) {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const [file, setFile] = useState(null);
+  const [AddSessionForm, setAddSessionForm] = useState(false);
+
+  function generateCSV(data) {
+    // Ensure data is provided and is an array
+    if (!data || !Array.isArray(data) || data.length === 0) {
+      return "";
+    }
+    // Extract headers from the first object
+    const headers = Object.keys(data[0]);
+    // Create CSV content
+    let csv = headers.join(",") + "\n";
+    data.forEach((item) => {
+      const values = headers.map((header) => item[header]);
+      csv += values.join(",") + "\n";
+    });
+    return csv;
+  }
 
   const handleDragEnter = (e) => {
     e.preventDefault();
@@ -64,74 +83,115 @@ function UploadingFile({ isOpen, setIsOpen }) {
       download: true,
       header: true,
       dynamicTyping: true,
-      step: async function (row) {
+      skipEmptyLines: true,
+      step: async function (row, index) {
         // Accessing Code, Description, SessionName, and SessionDescription from each row
-        const rowData = row.data;
+        const header = new Headers();
+        header.append("Content-Type", "application/json");
+        const {
+          code,
+          name,
+          description,
+          sessionName,
+          sessionDescription,
+          sessionCode,
+          durationInMinutes,
+        } = row.data;
         try {
-          const response = await fetch(`${SERVER_ENDPOINT}/course/create`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              code: rowData.code,
-              name: rowData.name,
-              description: rowData.description,
-            }),
-          });
-          if (response.ok) {
-            const SessionResponse = await fetch(
-              `${SERVER_ENDPOINT}/session/create/`,
+          if (
+            code ||
+            name ||
+            description ||
+            sessionCode ||
+            sessionDescription ||
+            sessionName ||
+            durationInMinutes
+          ) {
+            const courseData = { code, name, description };
+            const responseCourse = await fetch(
+              `${SERVER_ENDPOINT}/course/create`,
               {
                 method: "POST",
-                body: JSON.stringify({
-                  code: "DYSNP",
-                  name: rowData.SessionName,
-                  description: rowData.SessionDescription,
-                  courseCode: rowData.code,
-                  durationInMinutes: 20,
-                }),
-                headers: { "Content-Type": "application/json" },
+                headers: header,
+                body: JSON.stringify(courseData),
               }
             );
-            if (SessionResponse.ok) {
-              console.log("done");
-            }
-          } else {
-            const errorData = await response.json();
-            if (errorData.status === 400) {
-              const SessionResponse = await fetch(
+            if (responseCourse.ok) {
+              const sessionData = {
+                code: sessionCode,
+                name: sessionName,
+                description: sessionDescription,
+                durationInMinutes,
+                courseCode: code,
+              };
+              const responseSession = await fetch(
                 `${SERVER_ENDPOINT}/session/create`,
                 {
                   method: "POST",
-                  body: JSON.stringify({
-                    code: rowData.sessionCode,
-                    name: rowData.SessionName,
-                    description: rowData.SessionDescription,
-                    courseCode: rowData.code,
-                    durationInMinutes: rowData.durationInMinutes,
-                  }),
-                  headers: { "Content-Type": "application/json" },
+                  headers: header,
+                  body: JSON.stringify(sessionData),
                 }
               );
-              if (SessionResponse.ok) {
-                console.log("done");
+              if (responseSession.ok) {
+                console.log("done...?????///!!!!");
+              } else {
+                const errorData = await responseSession.json();
+                console.log(errorData);
+              }
+            } else {
+              if (responseCourse.status === 409) {
+                const sessionData = {
+                  code: sessionCode,
+                  name: sessionName,
+                  description: sessionDescription,
+                  durationInMinutes,
+                  courseCode: code,
+                };
+                const responseSession = await fetch(
+                  `${SERVER_ENDPOINT}/session/create`,
+                  {
+                    method: "POST",
+                    headers: header,
+                    body: JSON.stringify(sessionData),
+                  }
+                );
+                if (responseSession.ok) {
+                  success.push("sessionSuccessfully uploaded :", {
+                    sessionCode,
+                    sessionName,
+                    sessionDescription,
+                  });
+                } else {
+                  const errorData = await responseSession.json();
+                  errorArr.push(
+                    `error occured while uploading the session ${errorData}`,
+                    { sessionName, sessionCode, sessionDescription }
+                  );
+                }
+              } else {
+                const errorData = await responseCourse.json();
+                errorArr.push(
+                  `errorOccured while uploading the course ${`name: ${name}`},${`description :${description}`} , ${`description :${code}`} :`,
+                  errorData
+                );
               }
             }
+          } else {
+            errorArr.push(
+              `row ${index} data could not be uploaded due to insufficient fields`
+            );
           }
         } catch (error) {
-          errorArr.push(error);
+          errorArr.push(`an exception occured : ${error.message}`);
         }
-        const { Code, description, SessionName, SessionDescription } = row.data;
-        console.log("Code:", Code);
-        console.log("Description:", description);
-        console.log("SessionName:", SessionName);
-        console.log("SessionDescription:", SessionDescription);
       },
       error: function (error) {
         console.error("Error during parsing:", error);
       },
       complete: function () {
-        console.log("All done!");
-        console.log(errorArr);
+        errorArr.length > 0
+          ? toast.error(errorArr)
+          : toast.success("All done!");
       },
     });
   };
@@ -143,8 +203,8 @@ function UploadingFile({ isOpen, setIsOpen }) {
           className="fixed top-0 left-0 right-0 bottom-0 z-[1000] backdrop-brightness-50 cursor-pointer flex items-center justify-center"
           onClick={setIsOpen}
         ></div>
-        <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-[1000] bg-white p-5 rounded-2xl">
-          <div className="flex items-center border-b mb-3">
+        <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-[1000] bg-white rounded-2xl">
+          <div className="flex items-center border-b mb-3 pl-5 pr-5 pt-5">
             <button
               onClick={() => setIsFormOpen(false)}
               className={`text-lg py-1.5 ${
@@ -168,7 +228,7 @@ function UploadingFile({ isOpen, setIsOpen }) {
           </div>
           {!isFormOpen ? (
             <>
-              <div className="md:w-[500px] w-[80vw]">
+              <div className="md:w-[500px] w-[80vw] pl-5 pr-5 pb-5">
                 <div className="flex flex-col text-gray-700 mb-5">
                   <div className="flex items-center gap-3 ">
                     <p>
@@ -248,7 +308,7 @@ function UploadingFile({ isOpen, setIsOpen }) {
                   </div>
                 )}
               </div>
-              <div className="flex items-center justify-between px-4 pt-4 gap-5">
+              <div className="flex items-center justify-between px-4 pt-4 gap-5 pb-5">
                 <button
                   className="w-full border border-gray-400 px-4 py-1.5 rounded-md text-gray-700 text-lg hover:bg-gray-100"
                   onClick={setIsOpen}
@@ -268,7 +328,7 @@ function UploadingFile({ isOpen, setIsOpen }) {
             </>
           ) : (
             <>
-              <div className="md:w-[500px] w-[80vw]">
+              <div className="md:w-[500px] w-[80vw] h-[80vh] overflow-y-scroll pl-5 pr-5">
                 <div className="flex flex-col text-gray-700 mb-5">
                   <div className="flex items-center gap-3 ">
                     <p>
@@ -282,45 +342,8 @@ function UploadingFile({ isOpen, setIsOpen }) {
                     Fill the form to add courses
                   </p>
                 </div>
-                <div>
-                  <form action="" className="flex flex-col gap-5">
-                    <div className="flex flex-col gap-2">
-                      <label className="font-semibold">Course Name</label>
-                      <input
-                        type="text"
-                        className="px-4 py-1.5 border rounded-md outline-none focus:border-blue-700"
-                        placeholder="enter course name"
-                      />
-                    </div>
-                    <div className="flex flex-col gap-2">
-                      <label className="font-semibold">
-                        Course Description
-                      </label>
-                      <input
-                        type="text"
-                        className="px-4 py-1.5 border rounded-md outline-none focus:border-blue-700"
-                        placeholder="enter course name"
-                      />
-                    </div>
-                  </form>
-                </div>
-              </div>
-              <div className="flex items-center justify-between px-4 pt-4 gap-5">
-                <button
-                  className={`w-full border px-4 py-1.5 rounded-md text-black text-lg border-gray-400 cursor-pointer hover:bg-gray-100`}
-                  onClick={setIsOpen}
-                >
-                  cancel
-                </button>
-                <button
-                  className={`w-full ${
-                    file ? "bg-blue-700" : "bg-blue-300"
-                  } px-4 py-1.5 rounded-md text-white text-lg`}
-                  disabled={!file}
-                  onClick={handleFileUpload}
-                >
-                  submit
-                </button>
+
+                <AddSessions setIsOpen={setIsOpen} generateCSV={generateCSV} />
               </div>
             </>
           )}

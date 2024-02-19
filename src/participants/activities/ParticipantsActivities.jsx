@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { SERVER_ENDPOINT } from "../../admin/config/Server";
 import toast from "react-hot-toast";
 import ProgramCard from "./ProgramCard";
@@ -10,6 +10,10 @@ function Activities() {
   const [activitiesArr, setActivitiesArr] = useState([]);
   const [participant, setParticipant] = useState({});
   const navigate = useNavigate();
+
+  const storeToLocalStorage = (item) => {
+    localStorage.setItem("phoneNumber", item);
+  };
 
   const [Activities, setSelectedActivities] = useState(0);
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -74,6 +78,7 @@ function Activities() {
           "participant with the phone number does not exists  please register"
         );
         navigate("/registeration");
+        storeToLocalStorage(phoneNumber);
       } else {
         const errorData = await response.json();
         toast.error(errorData.message);
@@ -135,14 +140,6 @@ function Activities() {
                 >
                   {isLoading ? "loading..." : "Search"}
                 </button>
-                <Link to={"/registeration"}>
-                  <button
-                    className="px-4 py-1.5 text-white text-lg  bg-blue-700 rounded md:w-[150px] w-[100px]"
-                    type="button"
-                  >
-                    Register
-                  </button>
-                </Link>
               </div>
             </div>
           </form>

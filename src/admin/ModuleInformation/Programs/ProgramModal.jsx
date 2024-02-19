@@ -11,16 +11,21 @@ const AudienceType = [
   { name: "family", value: "FAMILY" },
   { name: "couple", value: "COUPLE" },
 ];
-const ProgramType = ["TempleProgram", "SocietyProgram", "CollegeProgram"];
+const ProgramType = [
+  { name: "TempleProgram", value: "TempleProgram" },
+  { name: "SocietyProgram", value: "SocietyProgram" },
+  { name: "CollegeProgram", value: "CollegeProgram" },
+];
 
 function ProgramModal({ isOpen, onClose, children }) {
   const [isError, setIsError] = useState(false);
   const [volunteerArr, setVolunteerArr] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
-  const [audienceType, setAudienceType] = useState("ALL");
-  const [programType, setProgramType] = useState("TempleProgram");
+  const [audienceType, setAudienceType] = useState("");
+  const [programType, setProgramType] = useState("");
   const [incharge, setIncharge] = useState(0);
   const [preacher, setPreacher] = useState(0);
   const [mentor, setMentor] = useState(0);
@@ -78,6 +83,8 @@ function ProgramModal({ isOpen, onClose, children }) {
       setName("");
       setDescription("");
       setLocation("");
+      setProgramType("");
+      setAudienceType("");
     }
 
     // await fetch(`${SERVER_ENDPOINT}/program/create`, {
@@ -200,34 +207,18 @@ function ProgramModal({ isOpen, onClose, children }) {
                     setVolunteer={setMentor}
                   />
 
-                  <div className="flex flex-col gap-2">
-                    <label className="font-semibold">Audience Type</label>
-                    <select
-                      className="border bg-white px-4 py-1.5 rounded-md transition-colors duration-500 focus:outline-gray-400"
-                      name="audienceType"
-                      onChange={(e) => setAudienceType(e.target.value)}
-                    >
-                      {AudienceType?.map((type, index) => (
-                        <option value={type.value} key={index}>
-                          {type.name}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                  <div className="flex flex-col gap-2">
-                    <label className="font-semibold">Program Type</label>
-                    <select
-                      className="border bg-white px-4 py-1.5 rounded-md transition-colors duration-500 focus:outline-gray-400"
-                      name="programType"
-                      onChange={(e) => setProgramType(e.target.value)}
-                    >
-                      {ProgramType?.map((type, index) => (
-                        <option value={type} key={index}>
-                          {type}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
+                  <SelectType
+                    TypeArr={AudienceType}
+                    label={"Audience Type"}
+                    setType={setAudienceType}
+                    isLoading={isLoading}
+                  />
+                  <SelectType
+                    isLoading={isLoading}
+                    TypeArr={ProgramType}
+                    label={"ProgramType"}
+                    setType={setProgramType}
+                  />
                 </div>
                 <div className="flex flex-col gap-2 mb-10">
                   <label className="font-semibold">Location</label>
@@ -299,8 +290,8 @@ function SelectVolunteerInput({
               {Object.keys(selectedVolunteer).length === 0
                 ? "Select"
                 : `${
-                    selectedVolunteer?.initialName
-                      ? selectedVolunteer?.initialName
+                    selectedVolunteer?.initiatedName
+                      ? selectedVolunteer?.initiatedName
                       : `${selectedVolunteer?.firstName} ${selectedVolunteer?.lastName}`
                   }`}
             </p>
@@ -329,8 +320,8 @@ function SelectVolunteerInput({
                         setVolunteer(item.id);
                       }}
                     >
-                      {item?.initialName
-                        ? item?.initialName
+                      {item?.initiatedName
+                        ? item?.initiatedName
                         : `${item.firstName} ${item.lastName}`}
                     </p>
                   ))
@@ -345,3 +336,74 @@ function SelectVolunteerInput({
     </>
   );
 }
+
+const SelectType = ({ isLoading, label, TypeArr, setType }) => {
+  const [isOpenSelection, setIsOpenSelection] = useState(false);
+  const [selectedType, setSelectedType] = useState({});
+  return (
+    <>
+      <div className="flex flex-col gap-2">
+        <p
+          className={`font-semibold ${
+            isLoading ? "text-gray-300" : "text-gray-600"
+          }`}
+        >
+          {label}
+        </p>
+        <div className="relative inline-block text-left">
+          <button
+            type="button"
+            onClick={() => !isLoading && setIsOpenSelection(!isOpenSelection)}
+            className={`inline-flex items-center justify-between w-full px-4 py-2 text-sm font-medium  bg-white border border-gray-300 rounded-md shadow-sm ${
+              isLoading
+                ? "text-gray-400"
+                : "hover:bg-gray-50 focus:outline-none focus:ring-1 text-gray-700"
+            }`}
+            id="options-menu"
+            aria-haspopup="true"
+            aria-expanded="true"
+          >
+            <p>
+              {Object.keys(selectedType).length === 0
+                ? "Select"
+                : `${selectedType?.name}`}
+            </p>
+            <p>
+              <ChevronDownIcon className="h-3 w-3 text-black" />
+            </p>
+          </button>
+          {!isLoading && isOpenSelection ? (
+            <div
+              className="origin-top-right absolute right-0 mt-2 w-full rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-[100]"
+              role="menu"
+              aria-orientation="vertical"
+              aria-labelledby="options-menu"
+            >
+              <div className="py-1" role="none">
+                {TypeArr?.length > 0 ? (
+                  TypeArr.map((item, index) => (
+                    <p
+                      value={item.value}
+                      key={index}
+                      role="menu"
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      onClick={() => {
+                        setSelectedType(item);
+                        setIsOpenSelection(false);
+                        setType(item.value);
+                      }}
+                    >
+                      {item?.name}
+                    </p>
+                  ))
+                ) : (
+                  <p>NO Volunteer to show</p>
+                )}
+              </div>
+            </div>
+          ) : null}
+        </div>
+      </div>
+    </>
+  );
+};

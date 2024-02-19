@@ -36,6 +36,8 @@ function ActivityModal({ isOpen, onClose }) {
       toast.error(error);
     } finally {
       setIsLoading(false);
+      setIsName("");
+      setDescription("");
     }
   };
 

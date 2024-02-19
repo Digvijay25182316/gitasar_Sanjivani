@@ -2,15 +2,10 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { SERVER_ENDPOINT } from "../../admin/config/Server";
 import toast from "react-hot-toast";
+import { ArrowLeftIcon, ArrowRightIcon } from "@heroicons/react/24/solid";
 
 const ParticipantRegisteration = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
-  const [successMessage, setSuccessMessage] = useState("");
-  const [errors, setErrors] = useState({});
-  const navigate = useNavigate();
 
   const [formState, setFormState] = useState({
     firstName: "",
@@ -31,8 +26,21 @@ const ParticipantRegisteration = () => {
     interestedTopics: [],
   });
 
+  useEffect(() => {
+    const phoneNumber = localStorage.getItem("phoneNumber");
+    if (phoneNumber) {
+      setFormState((prev) => ({
+        ...prev, // Spread the previous state
+        contactNumber: phoneNumber, // Update the contactNumber field
+        waNumber: phoneNumber, // Update the waNumber field
+      }));
+    }
+  }, []);
+
+  const [errors, setErrors] = useState({});
+  const navigate = useNavigate();
+
   const [currentStep, setCurrentStep] = useState(1);
-  const [isErrorNames, setIsErrorNames] = useState(false);
   const [topicNames, setTopicNames] = useState([]);
 
   const validateStep = () => {
@@ -110,7 +118,7 @@ const ParticipantRegisteration = () => {
       contactNumber: formState.contactNumber,
       gender: formState.gender,
     };
-    console.log(formData);
+
     const header = new Headers();
     header.append("Content-Type", "application/json");
     try {
@@ -123,7 +131,12 @@ const ParticipantRegisteration = () => {
       if (response.ok) {
         const responseData = await response.json();
         toast.success(responseData.message);
+        navigate(-1);
       } else {
+        if (response.status === 409) {
+          toast.error("already esists");
+          navigate(-1);
+        }
         const errorData = await response.json();
         toast.error(errorData.message);
       }
@@ -137,16 +150,47 @@ const ParticipantRegisteration = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     validateStep();
-    // try {
-    //   const response = await fetch(`${SERVER_ENDPOINT}/participant/create`);
-    // } catch (error) {
+    const formData = {
+      firstName: formState.firstName,
+      lastName: formState.lastName,
+      waNumber: formState.waNumber,
+      contactNumber: formState.contactNumber,
+      gender: formState.gender,
+      education: formState.education,
+      email: formState.email,
+      city: formState.city,
+      address: formState.address,
+      maritalStatus: formState.maritalStatus,
+      notes: formState.notes,
+      numberOfChildren: formState.numberOfChildren,
+      occupation: formState.occupation,
+      reference: formState.reference,
+      dob: formState.dob,
+    };
 
-    // }
-  };
-  const closeModal = () => {
-    setIsModalOpen(false);
-    setIsSuccess(false);
-    setErrorMessage("");
+    try {
+      const header = new Headers();
+      header.append("Content-Type", "application/json");
+      const response = await fetch(`${SERVER_ENDPOINT}/participant/create`, {
+        method: "POST",
+        headers: header,
+        body: JSON.stringify(formData),
+      });
+      if (response.ok) {
+        const responseData = await response.json();
+        toast.success(responseData.message);
+        navigate(-1);
+      } else {
+        if (response.status === 409) {
+          navigate(-1);
+          toast.error("user already exists");
+        }
+        const errorData = await response.json();
+        toast.error(errorData.message);
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
   };
 
   return (
@@ -335,9 +379,10 @@ const Step1 = ({
         <button
           onClick={nextStep}
           type="button"
-          className="bg-gray-200 text-black px-6 py-1.5 rounded-md transition-color duration-500 hover:bg-gray-400 focus:outline-none"
+          className="bg-gray-200 text-black px-6 py-1.5 rounded-md transition-color duration-500 hover:bg-gray-400 focus:outline-none flex items-center justify-center gap-2"
         >
           Next
+          <ArrowRightIcon className="h-5 w-5" />
         </button>
       </div>
     </div>
@@ -426,16 +471,18 @@ const Step2 = ({ contactInfo, setContactInfo, nextStep, prevStep }) => {
         <button
           onClick={prevStep}
           type={"button"}
-          className="bg-gray-200 text-black px-6 py-2 rounded-md transition-colors duration-500 hover:bg-gray-300 focus:outline-none"
+          className="bg-gray-200 text-black px-6 py-2 rounded-md transition-colors duration-500 hover:bg-gray-300 focus:outline-none  flex items-center justify-center gap-2"
         >
+          <ArrowLeftIcon className="h-5 w-5" />
           Previous
         </button>
         <button
           onClick={nextStep}
           type="button"
-          className="bg-blue-700 text-white px-6 py-1.5 rounded-md transition-color duration-500 hover:bg-blue-800 focus:outline-none"
+          className="bg-gray-200 text-black px-6 py-1.5 rounded-md transition-color duration-500 hover:bg-gray-400 focus:outline-none flex items-center justify-center gap-2"
         >
           Next
+          <ArrowRightIcon className="h-5 w-5" />
         </button>
       </div>
     </div>
@@ -517,8 +564,9 @@ const Step3 = ({
         <button
           onClick={prevStep}
           type={"button"}
-          className="bg-gray-200 text-black px-6 py-2 rounded-md transition-colors duration-500 hover:bg-gray-300 focus:outline-none"
+          className="bg-gray-200 text-black px-6 py-2 rounded-md transition-colors duration-500 hover:bg-gray-300 focus:outline-none  flex items-center justify-center gap-2"
         >
+          <ArrowLeftIcon className="h-5 w-5" />
           Previous
         </button>
         <button

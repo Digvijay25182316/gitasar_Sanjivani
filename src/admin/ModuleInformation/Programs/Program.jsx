@@ -238,7 +238,7 @@ function Programs() {
                               className=" checked:text-green-400 text-green-400 cursor-pointer"
                               onChange={onChangeSelect}
                               disabled={selected}
-                              checked={selectedItem === index + 1}
+                              checked={selectedItem === Programs.id}
                             />
                           </td>
                           <td className="text-center">{Programs.name}</td>

@@ -52,12 +52,23 @@ function ScheduleSessions({ courseData, onCancel, onClose }) {
   async function handleSubmit(e) {
     e.preventDefault();
     const formData = {
-      startTime: scheduledDate,
+      startTime: scheduledDate ? new Date(scheduledDate).toISOString() : "",
       sessionId: selectedSessions,
       name: sessionName,
       levelId: courseData?.id,
       programId: courseData?.programId,
     };
+    if (
+      formData.startTime === "" ||
+      formData.sessionId === 0 ||
+      formData.levelId === 0 ||
+      formData.name === "" ||
+      formData.programId === 0
+    ) {
+      toast.error("complete all the fields");
+      return;
+    }
+
     try {
       const header = new Headers();
       header.append("Content-Type", "application/json");

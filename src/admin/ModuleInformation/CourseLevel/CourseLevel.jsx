@@ -6,7 +6,7 @@ import {
   PlusIcon,
   ChevronDownIcon,
 } from "@heroicons/react/24/solid";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import Dropdown from "../../../components/BottomNav.jsx/DropDown";
 import CopyClipBoard from "../../../components/BottomNav.jsx/CopyClipBoard";
@@ -27,7 +27,7 @@ function CourseLevel() {
   const [selected, setSelected] = useState(false);
   const [selectedItem, setSelectedItem] = useState(0);
   const [coursesArr, setCoursesArr] = useState([]);
-  const [isError, setIsError] = useState(false);
+
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
@@ -37,6 +37,7 @@ function CourseLevel() {
         const response = await fetch(`${SERVER_ENDPOINT}/level/`);
         if (response.ok) {
           const responseData = await response.json();
+
           setCoursesArr(responseData.content);
         } else {
           const errorData = await response.json();
@@ -163,7 +164,22 @@ function CourseLevel() {
                           </th>
                           <th className="border-b px-6 font-semibold py-1">
                             <div className=" flex items-center w-max py-1">
-                              preacher
+                              preacher1
+                              <Dropdown
+                                origin={"origin-top-left"}
+                                position={"left-0"}
+                                setvalue={AddFilter}
+                                fieldname={"preacher"}
+                                selected={doesFieldExists(queryArr, "preacher")}
+                                removeFilter={() =>
+                                  removeObjectByKey("preacher")
+                                }
+                              />
+                            </div>
+                          </th>
+                          <th className="border-b px-6 font-semibold py-1">
+                            <div className=" flex items-center w-max py-1">
+                              preacher2
                               <Dropdown
                                 origin={"origin-top-left"}
                                 position={"left-0"}
@@ -271,6 +287,17 @@ function CourseLevel() {
                               )}
                             </td>
                             <td className="text-center">
+                              {courseLevel?.preacher2 ? (
+                                <div>
+                                  <VolunteerDataCard
+                                    volunteer_id={courseLevel?.preacher2}
+                                  />
+                                </div>
+                              ) : (
+                                <i className="text-gray-500">null</i>
+                              )}
+                            </td>
+                            <td className="text-center">
                               {courseLevel?.mentor ? (
                                 <div>
                                   <VolunteerDataCard
@@ -320,17 +347,17 @@ function CourseLevel() {
                             <td>
                               <div className="flex items-center gap-5 justify-center">
                                 <a
-                                  href={`${FRONTEND_ENDPOINT}/activities/${courseLevel.id}`}
+                                  href={`${FRONTEND_ENDPOINT}/activities/${courseLevel.programId}`}
                                   className=" hover:underline   text-blue-700 flex items-center gap-2 justify-center"
                                 >
                                   <LinkIcon className="h-4 w-4" />
                                   Link
                                 </a>
                                 <CopyClipBoard
-                                  url={`${FRONTEND_ENDPOINT}/activities/${courseLevel.id}`}
+                                  url={`${FRONTEND_ENDPOINT}/activities/${courseLevel.programId}`}
                                 />
                                 <QrCode
-                                  url={`${FRONTEND_ENDPOINT}/activities/${courseLevel.id}`}
+                                  url={`${FRONTEND_ENDPOINT}/activities/${courseLevel.programId}`}
                                   courseCode={courseLevel.programName}
                                 />
                               </div>

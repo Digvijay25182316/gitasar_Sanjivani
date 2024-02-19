@@ -1,24 +1,13 @@
-import {
-  AcademicCapIcon,
-  ArrowTrendingUpIcon,
-  CalendarDaysIcon,
-  ChevronRightIcon,
-  PresentationChartBarIcon,
-  UserGroupIcon,
-  UserIcon,
-  QueueListIcon,
-  PlusIcon,
-} from "@heroicons/react/24/solid";
+import { ChevronRightIcon, PlusIcon } from "@heroicons/react/24/solid";
 import React, { useEffect, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import Dropdown from "../../../components/BottomNav.jsx/DropDown";
-import { activitiesData } from "../../../data";
+
 import AddActivitiesModal from "./AddActivitiesModal";
 import Slider from "../../../components/MdLeftHeaderSlider";
 import { SERVER_ENDPOINT } from "../../config/Server";
 import toast from "react-hot-toast";
-import ProgramCard from "./ProgramCard";
-import ParticipantCard from "./ParticipantCard";
+
 import DateCard from "./DateCard";
 import { CubeTransparentIcon } from "@heroicons/react/24/outline";
 import Sidebar from "../../../components/BottomNav.jsx/Sidebar";
@@ -104,6 +93,7 @@ function Activities() {
               <div className="flex items-center gap-3 bg-white text-gray-700 px-2 py-1 border rounded">
                 <button>clear selection</button>
               </div>
+
               <button
                 onClick={() => setOpenActivities(true)}
                 className="flex items-center gap-2 bg-white px-4 py-1.5 border border-gray-300 rounded text-blue-800"

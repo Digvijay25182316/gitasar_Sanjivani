@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
-import { CheckIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import { useNavigate, useParams } from "react-router-dom";
+import { ChevronDownIcon } from "@heroicons/react/24/outline";
 import { SERVER_ENDPOINT } from "../../admin/config/Server";
 import toast from "react-hot-toast";
+import RSVPSection from "./RSVPSection";
 
 function Attendance() {
   const [currentStep, setCurrentStep] = useState(1);
   const [sessions, setSessions] = useState([]);
+  const [futureSessions, setFutureSessions] = useState([]);
   const { levelId } = useParams();
   const [levelObject, setLevelObject] = useState({});
   const [Participant, setParticipant] = useState({});
@@ -15,11 +17,12 @@ function Attendance() {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [sessionsAttendence, setSessionAttendence] = useState(0);
   const [SingleSession, setSingleSession] = useState({});
-  console.log(sessions);
-  const [isyes, setIsYes] = useState([
-    { id: 1, session: "Spirituality master", response: "" },
-  ]);
-  const [sessionsRSVP, setSessionRSVP] = useState(isyes);
+  const [LatestSession, setLatestSession] = useState({});
+
+  const storeToLocalStorage = (item) => {
+    localStorage.setItem("phoneNumber", item);
+  };
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -28,7 +31,6 @@ function Attendance() {
         const response = await fetch(`${SERVER_ENDPOINT}/level/id/${levelId}`);
         if (response.ok) {
           const responseData = await response.json();
-          console.log(responseData);
           setLevelObject(responseData);
         } else {
           const errorData = await response.json();
@@ -41,20 +43,33 @@ function Attendance() {
   }, [levelId]);
 
   useEffect(() => {
+    const future = [];
+    const past = [];
     (async () => {
       try {
         const response = await fetch(
-          `${SERVER_ENDPOINT}/session/scheduled/level/${levelId}`
+          `${SERVER_ENDPOINT}/session/scheduled/level/${levelId}?sort=startTime,desc`
         );
         if (response.ok) {
           const responseData = await response.json();
           setSessions(responseData.content);
+          responseData?.content?.forEach((session, index) => {
+            if (new Date(session.startTime) > new Date()) {
+              future.push(session);
+            } else {
+              past.push(session);
+            }
+          });
         } else {
           const errorData = await response.json();
           toast.error(errorData.message);
         }
       } catch (error) {
         toast.error(error.message);
+      } finally {
+        setFutureSessions(future);
+        setSessions(past.splice(1));
+        setLatestSession(past[0]);
       }
     })();
   }, [levelId]);
@@ -80,6 +95,7 @@ function Attendance() {
           "participant with the phone number does not exists  please register"
         );
         navigate("/registeration");
+        storeToLocalStorage(phoneNumber);
       } else {
         const errorData = await response.json();
         toast.error(errorData.message);
@@ -98,18 +114,6 @@ function Attendance() {
   const prevStep = () => {
     setCurrentStep(1);
   };
-
-  function handleChangeRSVP(response, id) {
-    setSessionRSVP((prevSessionsRSVP) =>
-      prevSessionsRSVP.map((item) =>
-        item.id === id ? { ...item, response: response } : item
-      )
-    );
-  }
-  function handleSubmitRSVP(e) {
-    e.preventDefault();
-    console.log(sessionsRSVP);
-  }
 
   async function handleSubmitAttendance(e) {
     e.preventDefault();
@@ -141,9 +145,10 @@ function Attendance() {
     }
   }
 
-  const handleSelectProgram = (item) => {
+  const handleSessionSelect = (item) => {
     setSingleSession(item);
     setIsOpenSelection(false);
+    setSessionAttendence(item.id);
   };
 
   return (
@@ -201,7 +206,7 @@ function Attendance() {
               onClick={() => prevStep()}
               className={`w-full py-2 text-lg ${
                 currentStep === 1
-                  ? "border bg-gray-200 text-blue-700 border-t-blue-700"
+                  ? "border bg-blue-200 text-blue-700 border-blue-700"
                   : " bg-none text-gray-700"
               } `}
               disabled={isLoading || Object.keys(Participant).length === 0}
@@ -212,7 +217,7 @@ function Attendance() {
               onClick={() => nextStep()}
               className={`w-full py-2 text-lg ${
                 currentStep !== 1
-                  ? "border bg-gray-200 text-blue-700 border-t-blue-700"
+                  ? "border bg-blue-200 text-blue-700 border-blue-700"
                   : " bg-none text-gray-700"
               } `}
               disabled={isLoading || Object.keys(Participant).length === 0}
@@ -242,11 +247,15 @@ function Attendance() {
                       <input
                         type="radio"
                         name="sessionAttendence"
-                        checked={sessionsAttendence === sessions[0].id}
-                        onChange={(e) => setSessionAttendence(sessions[0].id)}
+                        checked={sessionsAttendence === LatestSession?.id}
+                        onChange={(e) => {
+                          setSessionAttendence(sessions[0].id);
+                          setSingleSession({});
+                        }}
+                        readOnly={isLoading}
                       />
                       <p className="text-lg font-semibold">
-                        {sessions[0].name}
+                        {LatestSession?.name}
                       </p>
                     </label>
                   </div>
@@ -256,7 +265,7 @@ function Attendance() {
                       onClick={() =>
                         !isLoading && setIsOpenSelection(!isOpenSelection)
                       }
-                      className={`inline-flex justify-center w-full px-4 py-2 text-sm font-medium  bg-white border border-gray-300 rounded-md shadow-sm ${
+                      className={`inline-flex items-center justify-between w-full px-4 py-2 text-sm font-medium  bg-white border border-gray-300 rounded-md shadow-sm ${
                         isLoading
                           ? "text-gray-400"
                           : "hover:bg-gray-50 focus:outline-none focus:ring-1 text-gray-700"
@@ -264,10 +273,12 @@ function Attendance() {
                       id="options-menu"
                       aria-haspopup="true"
                       aria-expanded="true"
+                      disabled={isLoading}
                     >
                       {Object.keys(SingleSession).length === 0
                         ? "Select Previous Session"
                         : `${SingleSession?.name}`}
+                      <ChevronDownIcon className="h-3 w-3" />
                     </button>
                     {!isLoading && isOpenSelection ? (
                       <div
@@ -284,13 +295,13 @@ function Attendance() {
                                 key={item.id}
                                 role="menu"
                                 className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                                onClick={() => handleSelectProgram(item)}
+                                onClick={() => handleSessionSelect(item)}
                               >
                                 {item.name}
                               </p>
                             ))
                           ) : (
-                            <p>NO program to show</p>
+                            <p>NO Sessions to show</p>
                           )}
                         </div>
                       </div>
@@ -313,71 +324,17 @@ function Attendance() {
             </div>
           )
         ) : (
-          <div className="md:w-full w-[80vw] flex flex-col items-center border border-t-0 rounded-b">
-            <p className="w-4/5 border-b text-lg font-semibold text-gray-700 py-2 mb-5">
-              Select Upcomming Session
-            </p>
-            <div className="px-5 py-2 w-full">
-              <form onSubmit={handleSubmitRSVP}>
-                <div className="flex flex-col gap-2">
-                  <label className="font-semibold text-gray-800 px-5">
-                    * Upcomming sessions
-                  </label>
-                  <div className="flex flex-col items-start gap-5">
-                    {sessionsRSVP?.map((item, index) => (
-                      <div
-                        className="flex md:flex-row flex-col justify-between gap-2 md:gap-6 text-lg w-full border px-3 py-3 rounded-lg"
-                        key={index}
-                      >
-                        {item.session}
-                        <div className="flex items-center gap-5 justify-end">
-                          {item.response === "Yes" ? (
-                            <p className="text-green-600 px-4 py-1 bg-green-100 rounded-xl">
-                              <CheckIcon className="h-6 y-6" />
-                            </p>
-                          ) : (
-                            <button
-                              onClick={() => handleChangeRSVP("Yes", item.id)}
-                              className="bg-green-600 px-4 py-0.5 text-white rounded-lg"
-                              isYes
-                            >
-                              YES
-                            </button>
-                          )}
-                          {item.response === "No" ? (
-                            <p className="text-red-600 px-4 py-1 bg-red-100 rounded-xl">
-                              <XMarkIcon className="h-6 y-6" />
-                            </p>
-                          ) : (
-                            <button
-                              className="bg-red-600 px-4 py-0.5 text-white rounded-lg"
-                              onClick={() => handleChangeRSVP("No", item.id)}
-                            >
-                              NO
-                            </button>
-                          )}
-                          <button
-                            className="bg-gray-600 px-4 py-0.5 text-white rounded-lg"
-                            onClick={() => handleChangeRSVP("", item.id)}
-                          >
-                            clear
-                          </button>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-                <div className="flex justify-center mt-5">
-                  <button
-                    className="px-4 py-1.5 bg-blue-700 text-white rounded "
-                    type="submit"
-                  >
-                    Submit
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
+          <>
+            {futureSessions[0] ? (
+              <RSVPSection
+                futureSessions={futureSessions}
+                levelData={levelObject}
+                participantData={Participant}
+              />
+            ) : (
+              <p>No future sessions</p>
+            )}
+          </>
         )}
       </div>
     </div>
