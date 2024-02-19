@@ -251,7 +251,7 @@ function Attendance() {
                           setSessionAttendence(LatestSession?.id);
                           setSingleSession({});
                         }}
-                        readOnly={isLoading}
+                        readOnly={Object.keys(Participant).length === 0}
                       />
                       <p className="text-lg font-semibold">
                         {LatestSession?.name}
