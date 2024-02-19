@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { SERVER_ENDPOINT } from "../../config/Server";
 import toast from "react-hot-toast";
 import { ClockIcon, CubeTransparentIcon } from "@heroicons/react/24/solid";
-import { Link } from "react-router-dom";
+import DateDisplay from "../../../components/DateDisplay";
 
 const SessionList = ({ course_level_id }) => {
   const [items, setItems] = useState([]);
@@ -78,9 +78,7 @@ const SessionList = ({ course_level_id }) => {
                   {session.name}
                 </td>
                 <td className="border border-gray-300 text-center py-3">
-                  {session?.startTime
-                    ? new Date(session?.startTime).toUTCString()
-                    : session?.startTime}
+                  <DateDisplay dateString={session.startTime} />
                 </td>
                 <td className="border border-gray-300 text-center py-3">
                   {session.courseName}

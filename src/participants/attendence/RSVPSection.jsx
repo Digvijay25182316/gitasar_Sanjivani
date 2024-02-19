@@ -15,7 +15,7 @@ function RSVPSection({ levelData, participantData, futureSessions }) {
       setIsLoading(true);
       try {
         const response = await fetch(
-          `${SERVER_ENDPOINT}/rsvp/find/?participantId=${participantData.id}&scheduledSessionId=${futureSessions[0].sessionId}`
+          `${SERVER_ENDPOINT}/rsvp/find/?participantId=${participantData.id}&scheduledSessionId=${futureSessions[0].id}`
         );
         if (response.ok) {
           const responseData = await response.json();
@@ -34,7 +34,7 @@ function RSVPSection({ levelData, participantData, futureSessions }) {
         setIsLoading(false);
       }
     })();
-  }, [futureSessions, participantData]);
+  }, [futureSessions, participantData, isYes]);
 
   async function handleSubmitRSVP(answer) {
     setIsLoading(true);
@@ -49,7 +49,6 @@ function RSVPSection({ levelData, participantData, futureSessions }) {
       scheduledSessionName: futureSessions[0].name,
       rsvp: answer,
     };
-    console.log(RSVP);
 
     try {
       const response = await fetch(`${SERVER_ENDPOINT}/rsvp/mark`, {
@@ -58,9 +57,9 @@ function RSVPSection({ levelData, participantData, futureSessions }) {
         body: JSON.stringify(RSVP),
       });
       if (response.ok) {
-        // const responseData = await response.json();
-        toast.success("marked successfully");
-        // setIsYes(!isYes);
+        const responseData = await response.json();
+        toast.success(responseData.message);
+        setIsYes(!isYes);
       } else {
         const errorData = await response.json();
         toast.error(errorData);
@@ -92,7 +91,9 @@ function RSVPSection({ levelData, participantData, futureSessions }) {
           </div>
           {Object.keys(sessionsRSVP).length > 0 ? (
             <div className="flex items-center border border-gray-300 px-5 py-5 rounded-xl justify-between">
-              <div className="font-semibold text-lg">{sessionsRSVP.name}</div>
+              <div className="font-semibold text-lg">
+                {sessionsRSVP.scheduledSessionName}
+              </div>
               <div className="flex items-center gap-5">
                 <div>
                   {sessionsRSVP.rsvp !== "YES" ? (

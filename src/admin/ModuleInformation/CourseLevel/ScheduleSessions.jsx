@@ -56,7 +56,9 @@ function ScheduleSessions({ courseData, onCancel, onClose }) {
       name: sessionName,
       levelId: courseData?.id,
       programId: courseData?.programId,
+      courseName: courseData?.name,
     };
+
     if (
       formData.startTime === "" ||
       formData.sessionId === 0 ||
@@ -132,56 +134,13 @@ function ScheduleSessions({ courseData, onCancel, onClose }) {
                 {loadingSessions ? (
                   <>...loading</>
                 ) : (
-                  <SelectCourse
+                  <SelectSession
                     isLoading={loadingSessions}
                     TypeArr={sessionsData}
                     setType={setSelectedSessions}
                     label={"select session"}
                   />
                 )}
-                {/* <div className="flex flex-col gap-2 px-5">
-                  <label
-                    className="font-semibold text-gray-600"
-                    htmlFor="levelId"
-                  >
-                    Select Course
-                  </label>
-
-                  <select
-                    className="border bg-white px-4 py-2 rounded-md transition-colors duration-500 focus:outline-gray-400"
-                    name="levelId"
-                    onChange={handleChangeSession}
-                    id="levelId"
-                  >
-                    <option value={""}>select</option>
-                    {coursesArr?.map((item) => (
-                      <option key={item.id} value={item.code}>
-                        {item.name}
-                      </option>
-                    ))}
-                  </select>
-                </div> */}
-                {/* <div className="flex flex-col gap-2 px-5" htmlFor="sessionId">
-                  <label className="font-semibold text-gray-600">
-                    Select Session
-                  </label>
-                  {loadingSessions ? (
-                    <>loading...</>
-                  ) : (
-                    <select
-                      type="sessionId"
-                      className="border bg-white px-4 py-2 rounded-md transition-colors duration-500 focus:outline-gray-400 "
-                      onChange={(e) => setSelectedSessions(e.target.value)}
-                    >
-                      <option value={""}>select</option>
-                      {sessionsData?.map((session) => (
-                        <option key={session.id} value={session.id}>
-                          {session.name}
-                        </option>
-                      ))}
-                    </select>
-                  )}
-                </div> */}
               </div>
 
               <div className="flex flex-col gap-2 px-5">

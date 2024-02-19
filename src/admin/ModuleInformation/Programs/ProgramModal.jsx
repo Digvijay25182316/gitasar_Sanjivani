@@ -45,6 +45,7 @@ function ProgramModal({ isOpen, onClose, children }) {
 
   async function submitHandler(e) {
     e.preventDefault();
+    setIsLoading(true);
     const header = new Headers();
     header.append("Content-Type", "application/json");
     if (
@@ -76,6 +77,7 @@ function ProgramModal({ isOpen, onClose, children }) {
     } catch (error) {
       toast.error(error);
     } finally {
+      setIsLoading(false);
       setIncharge(0);
       setMentor(0);
       setCoordinator(0);
