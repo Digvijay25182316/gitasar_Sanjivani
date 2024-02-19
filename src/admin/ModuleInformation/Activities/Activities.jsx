@@ -7,8 +7,6 @@ import AddActivitiesModal from "./AddActivitiesModal";
 import Slider from "../../../components/MdLeftHeaderSlider";
 import { SERVER_ENDPOINT } from "../../config/Server";
 import toast from "react-hot-toast";
-
-import DateCard from "./DateCard";
 import { CubeTransparentIcon } from "@heroicons/react/24/outline";
 import Sidebar from "../../../components/BottomNav.jsx/Sidebar";
 import DateDisplay from "../../../components/DateDisplay";

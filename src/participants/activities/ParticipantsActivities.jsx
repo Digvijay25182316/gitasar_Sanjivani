@@ -145,15 +145,13 @@ function Activities() {
             </div>
           </form>
         </div>
-        <div className={`mt-5 flex md:flex-row flex-col items-center gap-5`}>
+        <div className={`mt-5 flex flex-col items-center gap-5`}>
           {Object.keys(participant).length > 0 ? (
-            <div className="flex flex-col font-semibold text-gray-400">
-              Participant Name:
-              <i className="text-gray-700">{`${participant.firstName} ${participant.lastName}`}</i>
+            <div className="flex flex-col font-semibold ">
+              <i className="text-red-700">{`${participant.firstName} ${participant.lastName}`}</i>
             </div>
           ) : null}
           <div className="font-semibold text-gray-400">
-            program Name:
             <i className="text-gray-700">
               <ProgramCard programId={Number(programId)} />
             </i>
