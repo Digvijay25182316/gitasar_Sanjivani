@@ -18,7 +18,7 @@ function Attendance() {
   const [sessionsAttendence, setSessionAttendence] = useState(0);
   const [SingleSession, setSingleSession] = useState({});
   const [LatestSession, setLatestSession] = useState({});
-  console.log(LatestSession);
+  const [allSessions, setAllSessions] = useState([]);
 
   const storeToLocalStorage = (item) => {
     localStorage.setItem("phoneNumber", item);
@@ -53,7 +53,7 @@ function Attendance() {
         );
         if (response.ok) {
           const responseData = await response.json();
-          console.log(responseData);
+
           responseData?.content?.forEach((session, index) => {
             if (new Date(session.startTime) > new Date()) {
               future.push(session);
@@ -68,6 +68,7 @@ function Attendance() {
       } catch (error) {
         toast.error(error.message);
       } finally {
+        setAllSessions(past);
         setLatestSession(past[0]);
         setSessions(past.splice(1));
         setFutureSessions(future);
@@ -226,7 +227,7 @@ function Attendance() {
           </div>
         </div>
         {currentStep === 1 ? (
-          sessions.length > 0 ? (
+          allSessions.length > 0 ? (
             <div
               className={`md:w-full w-[80vw] flex flex-col items-center border border-t-0 rounded-b ${
                 Object.keys(Participant).length === 0 ? " opacity-50" : null
@@ -257,54 +258,56 @@ function Attendance() {
                       </p>
                     </label>
                   </div>
-                  <div className="relative inline-block text-left w-full mt-10 min-w-[200px]">
-                    <button
-                      type="button"
-                      onClick={() =>
-                        !isLoading && setIsOpenSelection(!isOpenSelection)
-                      }
-                      className={`inline-flex items-center justify-between w-full px-4 py-2 text-sm font-medium  bg-white border border-gray-300 rounded-md shadow-sm ${
-                        isLoading
-                          ? "text-gray-400"
-                          : "hover:bg-gray-50 focus:outline-none focus:ring-1 text-gray-700"
-                      }`}
-                      id="options-menu"
-                      aria-haspopup="true"
-                      aria-expanded="true"
-                      disabled={isLoading}
-                    >
-                      {Object.keys(SingleSession).length === 0
-                        ? "Select Previous Session"
-                        : `${SingleSession?.name}`}
-                      <ChevronDownIcon className="h-3 w-3" />
-                    </button>
-                    {!isLoading && isOpenSelection ? (
-                      <div
-                        className="origin-top-right absolute right-0 mt-2 w-full rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none"
-                        role="menu"
-                        aria-orientation="vertical"
-                        aria-labelledby="options-menu"
+                  {sessions?.length !== 0 && (
+                    <div className="relative inline-block text-left w-full mt-10 min-w-[200px]">
+                      <button
+                        type="button"
+                        onClick={() =>
+                          !isLoading && setIsOpenSelection(!isOpenSelection)
+                        }
+                        className={`inline-flex items-center justify-between w-full px-4 py-2 text-sm font-medium  bg-white border border-gray-300 rounded-md shadow-sm ${
+                          isLoading
+                            ? "text-gray-400"
+                            : "hover:bg-gray-50 focus:outline-none focus:ring-1 text-gray-700"
+                        }`}
+                        id="options-menu"
+                        aria-haspopup="true"
+                        aria-expanded="true"
+                        disabled={isLoading}
                       >
-                        <div className="py-1" role="none">
-                          {sessions.length > 0 ? (
-                            sessions.map((item) => (
-                              <p
-                                value={item.name}
-                                key={item.id}
-                                role="menu"
-                                className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                                onClick={() => handleSessionSelect(item)}
-                              >
-                                {item.name}
-                              </p>
-                            ))
-                          ) : (
-                            <p>NO Sessions to show You can check in rsvp</p>
-                          )}
+                        {Object.keys(SingleSession).length === 0
+                          ? "Select Previous Session"
+                          : `${SingleSession?.name}`}
+                        <ChevronDownIcon className="h-3 w-3" />
+                      </button>
+                      {!isLoading && isOpenSelection ? (
+                        <div
+                          className="origin-top-right absolute right-0 mt-2 w-full rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none"
+                          role="menu"
+                          aria-orientation="vertical"
+                          aria-labelledby="options-menu"
+                        >
+                          <div className="py-1" role="none">
+                            {sessions.length > 0 ? (
+                              sessions.map((item) => (
+                                <p
+                                  value={item.name}
+                                  key={item.id}
+                                  role="menu"
+                                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                  onClick={() => handleSessionSelect(item)}
+                                >
+                                  {item.name}
+                                </p>
+                              ))
+                            ) : (
+                              <p>NO Sessions to show You can check in rsvp</p>
+                            )}
+                          </div>
                         </div>
-                      </div>
-                    ) : null}
-                  </div>
+                      ) : null}
+                    </div>
+                  )}
                   <div className="flex justify-center mt-5">
                     <button
                       className="px-4 py-1.5 bg-blue-700 text-white rounded "
