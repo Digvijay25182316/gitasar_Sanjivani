@@ -11,7 +11,7 @@ function BottomNav() {
   const { pathname } = useLocation();
   if (pathname.startsWith("/admin"))
     return (
-      <div className="fixed bottom-0 left-0 right-0 md:hidden bg-white">
+      <div className="fixed bottom-0 left-0 right-0 md:hidden bg-white border-t">
         <div className="flex items-center justify-evenly">
           <Link to={"/admin/information/program"} title="information">
             <p
