@@ -78,12 +78,18 @@ const SessionList = ({ course_level_id }) => {
                       />
                     </label>
                   </td>
-                  <td className="text-center">{session.name}</td>
+                  <td>
+                    <Elementexpandable>{session.name}</Elementexpandable>
+                  </td>
                   <td className="text-center">
                     <DateDisplay dateString={session.startTime} />
                   </td>
-                  <td className="text-center">{session.courseName}</td>
-                  <td className="text-center">{session.sessionName}</td>
+                  <td>
+                    <Elementexpandable>{session.courseName}</Elementexpandable>
+                  </td>
+                  <td>
+                    <Elementexpandable>{session.sessionName}</Elementexpandable>
+                  </td>
                   <td className="py-1 ">
                     <div className="flex justify-center">
                       <button className="bg-purple-600 rounded-md text-white px-4 py-1 flex items-center gap-2">
@@ -109,3 +115,22 @@ const SessionList = ({ course_level_id }) => {
 };
 
 export default SessionList;
+
+const Elementexpandable = ({ children }) => {
+  const [isExpanded, setIsExpanded] = useState(false);
+  useEffect(() => {
+    if (isExpanded) {
+      setTimeout(() => {
+        setIsExpanded(false);
+      }, 5000);
+    }
+  }, [isExpanded]);
+  return (
+    <span
+      className={`${isExpanded ? "w-max" : "text-center w-full line-clamp-1"}`}
+      onClick={() => setIsExpanded(true)}
+    >
+      {children}
+    </span>
+  );
+};
