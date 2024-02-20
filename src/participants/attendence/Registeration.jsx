@@ -195,11 +195,13 @@ const ParticipantRegisteration = () => {
 
   return (
     <div className="min-h-screen min-w-screen flex flex-col md:items-center justify-center text-gray-800 py-5">
-      <h1 className="text-center text-blue-700 text-3xl font-bold pb-10">
-        Participant Registeration
+      <h1 className="text-center text-red-700 text-xl font-bold pb-2">
+        Looks like you are not registered please register
+      </h1>
+      <h1 className="text-center text-blue-700 text-xl font-bold pb-5">
+        Registeration page
       </h1>
       <div className="md:min-w-3xl mx-2 bg-white p-5 md:p-10 rounded-3xl shadow-lg shadow-purple-200">
-        <p>You are not registered</p>
         <div className="flex items-center gap-8 justify-center">
           <p
             className={` border-8 transition-colors duration-500 ${

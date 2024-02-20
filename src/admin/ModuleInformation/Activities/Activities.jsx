@@ -14,27 +14,13 @@ import { CubeTransparentIcon } from "@heroicons/react/24/outline";
 import Sidebar from "../../../components/BottomNav.jsx/Sidebar";
 import DateDisplay from "../../../components/DateDisplay";
 
-const columnNames = [
-  "programName",
-  "courseCode",
-  "sessionName",
-  "typeofActivity",
-  "participantContactNumber",
-  "participantFirstName",
-  "participantLastName",
-  "created",
-];
-
 function Activities() {
   const { pathname } = useLocation();
   const [queryArr, setQueryArr] = useState([]);
   const [openActivities, setOpenActivities] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [ActivityArr, setActivityArr] = useState([]);
-  const [columnNamesArr, setColumnNamesArr] = useState([
-    "programName",
-    "courseName",
-  ]); //to toggle visibility
+  const [columnNamesArr, setColumnNamesArr] = useState([]); //to toggle visibility
 
   useEffect(() => {
     // Load data from local storage on component mount
@@ -49,21 +35,6 @@ function Activities() {
     localStorage.setItem("dataArray", JSON.stringify(columnNamesArr));
   }, [columnNamesArr]);
 
-  const handleAddColumns = (newColumn) => {
-    toast.dismiss("Column name already exists!");
-    // if (!columnNamesArr.includes(newColumn)) {
-    //   setColumnNamesArr([...columnNamesArr, newColumn]);
-    // } else {
-    //   toast.dismiss("Column name already exists!");
-    // }
-  };
-
-  const handleRemoveColumns = (index) => {
-    const newDataArray = [...columnNamesArr];
-    newDataArray.splice(index, 1);
-    setColumnNamesArr(newDataArray);
-  };
-
   function AddFilter(data) {
     setQueryArr((prev) => [...prev, data]);
   }
@@ -75,15 +46,13 @@ function Activities() {
     setQueryArr(queryArr.filter((item) => !Object.keys(item).includes(data)));
   }
 
-  const [selectedOptions, setSelectedOptions] = useState([]);
-
-  const handleSelect = (option) => {
-    if (selectedOptions.includes(option.value)) {
-      setSelectedOptions(
-        selectedOptions.filter((selected) => selected !== option.value)
+  const handleAddItemToColumnNameArr = (option) => {
+    if (columnNamesArr.includes(option.value)) {
+      setColumnNamesArr(
+        columnNamesArr.filter((selected) => selected !== option.value)
       );
     } else {
-      setSelectedOptions([...selectedOptions, option.value]);
+      setColumnNamesArr([...columnNamesArr, option.value]);
     }
   };
 
@@ -108,6 +77,7 @@ function Activities() {
         const response = await fetch(url);
         if (response.ok) {
           const responseData = await response.json();
+          console.log(responseData);
           setActivityArr(responseData.content);
         } else {
           const errorData = await response.json();
@@ -159,7 +129,10 @@ function Activities() {
               </button>
             </div>
             <div className="md:mx-5 mx-2 flex rounded justify-end">
-              <HeadlessMenu options={columnNames} onSelect={handleAddColumns} />
+              <HeadlessMenu
+                options={columnNamesArr}
+                onSelect={handleAddItemToColumnNameArr}
+              />
             </div>
             <div className="md:mx-5 mx-2 bg-white flex flex-col rounded border">
               <div className="flex items-center justify-between border-b">
@@ -175,187 +148,174 @@ function Activities() {
                         <th className="border-b px-6 font-semibold py-1">
                           Select
                         </th>
-                        <th className="border-b px-6 font-semibold py-1">
-                          <HidableColumns
-                            columnNameArr={columnNamesArr}
-                            fieldname={"programName"}
-                          >
-                            <div className=" flex items-center w-max py-1">
-                              Program Name
-                              <Dropdown
-                                origin={"origin-top-left"}
-                                position={"left-0"}
-                                setvalue={AddFilter}
-                                fieldname={"programName"}
-                                selected={doesFieldExists(
-                                  queryArr,
-                                  "programName"
-                                )}
-                                removeFilter={() =>
-                                  removeObjectByKey("programName")
-                                }
-                              />
-                            </div>
-                          </HidableColumns>
-                        </th>
-                        <th className="border-b px-6 font-semibold py-1">
-                          <HidableColumns
-                            columnNameArr={columnNamesArr}
-                            fieldname={"courseCode"}
-                          >
-                            <div className=" flex items-center w-max py-1">
-                              Course Code
-                              <Dropdown
-                                origin={"origin-top-left"}
-                                position={"left-0"}
-                                setvalue={AddFilter}
-                                fieldname={"courseCode"}
-                                selected={doesFieldExists(
-                                  queryArr,
-                                  "courseCode"
-                                )}
-                                removeFilter={() =>
-                                  removeObjectByKey("courseCode")
-                                }
-                              />
-                            </div>
-                          </HidableColumns>
-                        </th>
-                        <th className="border-b px-6 font-semibold py-1">
-                          <HidableColumns
-                            columnNameArr={columnNamesArr}
-                            fieldname={"sessionName"}
-                          >
-                            <div className=" flex items-center w-max py-1">
-                              Session Name
-                              <Dropdown
-                                origin={"origin-top-left"}
-                                position={"left-0"}
-                                setvalue={AddFilter}
-                                fieldname={"sessionName"}
-                                selected={doesFieldExists(
-                                  queryArr,
-                                  "sessionName"
-                                )}
-                                removeFilter={() =>
-                                  removeObjectByKey("sessionName")
-                                }
-                              />
-                            </div>
-                          </HidableColumns>
-                        </th>
-                        <th className="border-b px-6 font-semibold py-1">
-                          <HidableColumns
-                            columnNameArr={columnNamesArr}
-                            fieldname={"typeofActivity"}
-                          >
-                            <div className=" flex items-center w-max py-1">
-                              Activity
-                              <Dropdown
-                                origin={"origin-top-left"}
-                                position={"left-0"}
-                                setvalue={AddFilter}
-                                fieldname={"typeofActivity"}
-                                selected={doesFieldExists(
-                                  queryArr,
-                                  "typeofActivity"
-                                )}
-                                removeFilter={() =>
-                                  removeObjectByKey("typeofActivity")
-                                }
-                              />
-                            </div>
-                          </HidableColumns>
-                        </th>
-                        <th className="border-b px-6 font-semibold py-1">
-                          <HidableColumns
-                            columnNameArr={columnNamesArr}
-                            fieldname={"participantContactNumber"}
-                          >
-                            <div className=" flex items-center w-max py-1">
-                              Phone
-                              <Dropdown
-                                origin={"origin-top-left"}
-                                position={"left-0"}
-                                setvalue={AddFilter}
-                                fieldname={"participantContactNumber"}
-                                selected={doesFieldExists(
-                                  queryArr,
-                                  "participantContactNumber"
-                                )}
-                                removeFilter={() =>
-                                  removeObjectByKey("participantContactNumber")
-                                }
-                              />
-                            </div>
-                          </HidableColumns>
-                        </th>
-                        <th className="border-b px-6 font-semibold py-1">
-                          <HidableColumns
-                            columnNameArr={columnNamesArr}
-                            fieldname={"participantFirstName"}
-                          >
-                            <div className=" flex items-center w-max py-1">
-                              First Name
-                              <Dropdown
-                                origin={"origin-top-right"}
-                                position={"right-0"}
-                                setvalue={AddFilter}
-                                fieldname={"participantFirstName"}
-                                selected={doesFieldExists(
-                                  queryArr,
-                                  "participantFirstName"
-                                )}
-                                removeFilter={() =>
-                                  removeObjectByKey("participantFirstName")
-                                }
-                              />
-                            </div>
-                          </HidableColumns>
-                        </th>
-                        <th className="border-b px-6 font-semibold py-1">
-                          <HidableColumns
-                            columnNameArr={columnNamesArr}
-                            fieldname={"participantLastName"}
-                          >
-                            <div className=" flex items-center w-max py-1">
-                              Last Name
-                              <Dropdown
-                                origin={"origin-top-right"}
-                                position={"right-0"}
-                                setvalue={AddFilter}
-                                fieldname={"participantLastName"}
-                                selected={doesFieldExists(
-                                  queryArr,
-                                  "participantLastName"
-                                )}
-                                removeFilter={() =>
-                                  removeObjectByKey("participantLastName")
-                                }
-                              />
-                            </div>
-                          </HidableColumns>
-                        </th>
-                        <th className="border-b px-6 font-semibold py-1">
-                          <HidableColumns
-                            columnNameArr={columnNamesArr}
-                            fieldname={"created"}
-                          >
-                            <div className=" flex items-center w-max py-1">
-                              date
-                              <Dropdown
-                                origin={"origin-top-right"}
-                                position={"right-0"}
-                                setvalue={AddFilter}
-                                fieldname={"created"}
-                                selected={doesFieldExists(queryArr, "created")}
-                                removeFilter={() =>
-                                  removeObjectByKey("created")
-                                }
-                              />
-                            </div>
-                          </HidableColumns>
-                        </th>
+
+                        <HidableColumnsHeader
+                          columnNameArr={columnNamesArr}
+                          fieldName={"programName"}
+                        >
+                          <div className=" flex items-center w-max py-1">
+                            Program Name
+                            <Dropdown
+                              origin={"origin-top-left"}
+                              position={"left-0"}
+                              setvalue={AddFilter}
+                              fieldname={"programName"}
+                              selected={doesFieldExists(
+                                queryArr,
+                                "programName"
+                              )}
+                              removeFilter={() =>
+                                removeObjectByKey("programName")
+                              }
+                            />
+                          </div>
+                        </HidableColumnsHeader>
+
+                        <HidableColumnsHeader
+                          columnNameArr={columnNamesArr}
+                          fieldName={"courseCode"}
+                        >
+                          <div className=" flex items-center w-max py-1">
+                            Course Code
+                            <Dropdown
+                              origin={"origin-top-left"}
+                              position={"left-0"}
+                              setvalue={AddFilter}
+                              fieldname={"courseCode"}
+                              selected={doesFieldExists(queryArr, "courseCode")}
+                              removeFilter={() =>
+                                removeObjectByKey("courseCode")
+                              }
+                            />
+                          </div>
+                        </HidableColumnsHeader>
+
+                        <HidableColumnsHeader
+                          columnNameArr={columnNamesArr}
+                          fieldName={"sessionName"}
+                        >
+                          <div className=" flex items-center w-max py-1">
+                            Session Name
+                            <Dropdown
+                              origin={"origin-top-left"}
+                              position={"left-0"}
+                              setvalue={AddFilter}
+                              fieldname={"sessionName"}
+                              selected={doesFieldExists(
+                                queryArr,
+                                "sessionName"
+                              )}
+                              removeFilter={() =>
+                                removeObjectByKey("sessionName")
+                              }
+                            />
+                          </div>
+                        </HidableColumnsHeader>
+
+                        <HidableColumnsHeader
+                          columnNameArr={columnNamesArr}
+                          fieldName={"typeofActivity"}
+                        >
+                          <div className=" flex items-center w-max py-1">
+                            Activity
+                            <Dropdown
+                              origin={"origin-top-left"}
+                              position={"left-0"}
+                              setvalue={AddFilter}
+                              fieldname={"typeofActivity"}
+                              selected={doesFieldExists(
+                                queryArr,
+                                "typeofActivity"
+                              )}
+                              removeFilter={() =>
+                                removeObjectByKey("typeofActivity")
+                              }
+                            />
+                          </div>
+                        </HidableColumnsHeader>
+
+                        <HidableColumnsHeader
+                          columnNameArr={columnNamesArr}
+                          fieldName={"participantContactNumber"}
+                        >
+                          <div className=" flex items-center w-max py-1">
+                            Phone
+                            <Dropdown
+                              origin={"origin-top-left"}
+                              position={"left-0"}
+                              setvalue={AddFilter}
+                              fieldname={"participantContactNumber"}
+                              selected={doesFieldExists(
+                                queryArr,
+                                "participantContactNumber"
+                              )}
+                              removeFilter={() =>
+                                removeObjectByKey("participantContactNumber")
+                              }
+                            />
+                          </div>
+                        </HidableColumnsHeader>
+
+                        <HidableColumnsHeader
+                          columnNameArr={columnNamesArr}
+                          fieldName={"participantFirstName"}
+                        >
+                          <div className=" flex items-center w-max py-1">
+                            First Name
+                            <Dropdown
+                              origin={"origin-top-right"}
+                              position={"right-0"}
+                              setvalue={AddFilter}
+                              fieldname={"participantFirstName"}
+                              selected={doesFieldExists(
+                                queryArr,
+                                "participantFirstName"
+                              )}
+                              removeFilter={() =>
+                                removeObjectByKey("participantFirstName")
+                              }
+                            />
+                          </div>
+                        </HidableColumnsHeader>
+
+                        <HidableColumnsHeader
+                          columnNameArr={columnNamesArr}
+                          fieldName={"participantLastName"}
+                        >
+                          <div className=" flex items-center w-max py-1">
+                            Last Name
+                            <Dropdown
+                              origin={"origin-top-right"}
+                              position={"right-0"}
+                              setvalue={AddFilter}
+                              fieldname={"participantLastName"}
+                              selected={doesFieldExists(
+                                queryArr,
+                                "participantLastName"
+                              )}
+                              removeFilter={() =>
+                                removeObjectByKey("participantLastName")
+                              }
+                            />
+                          </div>
+                        </HidableColumnsHeader>
+
+                        <HidableColumnsHeader
+                          columnNameArr={columnNamesArr}
+                          fieldName={"created"}
+                        >
+                          <div className=" flex items-center w-max py-1">
+                            date
+                            <Dropdown
+                              origin={"origin-top-right"}
+                              position={"right-0"}
+                              setvalue={AddFilter}
+                              fieldname={"created"}
+                              selected={doesFieldExists(queryArr, "created")}
+                              removeFilter={() => removeObjectByKey("created")}
+                            />
+                          </div>
+                        </HidableColumnsHeader>
                       </tr>
                     </thead>
                     <tbody>
@@ -369,58 +329,86 @@ function Activities() {
                               className=" checked:text-green-400 text-green-400"
                             />
                           </td>
-                          <td className="text-center">
+                          <HidableColumns
+                            fieldName={"programName"}
+                            columnNameArr={columnNamesArr}
+                          >
                             {activity?.programName ? (
                               <div>{activity.programName}</div>
                             ) : (
                               <i className="text-gray-500">Null</i>
                             )}
-                          </td>
-                          <td className="text-center">
+                          </HidableColumns>
+                          <HidableColumns
+                            fieldName={"courseCode"}
+                            columnNameArr={columnNamesArr}
+                          >
                             {activity?.courseCode ? (
                               <div>{activity.courseCode}</div>
                             ) : (
                               <i className="text-gray-500">Null</i>
                             )}
-                          </td>
-                          <td className="text-center">
+                          </HidableColumns>
+                          <HidableColumns
+                            fieldName={"sessionName"}
+                            columnNameArr={columnNamesArr}
+                          >
                             {activity?.sessionName ? (
                               <div>{activity.sessionName}</div>
                             ) : (
                               <i className="text-gray-500">Null</i>
                             )}
-                          </td>
-                          <td className="text-center">
+                          </HidableColumns>
+                          <HidableColumns
+                            fieldName={"typeofActivity"}
+                            columnNameArr={columnNamesArr}
+                          >
                             {activity?.activityName ? (
                               <div>{activity.activityName}</div>
                             ) : (
                               <i className="text-gray-500">Null</i>
                             )}
-                          </td>
-                          <td className="text-center">
+                          </HidableColumns>
+                          <HidableColumns
+                            fieldName={"participantContactNumber"}
+                            columnNameArr={columnNamesArr}
+                          >
                             {activity?.participantContactNumber ? (
                               <div>{activity.participantContactNumber}</div>
                             ) : (
                               <i className="text-gray-500">Null</i>
                             )}
-                          </td>
-                          <td className="text-center">
+                          </HidableColumns>
+                          <HidableColumns
+                            fieldName={"participantFirstName"}
+                            columnNameArr={columnNamesArr}
+                          >
                             {activity?.participantFirstName ? (
                               <div>{activity.participantFirstName}</div>
                             ) : (
                               <i className="text-gray-500">Null</i>
                             )}
-                          </td>
-                          <td className="text-center">
+                          </HidableColumns>
+                          <HidableColumns
+                            fieldName={"participantLastName"}
+                            columnNameArr={columnNamesArr}
+                          >
                             {activity?.participantLastName ? (
                               <div>{activity.participantLastName}</div>
                             ) : (
                               <i className="text-gray-500">Null</i>
                             )}
-                          </td>
-                          <td className="text-center">
-                            <DateDisplay dateString={activity.activityDate} />
-                          </td>
+                          </HidableColumns>
+                          <HidableColumns
+                            fieldName="created"
+                            columnNameArr={columnNamesArr}
+                          >
+                            {activity?.activityName === "Attendance" ? (
+                              `${activity.activityDate}`
+                            ) : (
+                              <DateDisplay dateString={activity.activityDate} />
+                            )}
+                          </HidableColumns>
                         </tr>
                       ))}
                     </tbody>
@@ -453,16 +441,21 @@ function Activities() {
 export default Activities;
 
 function HeadlessMenu({ options, onSelect }) {
+  const columnNames = [
+    "programName",
+    "courseCode",
+    "sessionName",
+    "typeofActivity",
+    "participantContactNumber",
+    "participantFirstName",
+    "participantLastName",
+    "created",
+  ];
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef();
 
   const handleButtonClick = () => {
     setIsOpen(!isOpen);
-  };
-
-  const handleMenuItemClick = (option) => {
-    onSelect(option);
-    setIsOpen(false);
   };
 
   const handleClickOutside = (event) => {
@@ -494,7 +487,7 @@ function HeadlessMenu({ options, onSelect }) {
       {isOpen && (
         <div className="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-[100]">
           <div className="py-1">
-            {options.map((option, index) => (
+            {columnNames?.map((option, index) => (
               <label
                 key={index}
                 className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
@@ -502,7 +495,12 @@ function HeadlessMenu({ options, onSelect }) {
                 <input
                   type="checkbox"
                   className="form-checkbox h-5 w-5 text-indigo-600 transition duration-150 ease-in-out"
-                  onChange={() => handleMenuItemClick(option)}
+                  value={option}
+                  checked={options.includes(option)}
+                  onChange={(e) => {
+                    onSelect(e.target);
+                    setIsOpen(false);
+                  }}
                 />
                 <span className="ml-2">{option}</span>
               </label>
@@ -515,18 +513,22 @@ function HeadlessMenu({ options, onSelect }) {
 }
 
 function HidableColumns({ children, fieldName, columnNameArr }) {
-  console.log(columnNameArr);
   const [isHidden, setIsHidden] = useState(false);
+
   useEffect(() => {
-    if (fieldName && columnNameArr) {
-      if (columnNameArr.includes(fieldName)) {
-        setIsHidden(true);
-      }
-    }
+    setIsHidden(columnNameArr.includes(fieldName));
   }, [columnNameArr, fieldName]);
-  if (!isHidden) {
-    return <div>{children}</div>;
-  } else {
-    return null;
-  }
+
+  return !isHidden ? <td className="text-center">{children}</td> : null;
+}
+function HidableColumnsHeader({ children, fieldName, columnNameArr }) {
+  const [isHidden, setIsHidden] = useState(false);
+
+  useEffect(() => {
+    setIsHidden(columnNameArr.includes(fieldName));
+  }, [columnNameArr, fieldName]);
+
+  return !isHidden ? (
+    <th className="border-b px-6 font-semibold py-1">{children}</th>
+  ) : null;
 }

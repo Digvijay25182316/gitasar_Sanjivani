@@ -75,7 +75,7 @@ function Activities() {
         const responseData = await response.json();
         setParticipant(responseData);
       } else if (response.status === 404) {
-        toast.error(
+        console.log(
           "participant with the phone number does not exists  please register"
         );
         navigate("/registeration");
@@ -90,6 +90,13 @@ function Activities() {
       setIsLoading(false);
     }
   }
+
+  useEffect(() => {
+    const phoneNumber = localStorage.getItem("phoneNumber");
+    if (phoneNumber) {
+      setPhoneNumber(phoneNumber);
+    }
+  }, []);
 
   useEffect(() => {
     (async () => {
@@ -143,6 +150,9 @@ function Activities() {
                 </button>
               </div>
             </div>
+            {phoneNumber.length !== 10 ? (
+              <p className="text-red-600">Please enter 10 digit number</p>
+            ) : null}
           </form>
         </div>
         <div className={`mt-5 flex flex-col items-center gap-5`}>

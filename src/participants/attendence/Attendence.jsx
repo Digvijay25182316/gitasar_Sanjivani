@@ -24,6 +24,12 @@ function Attendance() {
     localStorage.setItem("phoneNumber", item);
   };
 
+  useEffect(() => {
+    const phoneNumber = localStorage.getItem("phoneNumber");
+    if (phoneNumber) {
+      setPhoneNumber(phoneNumber);
+    }
+  }, []);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -93,7 +99,7 @@ function Attendance() {
         const responseData = await response.json();
         setParticipant(responseData);
       } else if (response.status === 404) {
-        toast.error(
+        console.log(
           "participant with the phone number does not exists  please register"
         );
         navigate("/registeration");
@@ -179,6 +185,9 @@ function Attendance() {
                 </button>
               </div>
             </div>
+            {phoneNumber.length !== 10 ? (
+              <p className="text-red-600">Please enter 10 digit number</p>
+            ) : null}
           </form>
         </div>
         {Object.keys(Participant).length > 0 && (
@@ -230,7 +239,7 @@ function Attendance() {
           allSessions.length > 0 ? (
             <div
               className={`md:w-full w-[80vw] flex flex-col items-center border border-t-0 rounded-b ${
-                Object.keys(Participant).length === 0 ? " opacity-50" : null
+                Object.keys(Participant).length === 0 ? " opacity-0" : null
               }`}
             >
               <p className="w-4/5 border-b text-lg font-semibold text-gray-700 py-2 mb-5">
@@ -251,7 +260,7 @@ function Attendance() {
                           setSessionAttendence(LatestSession?.id);
                           setSingleSession({});
                         }}
-                        readOnly={Object.keys(Participant).length === 0}
+                        disabled={Object.keys(Participant).length === 0}
                       />
                       <p className="text-lg font-semibold">
                         {LatestSession?.name}
