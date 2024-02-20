@@ -39,73 +39,71 @@ const SessionList = ({ course_level_id }) => {
 
   return (
     <div className="w-full px-5 py-5">
-      {!isLoading ? (
-        <table className="w-full">
-          <thead>
-            <tr>
-              <th className="font-normal border-t border-l border-r">
-                checkbox
-              </th>
-              <th className="font-normal border-t border-l border-r">name</th>
-              <th className="font-normal border-t border-l border-r">
-                scheduledDate
-              </th>
-              <th className="font-normal border-t border-l border-r">
-                courseName
-              </th>
-              <th className="font-normal border-t border-l border-r">
-                sessionName
-              </th>
-              <th className="font-normal border-t border-l border-r">
-                Actions
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {items.map((session) => (
-              <tr key={session.id}>
-                <td className="flex justify-center border-l border-t border-b border-collapse py-3 ">
-                  <label htmlFor={`session_${session.id}`}>
-                    <input
-                      type="checkbox"
-                      name={`session_${session.id}`}
-                      id={`session_${session.id}`}
-                      onChange={() => handleCheckboxToggle(session.id)}
-                      checked={selectedSession === session.id}
-                    />
-                  </label>
-                </td>
-                <td className="border border-gray-300 text-center py-3">
-                  {session.name}
-                </td>
-                <td className="border border-gray-300 text-center py-3">
-                  <DateDisplay dateString={session.startTime} />
-                </td>
-                <td className="border border-gray-300 text-center py-3">
-                  {session.courseName}
-                </td>
-                <td className="border border-gray-300 text-center py-3">
-                  {session.sessionName}
-                </td>
-                <td className="border border-gray-300 py-1 ">
-                  <div className="flex justify-center">
-                    <button className="bg-purple-600 rounded-md text-white px-4 py-1 flex items-center gap-2">
-                      <ClockIcon className="h-5 w-5" />
-                      Reschedule
-                    </button>
-                  </div>
-                </td>
+      <div className=" overflow-x-scroll border border-gray-300 rounded">
+        {!isLoading ? (
+          <table className="w-full">
+            <thead className="bg-gray-50">
+              <tr>
+                <th className="border-b border-gray-300 px-6 font-semibold py-1">
+                  checkbox
+                </th>
+                <th className="border-b border-gray-300 px-6 font-semibold py-1">
+                  name
+                </th>
+                <th className="border-b border-gray-300 px-6 font-semibold py-1">
+                  scheduledDate
+                </th>
+                <th className="border-b border-gray-300 px-6 font-semibold py-1">
+                  courseName
+                </th>
+                <th className="border-b border-gray-300 px-6 font-semibold py-1">
+                  sessionName
+                </th>
+                <th className="border-b border-gray-300 px-6 font-semibold py-1">
+                  Actions
+                </th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      ) : (
-        <div className="flex items-center justify-center">
-          <div className="animate-spin">
-            <CubeTransparentIcon className="h-5 w-5 text-gray-500" />
+            </thead>
+            <tbody>
+              {items.map((session) => (
+                <tr key={session.id} className="border-b border-gray-300">
+                  <td className="flex justify-center  py-3 ">
+                    <label htmlFor={`session_${session.id}`}>
+                      <input
+                        type="checkbox"
+                        name={`session_${session.id}`}
+                        id={`session_${session.id}`}
+                        onChange={() => handleCheckboxToggle(session.id)}
+                        checked={selectedSession === session.id}
+                      />
+                    </label>
+                  </td>
+                  <td className="text-center">{session.name}</td>
+                  <td className="text-center">
+                    <DateDisplay dateString={session.startTime} />
+                  </td>
+                  <td className="text-center">{session.courseName}</td>
+                  <td className="text-center">{session.sessionName}</td>
+                  <td className="py-1 ">
+                    <div className="flex justify-center">
+                      <button className="bg-purple-600 rounded-md text-white px-4 py-1 flex items-center gap-2">
+                        <ClockIcon className="h-5 w-5" />
+                        Reschedule
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        ) : (
+          <div className="flex items-center justify-center">
+            <div className="animate-spin">
+              <CubeTransparentIcon className="h-5 w-5 text-gray-500" />
+            </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 };

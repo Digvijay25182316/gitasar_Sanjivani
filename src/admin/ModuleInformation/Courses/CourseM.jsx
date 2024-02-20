@@ -171,7 +171,7 @@ function CourseM() {
                             />
                           </td>
                           <td className="px-10">
-                            <div className=" line-clamp-2 w-full">
+                            <div className=" line-clamp-2 w-max">
                               <CourseDetailsCard
                                 courseCode={session.courseCode}
                                 fieldName={"name"}
@@ -179,40 +179,38 @@ function CourseM() {
                             </div>
                           </td>
                           <td className="px-10">
-                            <div className=" line-clamp-2 w-full">
+                            <Elementexpandable className=" line-clamp-2 w-full">
                               <CourseDetailsCard
                                 courseCode={session.courseCode}
                                 fieldName={"description"}
                               />
-                            </div>
+                            </Elementexpandable>
                           </td>
                           <td className="px-10">
-                            <div className=" line-clamp-2 w-full">
+                            <Elementexpandable className=" line-clamp-2 w-full">
                               <CourseDetailsCard
                                 courseCode={session.courseCode}
                                 fieldName={"code"}
                               />
-                            </div>
+                            </Elementexpandable>
                           </td>
                           <td className="px-10">
-                            <div className=" line-clamp-2 w-full">
+                            <Elementexpandable className=" line-clamp-2 w-full">
                               {session?.code}
-                            </div>
+                            </Elementexpandable>
                           </td>
                           <td className="px-10">
-                            <div className=" line-clamp-2 w-full">
+                            <Elementexpandable className=" line-clamp-2 w-full">
                               {session?.name}
-                            </div>
+                            </Elementexpandable>
                           </td>
                           <td className="px-10">
-                            <div className=" line-clamp-2 w-full">
-                              {session?.description}
-                            </div>
+                            <div className=" w-max">{session?.description}</div>
                           </td>
                           <td className="px-10">
-                            <div className=" line-clamp-2 w-full">
+                            <Elementexpandable className=" line-clamp-2 w-full">
                               {session?.durationInMinutes}
-                            </div>
+                            </Elementexpandable>
                           </td>
                         </tr>
                       ))}
@@ -238,3 +236,22 @@ function CourseM() {
 }
 
 export default CourseM;
+
+const Elementexpandable = ({ children }) => {
+  const [isExpanded, setIsExpanded] = useState(false);
+  useEffect(() => {
+    if (isExpanded) {
+      setTimeout(() => {
+        setIsExpanded(false);
+      }, 5000);
+    }
+  }, [isExpanded]);
+  return (
+    <div
+      className={isExpanded ? "w-max" : "w-full line-clamp-1"}
+      onClick={() => setIsExpanded(true)}
+    >
+      {children}
+    </div>
+  );
+};

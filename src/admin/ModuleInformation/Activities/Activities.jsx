@@ -1,8 +1,11 @@
-import { ChevronRightIcon, PlusIcon } from "@heroicons/react/24/solid";
-import React, { useEffect, useState } from "react";
+import {
+  BarsArrowDownIcon,
+  ChevronRightIcon,
+  PlusIcon,
+} from "@heroicons/react/24/solid";
+import React, { useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 import Dropdown from "../../../components/BottomNav.jsx/DropDown";
-
 import AddActivitiesModal from "./AddActivitiesModal";
 import Slider from "../../../components/MdLeftHeaderSlider";
 import { SERVER_ENDPOINT } from "../../config/Server";
@@ -28,6 +31,32 @@ function Activities() {
   function removeObjectByKey(data) {
     setQueryArr(queryArr.filter((item) => !Object.keys(item).includes(data)));
   }
+
+  const [selectedOptions, setSelectedOptions] = useState([]);
+
+  const options = [
+    {
+      label: "Option 1",
+      value: "option1",
+      selected: selectedOptions.includes("option1"),
+    },
+    {
+      label: "Option 2",
+      value: "option2",
+      selected: selectedOptions.includes("option2"),
+    },
+    // Add more options as needed
+  ];
+
+  const handleSelect = (option) => {
+    if (selectedOptions.includes(option.value)) {
+      setSelectedOptions(
+        selectedOptions.filter((selected) => selected !== option.value)
+      );
+    } else {
+      setSelectedOptions([...selectedOptions, option.value]);
+    }
+  };
 
   let url = `${SERVER_ENDPOINT}/participant-activity/`;
   if (queryArr.length > 0) {
@@ -100,6 +129,9 @@ function Activities() {
               >
                 <PlusIcon className="h-4 w-4" /> New Activity
               </button>
+            </div>
+            <div className="md:mx-5 mx-2 flex rounded justify-end">
+              <HeadlessMenu options={options} onSelect={handleSelect} />
             </div>
             <div className="md:mx-5 mx-2 bg-white flex flex-col rounded border">
               <div className="flex items-center justify-between border-b">
@@ -346,3 +378,66 @@ function Activities() {
 }
 
 export default Activities;
+
+function HeadlessMenu({ options, onSelect }) {
+  const [isOpen, setIsOpen] = useState(false);
+  const menuRef = useRef();
+
+  const handleButtonClick = () => {
+    setIsOpen(!isOpen);
+  };
+
+  const handleMenuItemClick = (option) => {
+    onSelect(option);
+    setIsOpen(false);
+  };
+
+  const handleClickOutside = (event) => {
+    if (menuRef.current && !menuRef.current.contains(event.target)) {
+      setIsOpen(false);
+    }
+  };
+
+  // Attach click outside listener
+  React.useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  return (
+    <div ref={menuRef} className="relative inline-block text-left">
+      <div>
+        <button
+          type="button"
+          className="inline-flex justify-center w-full rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none"
+          onClick={handleButtonClick}
+        >
+          <BarsArrowDownIcon className="h-5 w-5 rotate-90" />
+        </button>
+      </div>
+
+      {isOpen && (
+        <div className="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-[100]">
+          <div className="py-1">
+            {options.map((option) => (
+              <label
+                key={option.value}
+                className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+              >
+                <input
+                  type="checkbox"
+                  className="form-checkbox h-5 w-5 text-indigo-600 transition duration-150 ease-in-out"
+                  checked={option.selected}
+                  onChange={() => handleMenuItemClick(option)}
+                />
+                <span className="ml-2">{option.label}</span>
+              </label>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
