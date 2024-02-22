@@ -4,7 +4,7 @@ import {
   ArrowLongUpIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 const Dropdown = ({
   position,
@@ -18,6 +18,21 @@ const Dropdown = ({
 }) => {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const [formstate, setFormState] = useState("");
+
+  const menuRef = useRef();
+
+  const handleClickOutside = (event) => {
+    if (menuRef.current && !menuRef.current.contains(event.target)) {
+      setDropdownOpen(false);
+    }
+  };
+  // Attach click outside listener
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   const toggleDropdown = () => {
     setDropdownOpen(!isDropdownOpen);
@@ -33,7 +48,7 @@ const Dropdown = ({
   };
 
   return (
-    <div className="relative inline-block text-left">
+    <div className="relative inline-block text-left" ref={menuRef}>
       <div className=" flex items-center">
         {issort ? (
           <button

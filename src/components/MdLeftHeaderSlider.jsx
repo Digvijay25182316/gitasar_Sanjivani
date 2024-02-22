@@ -45,10 +45,10 @@ const Slider = () => {
           </button>
           <Link to={"/admin/information/program"}>
             <div
-              className={`flex items-center text-lg ${
+              className={`flex items-center text-lg transition-all duration-500 ${
                 pathname.startsWith("/admin/information/program")
                   ? "bg-gray-100 text-blue-700 border rounded-lg  border-gray-300"
-                  : "text-gray-500"
+                  : "text-gray-500 hover:bg-gray-100 rounded-lg"
               }  px-5 py-1.5 mx-2 lg:mx-5 gap-5`}
             >
               <p>
@@ -59,10 +59,10 @@ const Slider = () => {
           </Link>
           <Link to={"/admin/information/mcourse"}>
             <div
-              className={`flex items-center text-lg ${
+              className={`flex items-center text-lg transition-all duration-500 ${
                 pathname.startsWith("/admin/information/mcourse")
                   ? "bg-gray-100 text-blue-700 border rounded-lg  border-gray-300"
-                  : "text-gray-500"
+                  : "text-gray-500 hover:bg-gray-100 rounded-lg"
               }  px-5 py-1.5 mx-2 lg:mx-5 gap-5`}
             >
               <p>
@@ -73,10 +73,10 @@ const Slider = () => {
           </Link>
           <Link to={"/admin/information/activities"}>
             <div
-              className={`flex items-center text-lg ${
+              className={`flex items-center text-lg transition-all duration-500 ${
                 pathname.startsWith("/admin/information/activities")
                   ? "bg-gray-100 text-blue-700 border rounded-lg  border-gray-300"
-                  : "text-gray-500"
+                  : "text-gray-500 hover:bg-gray-100 rounded-lg"
               }  px-5 py-1.5 mx-2 lg:mx-5 gap-5`}
             >
               <p>
@@ -87,10 +87,10 @@ const Slider = () => {
           </Link>
           <Link to={"/admin/information/mactivities"}>
             <div
-              className={`flex items-center text-lg ${
+              className={`flex items-center text-lg transition-all duration-500 ${
                 pathname.startsWith("/admin/information/mactivities")
                   ? "bg-gray-100 text-blue-700 border rounded-lg  border-gray-300"
-                  : "text-gray-500"
+                  : "text-gray-500 hover:bg-gray-100 rounded-lg"
               }  px-5 py-1.5 mx-2 lg:mx-5 gap-5`}
             >
               <p>
@@ -101,10 +101,10 @@ const Slider = () => {
           </Link>
           <Link to={"/admin/information/course-level"}>
             <div
-              className={`flex items-center text-lg ${
+              className={`flex items-center text-lg transition-all duration-500 ${
                 pathname.startsWith("/admin/information/course-level")
                   ? "bg-gray-100 text-blue-700 border rounded-lg  border-gray-300"
-                  : "text-gray-500"
+                  : "text-gray-500 hover:bg-gray-100 rounded-lg"
               }  px-5 py-1.5 mx-2 lg:mx-5 gap-5`}
             >
               <p>
@@ -115,10 +115,10 @@ const Slider = () => {
           </Link>
           <Link to={"/admin/information/volunteers"}>
             <div
-              className={`flex items-center text-lg ${
+              className={`flex items-center text-lg transition-all duration-500 ${
                 pathname.startsWith("/admin/information/volunteers")
                   ? "bg-gray-100 text-blue-700 border rounded-lg  border-gray-300"
-                  : "text-gray-500"
+                  : "text-gray-500 hover:bg-gray-100 rounded-lg"
               }  px-5 py-1.5 mx-2 lg:mx-5 gap-5`}
             >
               <p>
@@ -129,10 +129,10 @@ const Slider = () => {
           </Link>
           <Link to={"/admin/information/participants"}>
             <div
-              className={`flex items-center text-lg ${
+              className={`flex items-center text-lg transition-all duration-500 ${
                 pathname.startsWith("/admin/information/participants")
                   ? "bg-gray-100 text-blue-700 border rounded-lg  border-gray-300"
-                  : "text-gray-500"
+                  : "text-gray-500 hover:bg-gray-100 rounded-lg"
               }  px-5 py-1.5 mx-2 lg:mx-5 gap-5`}
             >
               <p>

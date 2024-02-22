@@ -14,6 +14,8 @@ import toast from "react-hot-toast";
 import { CubeTransparentIcon } from "@heroicons/react/24/outline";
 import Sidebar from "../../../components/BottomNav.jsx/Sidebar";
 import DateDisplay from "../../../components/DateDisplay";
+import ProgramDropDown from "./ProgramDropDown";
+import ActivityTypeDropDown from "./ActivitiesTypeDropDown";
 
 function Activities() {
   const { pathname } = useLocation();
@@ -22,6 +24,8 @@ function Activities() {
     { size: 10 }, // a default page size
     { sort: "id" },
   ]);
+
+  console.log(queryArr);
 
   const [openActivities, setOpenActivities] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -220,7 +224,7 @@ function Activities() {
                       >
                         <div className=" flex items-center w-max py-1">
                           Program Name
-                          <Dropdown
+                          <ProgramDropDown
                             origin={"origin-top-left"}
                             position={"left-0"}
                             setvalue={AddFilter}
@@ -290,21 +294,18 @@ function Activities() {
                       >
                         <div className=" flex items-center w-max py-1">
                           Activity
-                          <Dropdown
+                          <ActivityTypeDropDown
                             origin={"origin-top-left"}
                             position={"left-0"}
                             setvalue={AddFilter}
                             setIsSort={SortElements}
                             issort={queryArr.some(
-                              (obj) => obj.sort === "typeofActivity"
+                              (obj) => obj.sort === "activityName"
                             )}
-                            fieldname={"typeofActivity"}
-                            selected={doesFieldExists(
-                              queryArr,
-                              "typeofActivity"
-                            )}
+                            fieldname={"activityName"}
+                            selected={doesFieldExists(queryArr, "activityName")}
                             removeFilter={() =>
-                              removeObjectByKey("typeofActivity")
+                              removeObjectByKey("activityName")
                             }
                           />
                         </div>
