@@ -28,7 +28,7 @@ function CourseM() {
   const [selectedItem, setSelectedItem] = useState(0);
   const [SessionArr, setSessionArr] = useState([]);
   const [totalElement, setTotalElements] = useState(0);
-  const [VisibleElements, setVisibleElements] = useState(0);
+  const [VisibleElements, setVisibleElements] = useState(10);
   let url = `${SERVER_ENDPOINT}/session/`;
   if (queryArr.length > 0) {
     url +=
@@ -52,7 +52,6 @@ function CourseM() {
           const responseData = await response.json();
           setSessionArr(responseData.content);
           setTotalElements(responseData.totalElements);
-          setVisibleElements(responseData.numberOfElements);
         } else {
           const errorData = await response.json();
           toast.error(errorData.message);
@@ -101,6 +100,7 @@ function CourseM() {
       }
       return prev;
     });
+    setVisibleElements((prev) => prev + 10);
   };
 
   // Function to decrease page by one
@@ -117,7 +117,9 @@ function CourseM() {
       }
       return prev;
     });
+    setVisibleElements((prev) => prev - 10);
   };
+  console.log(VisibleElements);
   //Function to sort
   const SortElements = (sortBy) => {
     setQueryArr((prev) => {
@@ -184,21 +186,26 @@ function CourseM() {
                 <p className=" px-2 py-1 font-semibold text-gray-600">
                   Courses Master
                 </p>
-                <p className="px-2 py-1  text-gray-400">{`${VisibleElements} of ${totalElement}`}</p>
+                <p className="px-2 py-1  text-gray-400">{`${
+                  totalElement < 10
+                    ? totalElement
+                    : VisibleElements > totalElement
+                    ? totalElement
+                    : VisibleElements
+                } of ${totalElement}`}</p>
               </div>
               <div className="overflow-x-scroll ">
-                {SessionArr?.length > 0 ? (
-                  <table className="w-full">
-                    <thead className="bg-gray-50">
-                      <tr>
-                        <th className="border-b px-6 font-semibold py-1">
-                          Select
-                        </th>
+                <table className="w-full">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th className="border-b px-6 font-semibold py-1">
+                        Select
+                      </th>
 
-                        <th className="border-b px-6 font-semibold py-1">
-                          <div className=" flex items-center py-1 w-max">
-                            Course Name
-                            {/* <Dropdown
+                      <th className="border-b px-6 font-semibold py-1">
+                        <div className=" flex items-center py-1 w-max">
+                          Course Name
+                          {/* <Dropdown
                               origin={"origin-top-left"}
                               position={"left-0"}
                               setvalue={AddFilter}
@@ -210,12 +217,12 @@ function CourseM() {
                               selected={doesFieldExists(queryArr, "name")}
                               removeFilter={() => removeObjectByKey("name")}
                             /> */}
-                          </div>
-                        </th>
-                        <th className="border-b px-6 font-semibold py-1">
-                          <div className=" flex items-center py-1 w-max">
-                            Course description
-                            {/* <Dropdown
+                        </div>
+                      </th>
+                      <th className="border-b px-6 font-semibold py-1">
+                        <div className=" flex items-center py-1 w-max">
+                          Course description
+                          {/* <Dropdown
                               origin={"origin-top-left"}
                               position={"left-0"}
                               setvalue={AddFilter}
@@ -232,12 +239,12 @@ function CourseM() {
                                 removeObjectByKey("description")
                               }
                             /> */}
-                          </div>
-                        </th>
-                        <th className="border-b px-6 font-semibold py-1">
-                          <div className=" flex items-center py-1 w-max">
-                            Course code
-                            {/* <Dropdown
+                        </div>
+                      </th>
+                      <th className="border-b px-6 font-semibold py-1">
+                        <div className=" flex items-center py-1 w-max">
+                          Course code
+                          {/* <Dropdown
                               origin={"origin-top-left"}
                               position={"left-0"}
                               setvalue={AddFilter}
@@ -249,88 +256,82 @@ function CourseM() {
                               selected={doesFieldExists(queryArr, "code")}
                               removeFilter={() => removeObjectByKey("code")}
                             /> */}
-                          </div>
-                        </th>
-                        <th className="border-b px-6 font-semibold py-1">
-                          <div className=" flex items-center py-1 w-max">
-                            session code
-                            <Dropdown
-                              origin={"origin-top-left"}
-                              position={"left-0"}
-                              setvalue={AddFilter}
-                              setIsSort={SortElements}
-                              issort={queryArr.some(
-                                (obj) => obj.sort === "code"
-                              )}
-                              fieldname={"code"}
-                              selected={doesFieldExists(queryArr, "code")}
-                              removeFilter={() => removeObjectByKey("code")}
-                            />
-                          </div>
-                        </th>
-                        <th className="border-b px-6 font-semibold py-1">
-                          <div className=" flex items-center py-1 w-max">
-                            session Name
-                            <Dropdown
-                              origin={"origin-top-left"}
-                              position={"left-0"}
-                              setvalue={AddFilter}
-                              setIsSort={SortElements}
-                              issort={queryArr.some(
-                                (obj) => obj.sort === "name"
-                              )}
-                              fieldname={"name"}
-                              selected={doesFieldExists(queryArr, "name")}
-                              removeFilter={() => removeObjectByKey("name")}
-                            />
-                          </div>
-                        </th>
-                        <th className="border-b px-6 font-semibold py-1">
-                          <div className=" flex items-center py-1 w-max">
-                            session description
-                            <Dropdown
-                              origin={"origin-top-left"}
-                              position={"left-0"}
-                              setvalue={AddFilter}
-                              setIsSort={SortElements}
-                              issort={queryArr.some(
-                                (obj) => obj.sort === "description"
-                              )}
-                              fieldname={"description"}
-                              selected={doesFieldExists(
-                                queryArr,
-                                "description"
-                              )}
-                              removeFilter={() =>
-                                removeObjectByKey("description")
-                              }
-                            />
-                          </div>
-                        </th>
-                        <th className="border-b px-6 font-semibold py-1">
-                          <div className=" flex items-center py-1 w-max">
-                            session duration(min)
-                            <Dropdown
-                              origin={"origin-top-left"}
-                              position={"left-0"}
-                              setvalue={AddFilter}
-                              setIsSort={SortElements}
-                              issort={queryArr.some(
-                                (obj) => obj.sort === "durationInMinutes"
-                              )}
-                              fieldname={"durationInMinutes"}
-                              selected={doesFieldExists(
-                                queryArr,
-                                "durationInMinutes"
-                              )}
-                              removeFilter={() =>
-                                removeObjectByKey("durationInMinutes")
-                              }
-                            />
-                          </div>
-                        </th>
-                      </tr>
-                    </thead>
+                        </div>
+                      </th>
+                      <th className="border-b px-6 font-semibold py-1">
+                        <div className=" flex items-center py-1 w-max">
+                          session code
+                          <Dropdown
+                            origin={"origin-top-left"}
+                            position={"left-0"}
+                            setvalue={AddFilter}
+                            setIsSort={SortElements}
+                            issort={queryArr.some((obj) => obj.sort === "code")}
+                            fieldname={"code"}
+                            selected={doesFieldExists(queryArr, "code")}
+                            removeFilter={() => removeObjectByKey("code")}
+                          />
+                        </div>
+                      </th>
+                      <th className="border-b px-6 font-semibold py-1">
+                        <div className=" flex items-center py-1 w-max">
+                          session Name
+                          <Dropdown
+                            origin={"origin-top-left"}
+                            position={"left-0"}
+                            setvalue={AddFilter}
+                            setIsSort={SortElements}
+                            issort={queryArr.some((obj) => obj.sort === "name")}
+                            fieldname={"name"}
+                            selected={doesFieldExists(queryArr, "name")}
+                            removeFilter={() => removeObjectByKey("name")}
+                          />
+                        </div>
+                      </th>
+                      <th className="border-b px-6 font-semibold py-1">
+                        <div className=" flex items-center py-1 w-max">
+                          session description
+                          <Dropdown
+                            origin={"origin-top-left"}
+                            position={"left-0"}
+                            setvalue={AddFilter}
+                            setIsSort={SortElements}
+                            issort={queryArr.some(
+                              (obj) => obj.sort === "description"
+                            )}
+                            fieldname={"description"}
+                            selected={doesFieldExists(queryArr, "description")}
+                            removeFilter={() =>
+                              removeObjectByKey("description")
+                            }
+                          />
+                        </div>
+                      </th>
+                      <th className="border-b px-6 font-semibold py-1">
+                        <div className=" flex items-center py-1 w-max">
+                          session duration(min)
+                          <Dropdown
+                            origin={"origin-top-left"}
+                            position={"left-0"}
+                            setvalue={AddFilter}
+                            setIsSort={SortElements}
+                            issort={queryArr.some(
+                              (obj) => obj.sort === "durationInMinutes"
+                            )}
+                            fieldname={"durationInMinutes"}
+                            selected={doesFieldExists(
+                              queryArr,
+                              "durationInMinutes"
+                            )}
+                            removeFilter={() =>
+                              removeObjectByKey("durationInMinutes")
+                            }
+                          />
+                        </div>
+                      </th>
+                    </tr>
+                  </thead>
+                  {SessionArr?.length > 0 ? (
                     <tbody>
                       {SessionArr?.map((session, index) => (
                         <tr key={index + 1} className="border-b w-full">
@@ -391,29 +392,43 @@ function CourseM() {
                         </tr>
                       ))}
                     </tbody>
-                  </table>
-                ) : (
-                  <div className="text-center text-gray-400 my-10">
-                    {" "}
-                    No Courses Found
-                  </div>
-                )}
+                  ) : (
+                    <tbody>
+                      <tr>
+                        <td
+                          colSpan={10}
+                          className="text-center text-gray-400 py-10"
+                        >
+                          No Course Found
+                        </td>
+                      </tr>
+                    </tbody>
+                  )}
+                </table>
               </div>
             </div>
             <div className="px-5 flex items-center justify-between mt-6">
               <button
-                className="flex items-center gap-3 text-lg bg-white px-4 py-1 rounded border"
+                className={`flex items-center gap-3 text-lg bg-white px-4 py-1 rounded border ${
+                  VisibleElements === 10 ? "text-gray-400" : "text-gray-700"
+                }`}
                 onClick={decreasePage}
+                disabled={VisibleElements === 10}
               >
-                <ChevronLeftIcon className="h-7 w-7" />
+                <ChevronLeftIcon className="h-5 w-5" />
                 Prev
               </button>
               <button
-                className="flex items-center gap-3 text-lg bg-white px-4 py-1 rounded border"
+                className={`flex items-center gap-3 text-lg bg-white px-4 py-1 rounded border ${
+                  VisibleElements > totalElement
+                    ? "text-gray-400"
+                    : "text-gray-700"
+                }`}
                 onClick={increasePage}
+                disabled={VisibleElements > totalElement}
               >
                 Next
-                <ChevronRightIcon className="h-7 w-7" />
+                <ChevronRightIcon className="h-5 w-5" />
               </button>
             </div>
           </div>

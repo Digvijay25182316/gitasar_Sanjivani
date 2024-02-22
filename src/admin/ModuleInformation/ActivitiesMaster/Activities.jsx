@@ -27,7 +27,7 @@ function ActivitiesM() {
   const [isLoading, setIsLoading] = useState(false);
   const [selectedItem, setSelectedItem] = useState(0);
   const [totalElement, setTotalElements] = useState(0);
-  const [VisibleElements, setVisibleElements] = useState(0);
+  const [VisibleElements, setVisibleElements] = useState(10);
 
   let url = `${SERVER_ENDPOINT}/activity/`;
   if (queryArr.length > 0) {
@@ -50,9 +50,7 @@ function ActivitiesM() {
         const response = await fetch(url);
         if (response.ok) {
           const responseData = await response.json();
-          console.log(responseData);
           setActivitiesArr(responseData.content);
-          setVisibleElements(responseData?.numberOfElements);
           setTotalElements(responseData?.totalElements);
         } else {
           const errorData = await response.json();
@@ -102,6 +100,7 @@ function ActivitiesM() {
       }
       return prev;
     });
+    setVisibleElements((prev) => prev + 10);
   };
 
   // Function to decrease page by one
@@ -118,6 +117,7 @@ function ActivitiesM() {
       }
       return prev;
     });
+    setVisibleElements((prev) => prev - 10);
   };
   //Function to sort
   const SortElements = (sortBy) => {
@@ -175,58 +175,59 @@ function ActivitiesM() {
                 <p className=" px-2 py-1 font-semibold text-gray-600">
                   Activity master
                 </p>
-                <p className="px-2 py-1  text-gray-400">{`${VisibleElements} of ${totalElement}`}</p>
+                <p className="px-2 py-1  text-gray-400">{`${
+                  totalElement < 10
+                    ? totalElement
+                    : VisibleElements > totalElement
+                    ? totalElement
+                    : VisibleElements
+                } of ${totalElement}`}</p>
               </div>
 
               <div className="overflow-x-scroll">
-                {activitiesArr?.length > 0 ? (
-                  <table className="w-full">
-                    <thead className="bg-gray-50">
-                      <tr>
-                        <th className="border-b px-6 font-semibold py-1">
-                          Select
-                        </th>
-                        <th className="border-b px-6 font-semibold py-1">
-                          <div className=" flex items-center w-max">
-                            Activity Name
-                            <Dropdown
-                              origin={"origin-top-left"}
-                              position={"left-0"}
-                              setvalue={AddFilter}
-                              setIsSort={SortElements}
-                              issort={queryArr.some(
-                                (obj) => obj.sort === "name"
-                              )}
-                              fieldname={"name"}
-                              selected={doesFieldExists(queryArr, "name")}
-                              removeFilter={() => removeObjectByKey("name")}
-                            />
-                          </div>
-                        </th>
-                        <th className="border-b px-6 font-semibold py-1">
-                          <div className=" flex items-center w-max py-1">
-                            Activity Description
-                            <Dropdown
-                              origin={"origin-top-left"}
-                              position={"left-0"}
-                              setvalue={AddFilter}
-                              setIsSort={SortElements}
-                              issort={queryArr.some(
-                                (obj) => obj.sort === "description"
-                              )}
-                              fieldname={"description"}
-                              selected={doesFieldExists(
-                                queryArr,
-                                "description"
-                              )}
-                              removeFilter={() =>
-                                removeObjectByKey("description")
-                              }
-                            />
-                          </div>
-                        </th>
-                      </tr>
-                    </thead>
+                <table className="w-full">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th className="border-b px-6 font-semibold py-1">
+                        Select
+                      </th>
+                      <th className="border-b px-6 font-semibold py-1">
+                        <div className=" flex items-center w-max">
+                          Activity Name
+                          <Dropdown
+                            origin={"origin-top-left"}
+                            position={"left-0"}
+                            setvalue={AddFilter}
+                            setIsSort={SortElements}
+                            issort={queryArr.some((obj) => obj.sort === "name")}
+                            fieldname={"name"}
+                            selected={doesFieldExists(queryArr, "name")}
+                            removeFilter={() => removeObjectByKey("name")}
+                          />
+                        </div>
+                      </th>
+                      <th className="border-b px-6 font-semibold py-1">
+                        <div className=" flex items-center w-max py-1">
+                          Activity Description
+                          <Dropdown
+                            origin={"origin-top-left"}
+                            position={"left-0"}
+                            setvalue={AddFilter}
+                            setIsSort={SortElements}
+                            issort={queryArr.some(
+                              (obj) => obj.sort === "description"
+                            )}
+                            fieldname={"description"}
+                            selected={doesFieldExists(queryArr, "description")}
+                            removeFilter={() =>
+                              removeObjectByKey("description")
+                            }
+                          />
+                        </div>
+                      </th>
+                    </tr>
+                  </thead>
+                  {activitiesArr?.length > 0 ? (
                     <tbody>
                       {activitiesArr?.map((acitivity, index) => (
                         <tr key={index} className="border-b">
@@ -244,29 +245,43 @@ function ActivitiesM() {
                         </tr>
                       ))}
                     </tbody>
-                  </table>
-                ) : (
-                  <div className="text-center text-gray-400 my-10">
-                    {" "}
-                    No Activities Found
-                  </div>
-                )}
+                  ) : (
+                    <tbody>
+                      <tr>
+                        <td
+                          className="text-center text-gray-400 py-10"
+                          colSpan={10}
+                        >
+                          No Activities Found
+                        </td>
+                      </tr>
+                    </tbody>
+                  )}
+                </table>
               </div>
             </div>
             <div className="px-5 flex items-center justify-between mt-6">
               <button
-                className="flex items-center gap-3 text-lg bg-white px-4 py-1 rounded border"
+                className={`flex items-center gap-3 text-lg bg-white px-4 py-1 rounded border ${
+                  VisibleElements === 10 ? "text-gray-400" : "text-gray-700"
+                }`}
                 onClick={decreasePage}
+                disabled={VisibleElements === 10}
               >
-                <ChevronLeftIcon className="h-7 w-7" />
+                <ChevronLeftIcon className="h-5 w-5" />
                 Prev
               </button>
               <button
-                className="flex items-center gap-3 text-lg bg-white px-4 py-1 rounded border"
+                className={`flex items-center gap-3 text-lg bg-white px-4 py-1 rounded border ${
+                  VisibleElements > totalElement
+                    ? "text-gray-400"
+                    : "text-gray-700"
+                }`}
                 onClick={increasePage}
+                disabled={VisibleElements > totalElement}
               >
                 Next
-                <ChevronRightIcon className="h-7 w-7" />
+                <ChevronRightIcon className="h-5 w-5" />
               </button>
             </div>
           </div>

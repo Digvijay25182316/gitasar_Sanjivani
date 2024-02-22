@@ -28,7 +28,7 @@ function Activities() {
   const [ActivityArr, setActivityArr] = useState([]);
   const [columnNamesArr, setColumnNamesArr] = useState([]); //to toggle visibility
   const [totalElement, setTotalElements] = useState(0);
-  const [VisibleElements, setVisibleElements] = useState(0);
+  const [VisibleElements, setVisibleElements] = useState(10);
   const handleAddItemToColumnNameArr = (option) => {
     if (columnNamesArr.includes(option.value)) {
       setColumnNamesArr(
@@ -74,7 +74,6 @@ function Activities() {
         if (response.ok) {
           const responseData = await response.json();
           setTotalElements(responseData?.totalElements);
-          setVisibleElements(responseData?.numberOfElements);
           setActivityArr(responseData.content);
         } else {
           const errorData = await response.json();
@@ -115,6 +114,7 @@ function Activities() {
       }
       return prev;
     });
+    setVisibleElements((prev) => prev + 10);
   };
 
   // Function to decrease page by one
@@ -131,6 +131,7 @@ function Activities() {
       }
       return prev;
     });
+    setVisibleElements((prev) => prev - 10);
   };
   //Function to sort
   const SortElements = (sortBy) => {
@@ -197,7 +198,13 @@ function Activities() {
                 <p className="px-2 py-1 font-semibold text-gray-600">
                   Activities
                 </p>
-                <p className="px-2 py-1  text-gray-400">{`${VisibleElements} of ${totalElement}`}</p>
+                <p className="px-2 py-1  text-gray-400">{`${
+                  totalElement < 10
+                    ? totalElement
+                    : VisibleElements > totalElement
+                    ? totalElement
+                    : VisibleElements
+                } of ${totalElement}`}</p>
               </div>
               <div className="overflow-x-scroll">
                 <table className="w-full">
@@ -515,18 +522,26 @@ function Activities() {
             </div>
             <div className="px-5 flex items-center justify-between mt-6">
               <button
-                className="flex items-center gap-3 text-lg bg-white px-4 py-1 rounded border"
+                className={`flex items-center gap-3 text-lg bg-white px-4 py-1 rounded border ${
+                  VisibleElements === 10 ? "text-gray-400" : "text-gray-700"
+                }`}
                 onClick={decreasePage}
+                disabled={VisibleElements === 10}
               >
-                <ChevronLeftIcon className="h-7 w-7" />
+                <ChevronLeftIcon className="h-5 w-5" />
                 Prev
               </button>
               <button
-                className="flex items-center gap-3 text-lg bg-white px-4 py-1 rounded border"
+                className={`flex items-center gap-3 text-lg bg-white px-4 py-1 rounded border ${
+                  VisibleElements > totalElement
+                    ? "text-gray-400"
+                    : "text-gray-700"
+                }`}
                 onClick={increasePage}
+                disabled={VisibleElements > totalElement}
               >
                 Next
-                <ChevronRightIcon className="h-7 w-7" />
+                <ChevronRightIcon className="h-5 w-5" />
               </button>
             </div>
           </div>

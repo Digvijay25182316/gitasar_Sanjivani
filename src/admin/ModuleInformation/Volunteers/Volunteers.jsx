@@ -12,6 +12,7 @@ import { SERVER_ENDPOINT } from "../../config/Server";
 import Dropdown from "../../../components/BottomNav.jsx/DropDown";
 import toast from "react-hot-toast";
 import Sidebar from "../../../components/BottomNav.jsx/Sidebar";
+import DateDisplay from "../../../components/DateDisplay";
 
 function Volunteers() {
   const { pathname } = useLocation();
@@ -27,7 +28,7 @@ function Volunteers() {
   const [isLoading, setIsLoading] = useState(true);
   const [selectedItem, setSelectedItem] = useState(0);
   const [totalElement, setTotalElements] = useState(0);
-  const [VisibleElements, setVisibleElements] = useState(0);
+  const [VisibleElements, setVisibleElements] = useState(10);
 
   let url = `${SERVER_ENDPOINT}/volunteer/`;
   if (queryArr.length > 0) {
@@ -52,7 +53,6 @@ function Volunteers() {
           const responseData = await response.json();
           setVolunteerData(responseData.content);
           setTotalElements(responseData.totalElements);
-          setVisibleElements(responseData.numberOfElements);
         } else {
           const errorData = await response.json();
           toast.error(errorData.message);
@@ -103,6 +103,7 @@ function Volunteers() {
       }
       return prev;
     });
+    setVisibleElements((prev) => prev + 10);
   };
 
   // Function to decrease page by one
@@ -119,6 +120,7 @@ function Volunteers() {
       }
       return prev;
     });
+    setVisibleElements((prev) => prev - 10);
   };
   //Function to sort
   const SortElements = (sortBy) => {
@@ -180,176 +182,178 @@ function Volunteers() {
                 <p className=" px-2 py-1 font-semibold text-gray-600">
                   Volunteer
                 </p>
-                <p className="px-2 py-1  text-gray-400">{`${VisibleElements} of ${totalElement}`}</p>
+                <p className="px-2 py-1  text-gray-400">{`${
+                  totalElement < 10
+                    ? totalElement
+                    : VisibleElements > totalElement
+                    ? totalElement
+                    : VisibleElements
+                } of ${totalElement}`}</p>
               </div>
               <div className="overflow-x-scroll">
-                {VolunteerData?.length > 0 ? (
-                  <table>
-                    <thead className="bg-gray-50">
-                      <tr>
-                        <th className="border-b px-6 font-semibold py-1">
-                          Select
-                        </th>
-                        <th className="border-b px-6 font-semibold py-1">
-                          <div className=" flex items-center w-max py-1">
-                            First Name
-                            <Dropdown
-                              origin={"origin-top-left"}
-                              position={"left-0"}
-                              setvalue={AddFilter}
-                              setIsSort={SortElements}
-                              issort={queryArr.some(
-                                (obj) => obj.sort === "firstName"
-                              )}
-                              fieldname={"firstName"}
-                              selected={doesFieldExists(queryArr, "firstName")}
-                              removeFilter={() =>
-                                removeObjectByKey("firstName")
-                              }
-                            />
-                          </div>
-                        </th>
-                        <th className="border-b px-6 font-semibold py-1">
-                          <div className=" flex items-center w-max py-1">
-                            Last Name
-                            <Dropdown
-                              origin={"origin-top-left"}
-                              position={"left-0"}
-                              setvalue={AddFilter}
-                              setIsSort={SortElements}
-                              issort={queryArr.some(
-                                (obj) => obj.sort === "lastName"
-                              )}
-                              fieldname={"lastName"}
-                              selected={doesFieldExists(queryArr, "lastName")}
-                              removeFilter={() => removeObjectByKey("lastName")}
-                            />
-                          </div>
-                        </th>
-                        <th className="border-b px-6 font-semibold py-1">
-                          <div className=" flex items-center w-max py-1">
-                            Initiated Name
-                            <Dropdown
-                              origin={"origin-top-left"}
-                              position={"left-0"}
-                              setvalue={AddFilter}
-                              setIsSort={SortElements}
-                              issort={queryArr.some(
-                                (obj) => obj.sort === "initiatedName"
-                              )}
-                              fieldname={"initiatedName"}
-                              selected={doesFieldExists(
-                                queryArr,
-                                "initiatedName"
-                              )}
-                              removeFilter={() =>
-                                removeObjectByKey("initiatedName")
-                              }
-                            />
-                          </div>
-                        </th>
-                        <th className="border-b px-6 font-semibold py-1">
-                          <div className=" flex items-center w-max py-1">
-                            Contact Number
-                            <Dropdown
-                              origin={"origin-top-left"}
-                              position={"left-0"}
-                              setvalue={AddFilter}
-                              setIsSort={SortElements}
-                              issort={queryArr.some(
-                                (obj) => obj.sort === "contactNumber"
-                              )}
-                              fieldname={"contactNumber"}
-                              selected={doesFieldExists(
-                                queryArr,
-                                "contactNumber"
-                              )}
-                              removeFilter={() =>
-                                removeObjectByKey("contactNumber")
-                              }
-                            />
-                          </div>
-                        </th>
-                        <th className="border-b px-6 font-semibold py-1">
-                          <div className=" flex items-center w-max py-1">
-                            dob
-                            <Dropdown
-                              origin={"origin-top-left"}
-                              position={"left-0"}
-                              setvalue={AddFilter}
-                              setIsSort={SortElements}
-                              issort={queryArr.some(
-                                (obj) => obj.sort === "dob"
-                              )}
-                              fieldname={"dob"}
-                              selected={doesFieldExists(queryArr, "dob")}
-                              removeFilter={() => removeObjectByKey("dob")}
-                            />
-                          </div>
-                        </th>
-                        <th className="border-b px-6 font-semibold py-1">
-                          <div className=" flex items-center w-max py-1">
-                            gender
-                            <Dropdown
-                              origin={"origin-top-left"}
-                              position={"left-0"}
-                              setvalue={AddFilter}
-                              setIsSort={SortElements}
-                              issort={queryArr.some(
-                                (obj) => obj.sort === "gender"
-                              )}
-                              fieldname={"gender"}
-                              selected={doesFieldExists(queryArr, "gender")}
-                              removeFilter={() => removeObjectByKey("gender")}
-                            />
-                          </div>
-                        </th>
-                        <th className="border-b px-6 font-semibold py-1">
-                          <div className=" flex items-center w-max py-1">
-                            Current Service
-                            <Dropdown
-                              origin={"origin-top-left"}
-                              position={"left-0"}
-                              setvalue={AddFilter}
-                              setIsSort={SortElements}
-                              issort={queryArr.some(
-                                (obj) => obj.sort === "currentService"
-                              )}
-                              fieldname={"currentService"}
-                              selected={doesFieldExists(
-                                queryArr,
-                                "currentService"
-                              )}
-                              removeFilter={() =>
-                                removeObjectByKey("currentService")
-                              }
-                            />
-                          </div>
-                        </th>
-                        <th className="border-b px-6 font-semibold py-1">
-                          <div className=" flex items-center w-max py-1">
-                            interested Service
-                            <Dropdown
-                              origin={"origin-top-left"}
-                              position={"left-0"}
-                              setvalue={AddFilter}
-                              setIsSort={SortElements}
-                              issort={queryArr.some(
-                                (obj) => obj.sort === "serviceInterested"
-                              )}
-                              fieldname={"serviceInterested"}
-                              selected={doesFieldExists(
-                                queryArr,
-                                "serviceInterested"
-                              )}
-                              removeFilter={() =>
-                                removeObjectByKey("serviceInterested")
-                              }
-                            />
-                          </div>
-                        </th>
-                      </tr>
-                    </thead>
+                <table>
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th className="border-b px-6 font-semibold py-1">
+                        Select
+                      </th>
+                      <th className="border-b px-6 font-semibold py-1">
+                        <div className=" flex items-center w-max py-1">
+                          First Name
+                          <Dropdown
+                            origin={"origin-top-left"}
+                            position={"left-0"}
+                            setvalue={AddFilter}
+                            setIsSort={SortElements}
+                            issort={queryArr.some(
+                              (obj) => obj.sort === "firstName"
+                            )}
+                            fieldname={"firstName"}
+                            selected={doesFieldExists(queryArr, "firstName")}
+                            removeFilter={() => removeObjectByKey("firstName")}
+                          />
+                        </div>
+                      </th>
+                      <th className="border-b px-6 font-semibold py-1">
+                        <div className=" flex items-center w-max py-1">
+                          Last Name
+                          <Dropdown
+                            origin={"origin-top-left"}
+                            position={"left-0"}
+                            setvalue={AddFilter}
+                            setIsSort={SortElements}
+                            issort={queryArr.some(
+                              (obj) => obj.sort === "lastName"
+                            )}
+                            fieldname={"lastName"}
+                            selected={doesFieldExists(queryArr, "lastName")}
+                            removeFilter={() => removeObjectByKey("lastName")}
+                          />
+                        </div>
+                      </th>
+                      <th className="border-b px-6 font-semibold py-1">
+                        <div className=" flex items-center w-max py-1">
+                          Initiated Name
+                          <Dropdown
+                            origin={"origin-top-left"}
+                            position={"left-0"}
+                            setvalue={AddFilter}
+                            setIsSort={SortElements}
+                            issort={queryArr.some(
+                              (obj) => obj.sort === "initiatedName"
+                            )}
+                            fieldname={"initiatedName"}
+                            selected={doesFieldExists(
+                              queryArr,
+                              "initiatedName"
+                            )}
+                            removeFilter={() =>
+                              removeObjectByKey("initiatedName")
+                            }
+                          />
+                        </div>
+                      </th>
+                      <th className="border-b px-6 font-semibold py-1">
+                        <div className=" flex items-center w-max py-1">
+                          Contact Number
+                          <Dropdown
+                            origin={"origin-top-left"}
+                            position={"left-0"}
+                            setvalue={AddFilter}
+                            setIsSort={SortElements}
+                            issort={queryArr.some(
+                              (obj) => obj.sort === "contactNumber"
+                            )}
+                            fieldname={"contactNumber"}
+                            selected={doesFieldExists(
+                              queryArr,
+                              "contactNumber"
+                            )}
+                            removeFilter={() =>
+                              removeObjectByKey("contactNumber")
+                            }
+                          />
+                        </div>
+                      </th>
+                      <th className="border-b px-6 font-semibold py-1">
+                        <div className=" flex items-center w-max py-1">
+                          dob
+                          <Dropdown
+                            origin={"origin-top-left"}
+                            position={"left-0"}
+                            setvalue={AddFilter}
+                            setIsSort={SortElements}
+                            issort={queryArr.some((obj) => obj.sort === "dob")}
+                            fieldname={"dob"}
+                            selected={doesFieldExists(queryArr, "dob")}
+                            removeFilter={() => removeObjectByKey("dob")}
+                          />
+                        </div>
+                      </th>
+                      <th className="border-b px-6 font-semibold py-1">
+                        <div className=" flex items-center w-max py-1">
+                          gender
+                          <Dropdown
+                            origin={"origin-top-left"}
+                            position={"left-0"}
+                            setvalue={AddFilter}
+                            setIsSort={SortElements}
+                            issort={queryArr.some(
+                              (obj) => obj.sort === "gender"
+                            )}
+                            fieldname={"gender"}
+                            selected={doesFieldExists(queryArr, "gender")}
+                            removeFilter={() => removeObjectByKey("gender")}
+                          />
+                        </div>
+                      </th>
+                      <th className="border-b px-6 font-semibold py-1">
+                        <div className=" flex items-center w-max py-1">
+                          Current Service
+                          <Dropdown
+                            origin={"origin-top-left"}
+                            position={"left-0"}
+                            setvalue={AddFilter}
+                            setIsSort={SortElements}
+                            issort={queryArr.some(
+                              (obj) => obj.sort === "currentService"
+                            )}
+                            fieldname={"currentService"}
+                            selected={doesFieldExists(
+                              queryArr,
+                              "currentService"
+                            )}
+                            removeFilter={() =>
+                              removeObjectByKey("currentService")
+                            }
+                          />
+                        </div>
+                      </th>
+                      <th className="border-b px-6 font-semibold py-1">
+                        <div className=" flex items-center w-max py-1">
+                          interested Service
+                          <Dropdown
+                            origin={"origin-top-left"}
+                            position={"left-0"}
+                            setvalue={AddFilter}
+                            setIsSort={SortElements}
+                            issort={queryArr.some(
+                              (obj) => obj.sort === "serviceInterested"
+                            )}
+                            fieldname={"serviceInterested"}
+                            selected={doesFieldExists(
+                              queryArr,
+                              "serviceInterested"
+                            )}
+                            removeFilter={() =>
+                              removeObjectByKey("serviceInterested")
+                            }
+                          />
+                        </div>
+                      </th>
+                    </tr>
+                  </thead>
+                  {VolunteerData?.length > 0 ? (
                     <tbody>
                       {VolunteerData?.map((volunteer, index) => (
                         <tr key={index + 1} className="border-b">
@@ -394,7 +398,9 @@ function Volunteers() {
                           </td>
                           <td className="text-center">
                             {volunteer?.dob ? (
-                              <div>{volunteer.dob}</div>
+                              <div>
+                                <DateDisplay dateString={volunteer.dob} />
+                              </div>
                             ) : (
                               <i className="text-gray-500">null</i>
                             )}
@@ -423,13 +429,19 @@ function Volunteers() {
                         </tr>
                       ))}
                     </tbody>
-                  </table>
-                ) : (
-                  <div className="text-center text-gray-400 my-10">
-                    {" "}
-                    No Volunteers Found
-                  </div>
-                )}
+                  ) : (
+                    <tbody>
+                      <tr>
+                        <td
+                          colSpan={10}
+                          className="text-center text-gray-400 my-10"
+                        >
+                          No Volunteers Found
+                        </td>
+                      </tr>
+                    </tbody>
+                  )}
+                </table>
               </div>
             </div>
           </div>
@@ -442,18 +454,24 @@ function Volunteers() {
         )}
         <div className="px-5 flex items-center justify-between mt-6">
           <button
-            className="flex items-center gap-3 text-lg bg-white px-4 py-1 rounded border"
+            className={`flex items-center gap-3 text-lg bg-white px-4 py-1 rounded border ${
+              VisibleElements === 10 ? "text-gray-400" : "text-gray-700"
+            }`}
             onClick={decreasePage}
+            disabled={VisibleElements === 10}
           >
-            <ChevronLeftIcon className="h-7 w-7" />
+            <ChevronLeftIcon className="h-5 w-5" />
             Prev
           </button>
           <button
-            className="flex items-center gap-3 text-lg bg-white px-4 py-1 rounded border"
+            className={`flex items-center gap-3 text-lg bg-white px-4 py-1 rounded border ${
+              VisibleElements > totalElement ? "text-gray-400" : "text-gray-700"
+            }`}
             onClick={increasePage}
+            disabled={VisibleElements > totalElement}
           >
             Next
-            <ChevronRightIcon className="h-7 w-7" />
+            <ChevronRightIcon className="h-5 w-5" />
           </button>
         </div>
       </div>
