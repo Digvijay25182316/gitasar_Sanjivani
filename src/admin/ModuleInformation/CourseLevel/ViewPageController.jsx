@@ -1,6 +1,4 @@
 import {
-  ChevronLeftIcon,
-  ChevronRightIcon,
   CubeTransparentIcon,
   PencilSquareIcon,
   PlusIcon,
@@ -16,12 +14,13 @@ import toast from "react-hot-toast";
 import VolunteerDataCard from "./VolunteerDataCard";
 import ScheduleSessions from "./ScheduleSessions";
 
-function ViewPageController({ currentPage, setPage, selected, id }) {
+function ViewPageController({ totalElement, VisibleElements, selected, id }) {
   const [courseData, setCourseData] = useState({});
   const [ViewOpen, setViewOpen] = useState(false);
   const [UpdateOpen, setUpdateOpen] = useState(false);
   const [AddSession, setAddSession] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  console.log(selected);
 
   useEffect(() => {
     (async () => {
@@ -40,43 +39,25 @@ function ViewPageController({ currentPage, setPage, selected, id }) {
     })();
   }, [id]);
 
-  const remainingPages = 10;
-  const totalEntries = 500;
   return (
     <div className="px-1">
-      {selected ? (
-        <div className="flex items-center gap-3 px-1">
-          <button
-            className="text-blue-700 flex items-center bg-blue-200 px-1 rounded"
-            onClick={() => setViewOpen(true)}
-          >
-            <PlusIcon className="h-5 w-5" />
-            Sessions
-          </button>
-          <button
-            className="text-blue-700 flex items-center bg-blue-200 px-1 rounded"
-            onClick={() => setUpdateOpen(true)}
-          >
-            <PencilSquareIcon className="h-5 w-5" />
-            update
-          </button>
-        </div>
-      ) : (
-        <div className="flex items-center gap-2">
-          <div className="flex items-center gap-1 text-gray-400">
-            <p>{currentPage + "-" + remainingPages}</p> of
-            <p>{totalEntries}</p>
-          </div>
-          <div className="flex items-center">
-            <button className="flex items-center transition-colors duration-500 hover:bg-gray-100 p-1 rounded-full cursor-pointer">
-              <ChevronLeftIcon className="h-4 w-4" />
-            </button>
-            <button className="flex items-center transition-colors duration-500 hover:bg-gray-100 p-1 rounded-full cursor-pointer">
-              <ChevronRightIcon className="h-4 w-4" />
-            </button>
-          </div>
-        </div>
-      )}
+      <div className="flex items-center gap-3 px-1">
+        <button
+          className="text-blue-700 flex items-center bg-blue-200 px-1 rounded"
+          onClick={() => setViewOpen(true)}
+        >
+          <PlusIcon className="h-5 w-5" />
+          Sessions
+        </button>
+        <button
+          className="text-blue-700 flex items-center bg-blue-200 px-1 rounded"
+          onClick={() => setUpdateOpen(true)}
+        >
+          <PencilSquareIcon className="h-5 w-5" />
+          update
+        </button>
+      </div>
+
       <CourseModal isOpen={ViewOpen} setIsOpen={() => setViewOpen(false)}>
         {!AddSession ? (
           <div className="w-screen h-screen flex justify-center  ">

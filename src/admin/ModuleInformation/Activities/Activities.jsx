@@ -1,5 +1,6 @@
 import {
   BarsArrowDownIcon,
+  ChevronLeftIcon,
   ChevronRightIcon,
   PlusIcon,
 } from "@heroicons/react/24/solid";
@@ -16,12 +17,27 @@ import DateDisplay from "../../../components/DateDisplay";
 
 function Activities() {
   const { pathname } = useLocation();
-  const [queryArr, setQueryArr] = useState([]);
+  const [queryArr, setQueryArr] = useState([
+    { page: 0 },
+    { size: 10 }, // a default page size
+    { sort: "id" },
+  ]);
+
   const [openActivities, setOpenActivities] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [ActivityArr, setActivityArr] = useState([]);
   const [columnNamesArr, setColumnNamesArr] = useState([]); //to toggle visibility
-
+  const [totalElement, setTotalElements] = useState(0);
+  const [VisibleElements, setVisibleElements] = useState(0);
+  const handleAddItemToColumnNameArr = (option) => {
+    if (columnNamesArr.includes(option.value)) {
+      setColumnNamesArr(
+        columnNamesArr.filter((selected) => selected !== option.value)
+      );
+    } else {
+      setColumnNamesArr([...columnNamesArr, option.value]);
+    }
+  };
   useEffect(() => {
     // Load data from local storage on component mount
     const storedData = localStorage.getItem("dataArray");
@@ -35,28 +51,9 @@ function Activities() {
     localStorage.setItem("dataArray", JSON.stringify(columnNamesArr));
   }, [columnNamesArr]);
 
-  function AddFilter(data) {
-    setQueryArr((prev) => [...prev, data]);
-  }
-  function doesFieldExists(array, propertyName) {
-    return array?.some((obj) => obj.hasOwnProperty(propertyName));
-  }
+  /////////////////toggle columns visibility end
 
-  function removeObjectByKey(data) {
-    setQueryArr(queryArr.filter((item) => !Object.keys(item).includes(data)));
-  }
-
-  const handleAddItemToColumnNameArr = (option) => {
-    if (columnNamesArr.includes(option.value)) {
-      setColumnNamesArr(
-        columnNamesArr.filter((selected) => selected !== option.value)
-      );
-    } else {
-      setColumnNamesArr([...columnNamesArr, option.value]);
-    }
-  };
-
-  let url = `${SERVER_ENDPOINT}/participant-activity/`;
+  let url = `${SERVER_ENDPOINT}/participant-activity/filter/`;
   if (queryArr.length > 0) {
     url +=
       "?" +
@@ -69,7 +66,6 @@ function Activities() {
         )
         .join("&");
   }
-
   useEffect(() => {
     (async () => {
       try {
@@ -77,7 +73,8 @@ function Activities() {
         const response = await fetch(url);
         if (response.ok) {
           const responseData = await response.json();
-          console.log(responseData);
+          setTotalElements(responseData?.totalElements);
+          setVisibleElements(responseData?.numberOfElements);
           setActivityArr(responseData.content);
         } else {
           const errorData = await response.json();
@@ -91,6 +88,67 @@ function Activities() {
     })();
   }, [url]);
 
+  ///////////////////////////////// this section everything is about filtering and pagination etc
+  //contents: pagination , search_parameter_management , sorting
+  // Function to increase page by one
+
+  function AddFilter(data) {
+    setQueryArr((prev) => [...prev, data]);
+  }
+  function doesFieldExists(array, propertyName) {
+    return array?.some((obj) => obj.hasOwnProperty(propertyName));
+  }
+
+  function removeObjectByKey(data) {
+    setQueryArr(queryArr.filter((item) => !Object.keys(item).includes(data)));
+  }
+  const increasePage = () => {
+    setQueryArr((prev) => {
+      const pageIndex = prev.findIndex((item) => item.hasOwnProperty("page"));
+      if (pageIndex !== -1) {
+        const updatedQueryArr = [...prev];
+        updatedQueryArr[pageIndex] = {
+          ...updatedQueryArr[pageIndex],
+          page: updatedQueryArr[pageIndex].page + 1,
+        };
+        return updatedQueryArr;
+      }
+      return prev;
+    });
+  };
+
+  // Function to decrease page by one
+  const decreasePage = () => {
+    setQueryArr((prev) => {
+      const pageIndex = prev.findIndex((item) => item.hasOwnProperty("page"));
+      if (pageIndex !== -1 && prev[pageIndex].page > 0) {
+        const updatedQueryArr = [...prev];
+        updatedQueryArr[pageIndex] = {
+          ...updatedQueryArr[pageIndex],
+          page: updatedQueryArr[pageIndex].page - 1,
+        };
+        return updatedQueryArr;
+      }
+      return prev;
+    });
+  };
+  //Function to sort
+  const SortElements = (sortBy) => {
+    setQueryArr((prev) => {
+      const sortIndex = prev.findIndex((item) => item.hasOwnProperty("sort"));
+      if (sortIndex !== -1) {
+        const updatedQueryArr = [...prev];
+        updatedQueryArr[sortIndex] = {
+          ...updatedQueryArr[sortIndex],
+          sort: sortBy,
+        };
+        return updatedQueryArr;
+      }
+      return prev;
+    });
+  };
+
+  ///////////////////////search params and filtering end
   return (
     <div className="flex items-center max-w-screen bg-gray-50">
       <div className="md:w-[20vw] md:flex hidden">
@@ -136,188 +194,216 @@ function Activities() {
             </div>
             <div className="md:mx-5 mx-2 bg-white flex flex-col rounded border">
               <div className="flex items-center justify-between border-b">
-                <p className="border-b px-2 py-1 font-semibold text-gray-600">
+                <p className="px-2 py-1 font-semibold text-gray-600">
                   Activities
                 </p>
+                <p className="px-2 py-1  text-gray-400">{`${VisibleElements} of ${totalElement}`}</p>
               </div>
               <div className="overflow-x-scroll">
-                {ActivityArr?.length > 0 ? (
-                  <table className="w-full">
-                    <thead className="bg-gray-50">
-                      <tr>
-                        <th className="border-b px-6 font-semibold py-1">
-                          Select
-                        </th>
+                <table className="w-full">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th className="border-b px-6 font-semibold py-1">
+                        Select
+                      </th>
 
-                        <HidableColumnsHeader
-                          columnNameArr={columnNamesArr}
-                          fieldName={"programName"}
-                        >
-                          <div className=" flex items-center w-max py-1">
-                            Program Name
-                            <Dropdown
-                              origin={"origin-top-left"}
-                              position={"left-0"}
-                              setvalue={AddFilter}
-                              fieldname={"programName"}
-                              selected={doesFieldExists(
-                                queryArr,
-                                "programName"
-                              )}
-                              removeFilter={() =>
-                                removeObjectByKey("programName")
-                              }
-                            />
-                          </div>
-                        </HidableColumnsHeader>
+                      <HidableColumnsHeader
+                        columnNameArr={columnNamesArr}
+                        fieldName={"programName"}
+                      >
+                        <div className=" flex items-center w-max py-1">
+                          Program Name
+                          <Dropdown
+                            origin={"origin-top-left"}
+                            position={"left-0"}
+                            setvalue={AddFilter}
+                            setIsSort={SortElements}
+                            issort={queryArr.some(
+                              (obj) => obj.sort === "programName"
+                            )}
+                            fieldname={"programName"}
+                            selected={doesFieldExists(queryArr, "programName")}
+                            removeFilter={() =>
+                              removeObjectByKey("programName")
+                            }
+                          />
+                        </div>
+                      </HidableColumnsHeader>
 
-                        <HidableColumnsHeader
-                          columnNameArr={columnNamesArr}
-                          fieldName={"courseCode"}
-                        >
-                          <div className=" flex items-center w-max py-1">
-                            Course Code
-                            <Dropdown
-                              origin={"origin-top-left"}
-                              position={"left-0"}
-                              setvalue={AddFilter}
-                              fieldname={"courseCode"}
-                              selected={doesFieldExists(queryArr, "courseCode")}
-                              removeFilter={() =>
-                                removeObjectByKey("courseCode")
-                              }
-                            />
-                          </div>
-                        </HidableColumnsHeader>
+                      <HidableColumnsHeader
+                        columnNameArr={columnNamesArr}
+                        fieldName={"courseCode"}
+                      >
+                        <div className=" flex items-center w-max py-1">
+                          Course Code
+                          <Dropdown
+                            origin={"origin-top-left"}
+                            position={"left-0"}
+                            setvalue={AddFilter}
+                            setIsSort={SortElements}
+                            issort={queryArr.some(
+                              (obj) => obj.sort === "courseCode"
+                            )}
+                            fieldname={"courseCode"}
+                            selected={doesFieldExists(queryArr, "courseCode")}
+                            removeFilter={() => removeObjectByKey("courseCode")}
+                          />
+                        </div>
+                      </HidableColumnsHeader>
 
-                        <HidableColumnsHeader
-                          columnNameArr={columnNamesArr}
-                          fieldName={"sessionName"}
-                        >
-                          <div className=" flex items-center w-max py-1">
-                            Session Name
-                            <Dropdown
-                              origin={"origin-top-left"}
-                              position={"left-0"}
-                              setvalue={AddFilter}
-                              fieldname={"sessionName"}
-                              selected={doesFieldExists(
-                                queryArr,
-                                "sessionName"
-                              )}
-                              removeFilter={() =>
-                                removeObjectByKey("sessionName")
-                              }
-                            />
-                          </div>
-                        </HidableColumnsHeader>
+                      <HidableColumnsHeader
+                        columnNameArr={columnNamesArr}
+                        fieldName={"sessionName"}
+                      >
+                        <div className=" flex items-center w-max py-1">
+                          Session Name
+                          <Dropdown
+                            origin={"origin-top-left"}
+                            position={"left-0"}
+                            setvalue={AddFilter}
+                            setIsSort={SortElements}
+                            issort={queryArr.some(
+                              (obj) => obj.sort === "scheduledSessionName"
+                            )}
+                            fieldname={"scheduledSessionName"}
+                            selected={doesFieldExists(
+                              queryArr,
+                              "scheduledSessionName"
+                            )}
+                            removeFilter={() =>
+                              removeObjectByKey("scheduledSessionName")
+                            }
+                          />
+                        </div>
+                      </HidableColumnsHeader>
 
-                        <HidableColumnsHeader
-                          columnNameArr={columnNamesArr}
-                          fieldName={"typeofActivity"}
-                        >
-                          <div className=" flex items-center w-max py-1">
-                            Activity
-                            <Dropdown
-                              origin={"origin-top-left"}
-                              position={"left-0"}
-                              setvalue={AddFilter}
-                              fieldname={"typeofActivity"}
-                              selected={doesFieldExists(
-                                queryArr,
-                                "typeofActivity"
-                              )}
-                              removeFilter={() =>
-                                removeObjectByKey("typeofActivity")
-                              }
-                            />
-                          </div>
-                        </HidableColumnsHeader>
+                      <HidableColumnsHeader
+                        columnNameArr={columnNamesArr}
+                        fieldName={"typeofActivity"}
+                      >
+                        <div className=" flex items-center w-max py-1">
+                          Activity
+                          <Dropdown
+                            origin={"origin-top-left"}
+                            position={"left-0"}
+                            setvalue={AddFilter}
+                            setIsSort={SortElements}
+                            issort={queryArr.some(
+                              (obj) => obj.sort === "typeofActivity"
+                            )}
+                            fieldname={"typeofActivity"}
+                            selected={doesFieldExists(
+                              queryArr,
+                              "typeofActivity"
+                            )}
+                            removeFilter={() =>
+                              removeObjectByKey("typeofActivity")
+                            }
+                          />
+                        </div>
+                      </HidableColumnsHeader>
 
-                        <HidableColumnsHeader
-                          columnNameArr={columnNamesArr}
-                          fieldName={"participantContactNumber"}
-                        >
-                          <div className=" flex items-center w-max py-1">
-                            Phone
-                            <Dropdown
-                              origin={"origin-top-left"}
-                              position={"left-0"}
-                              setvalue={AddFilter}
-                              fieldname={"participantContactNumber"}
-                              selected={doesFieldExists(
-                                queryArr,
-                                "participantContactNumber"
-                              )}
-                              removeFilter={() =>
-                                removeObjectByKey("participantContactNumber")
-                              }
-                            />
-                          </div>
-                        </HidableColumnsHeader>
+                      <HidableColumnsHeader
+                        columnNameArr={columnNamesArr}
+                        fieldName={"participantContactNumber"}
+                      >
+                        <div className=" flex items-center w-max py-1">
+                          Phone
+                          <Dropdown
+                            origin={"origin-top-left"}
+                            position={"left-0"}
+                            setvalue={AddFilter}
+                            setIsSort={SortElements}
+                            issort={queryArr.some(
+                              (obj) => obj.sort === "participantContactNumber"
+                            )}
+                            fieldname={"participantContactNumber"}
+                            selected={doesFieldExists(
+                              queryArr,
+                              "participantContactNumber"
+                            )}
+                            removeFilter={() =>
+                              removeObjectByKey("participantContactNumber")
+                            }
+                          />
+                        </div>
+                      </HidableColumnsHeader>
 
-                        <HidableColumnsHeader
-                          columnNameArr={columnNamesArr}
-                          fieldName={"participantFirstName"}
-                        >
-                          <div className=" flex items-center w-max py-1">
-                            First Name
-                            <Dropdown
-                              origin={"origin-top-right"}
-                              position={"right-0"}
-                              setvalue={AddFilter}
-                              fieldname={"participantFirstName"}
-                              selected={doesFieldExists(
-                                queryArr,
-                                "participantFirstName"
-                              )}
-                              removeFilter={() =>
-                                removeObjectByKey("participantFirstName")
-                              }
-                            />
-                          </div>
-                        </HidableColumnsHeader>
+                      <HidableColumnsHeader
+                        columnNameArr={columnNamesArr}
+                        fieldName={"participantFirstName"}
+                      >
+                        <div className=" flex items-center w-max py-1">
+                          First Name
+                          <Dropdown
+                            origin={"origin-top-right"}
+                            position={"right-0"}
+                            setvalue={AddFilter}
+                            setIsSort={SortElements}
+                            issort={queryArr.some(
+                              (obj) => obj.sort === "participantFirstName"
+                            )}
+                            fieldname={"participantFirstName"}
+                            selected={doesFieldExists(
+                              queryArr,
+                              "participantFirstName"
+                            )}
+                            removeFilter={() =>
+                              removeObjectByKey("participantFirstName")
+                            }
+                          />
+                        </div>
+                      </HidableColumnsHeader>
 
-                        <HidableColumnsHeader
-                          columnNameArr={columnNamesArr}
-                          fieldName={"participantLastName"}
-                        >
-                          <div className=" flex items-center w-max py-1">
-                            Last Name
-                            <Dropdown
-                              origin={"origin-top-right"}
-                              position={"right-0"}
-                              setvalue={AddFilter}
-                              fieldname={"participantLastName"}
-                              selected={doesFieldExists(
-                                queryArr,
-                                "participantLastName"
-                              )}
-                              removeFilter={() =>
-                                removeObjectByKey("participantLastName")
-                              }
-                            />
-                          </div>
-                        </HidableColumnsHeader>
+                      <HidableColumnsHeader
+                        columnNameArr={columnNamesArr}
+                        fieldName={"participantLastName"}
+                      >
+                        <div className=" flex items-center w-max py-1">
+                          Last Name
+                          <Dropdown
+                            origin={"origin-top-right"}
+                            position={"right-0"}
+                            setvalue={AddFilter}
+                            setIsSort={SortElements}
+                            issort={queryArr.some(
+                              (obj) => obj.sort === "participantLastName"
+                            )}
+                            fieldname={"participantLastName"}
+                            selected={doesFieldExists(
+                              queryArr,
+                              "participantLastName"
+                            )}
+                            removeFilter={() =>
+                              removeObjectByKey("participantLastName")
+                            }
+                          />
+                        </div>
+                      </HidableColumnsHeader>
 
-                        <HidableColumnsHeader
-                          columnNameArr={columnNamesArr}
-                          fieldName={"created"}
-                        >
-                          <div className=" flex items-center w-max py-1">
-                            date
-                            <Dropdown
-                              origin={"origin-top-right"}
-                              position={"right-0"}
-                              setvalue={AddFilter}
-                              fieldname={"created"}
-                              selected={doesFieldExists(queryArr, "created")}
-                              removeFilter={() => removeObjectByKey("created")}
-                            />
-                          </div>
-                        </HidableColumnsHeader>
-                      </tr>
-                    </thead>
+                      <HidableColumnsHeader
+                        columnNameArr={columnNamesArr}
+                        fieldName={"created"}
+                      >
+                        <div className=" flex items-center w-max py-1">
+                          date
+                          <Dropdown
+                            origin={"origin-top-right"}
+                            position={"right-0"}
+                            setvalue={AddFilter}
+                            setIsSort={SortElements}
+                            issort={queryArr.some(
+                              (obj) => obj.sort === "created"
+                            )}
+                            fieldname={"created"}
+                            selected={doesFieldExists(queryArr, "created")}
+                            removeFilter={() => removeObjectByKey("created")}
+                          />
+                        </div>
+                      </HidableColumnsHeader>
+                    </tr>
+                  </thead>
+                  {ActivityArr?.length > 0 ? (
                     <tbody>
                       {ActivityArr?.map((activity, index) => (
                         <tr key={index} className="border-b">
@@ -412,14 +498,36 @@ function Activities() {
                         </tr>
                       ))}
                     </tbody>
-                  </table>
-                ) : (
-                  <div className="text-center text-gray-400 my-10">
-                    {" "}
-                    No Activities Found
-                  </div>
-                )}
+                  ) : (
+                    <tbody>
+                      <tr>
+                        <td
+                          colSpan={7}
+                          className="text-center text-gray-400 py-10"
+                        >
+                          No Activity to show
+                        </td>
+                      </tr>
+                    </tbody>
+                  )}
+                </table>
               </div>
+            </div>
+            <div className="px-5 flex items-center justify-between mt-6">
+              <button
+                className="flex items-center gap-3 text-lg bg-white px-4 py-1 rounded border"
+                onClick={decreasePage}
+              >
+                <ChevronLeftIcon className="h-7 w-7" />
+                Prev
+              </button>
+              <button
+                className="flex items-center gap-3 text-lg bg-white px-4 py-1 rounded border"
+                onClick={increasePage}
+              >
+                Next
+                <ChevronRightIcon className="h-7 w-7" />
+              </button>
             </div>
           </div>
         ) : (

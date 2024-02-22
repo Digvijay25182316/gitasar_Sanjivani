@@ -1,4 +1,5 @@
 import {
+  ChevronLeftIcon,
   ChevronRightIcon,
   CubeTransparentIcon,
   PlusIcon,
@@ -17,22 +18,44 @@ import Sidebar from "../../../components/BottomNav.jsx/Sidebar";
 
 function Programs() {
   const { pathname } = useLocation();
-  const [queryArr, setQueryArr] = useState([]);
+  const [queryArr, setQueryArr] = useState([
+    { page: 0 },
+    { size: 10 }, // a default page size
+    { sort: "id" },
+  ]);
   const [programArr, setProgramArr] = useState([]);
   const [OpenPrograms, setOpenPrograms] = useState(false);
-  const [currentPage, setPage] = useState(1);
   const [selected, setSelected] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [selectedItem, setSelectedItem] = useState(0);
+  const [totalElement, setTotalElements] = useState(0);
+  const [VisibleElements, setVisibleElements] = useState(0);
+
+  let url = `${SERVER_ENDPOINT}/program/`;
+  if (queryArr.length > 0) {
+    url +=
+      "?" +
+      queryArr
+        .map(
+          (param) =>
+            `${Object.keys(param)}=${encodeURIComponent(
+              param[Object.keys(param)]
+            )}`
+        )
+        .join("&");
+  }
 
   useEffect(() => {
     (async () => {
       setIsLoading(true);
       try {
-        const response = await fetch(`${SERVER_ENDPOINT}/program/`);
+        const response = await fetch(url);
         if (response.ok) {
           const responseData = await response.json();
+
           setProgramArr(responseData.content);
+          setTotalElements(responseData.totalElements);
+          setVisibleElements(responseData.numberOfElements);
         } else {
           const errorData = await response.json();
           toast.error(errorData.message);
@@ -43,7 +66,7 @@ function Programs() {
         setIsLoading(false);
       }
     })();
-  }, [OpenPrograms]);
+  }, [OpenPrograms, url]);
   useEffect(() => {
     if (OpenPrograms) {
       document.body.style.overflow = "hidden";
@@ -53,14 +76,14 @@ function Programs() {
   }, [OpenPrograms]);
 
   function AddFilter(data) {
-    setQueryArr((prev) => [...prev, data]);
+    // setQueryArr((prev) => [...prev, data]);
   }
   function doesFieldExists(array, propertyName) {
-    return array?.some((obj) => obj.hasOwnProperty(propertyName));
+    // return array?.some((obj) => obj.hasOwnProperty(propertyName));
   }
 
   function removeObjectByKey(data) {
-    setQueryArr(queryArr.filter((item) => !Object.keys(item).includes(data)));
+    // setQueryArr(queryArr.filter((item) => !Object.keys(item).includes(data)));
   }
   function onChangeSelect(e) {
     setSelectedItem(Number(e.target.value));
@@ -70,6 +93,58 @@ function Programs() {
     setSelectedItem(0);
     setSelected(false);
   }
+
+  ///////////////////////////////// this section everything is about filtering and pagination etc
+  //contents: pagination , search_parameter_management , sorting
+  // Function to increase page by one
+
+  const increasePage = () => {
+    setQueryArr((prev) => {
+      const pageIndex = prev.findIndex((item) => item.hasOwnProperty("page"));
+      if (pageIndex !== -1) {
+        const updatedQueryArr = [...prev];
+        updatedQueryArr[pageIndex] = {
+          ...updatedQueryArr[pageIndex],
+          page: updatedQueryArr[pageIndex].page + 1,
+        };
+        return updatedQueryArr;
+      }
+      return prev;
+    });
+  };
+
+  // Function to decrease page by one
+  const decreasePage = () => {
+    setQueryArr((prev) => {
+      const pageIndex = prev.findIndex((item) => item.hasOwnProperty("page"));
+      if (pageIndex !== -1 && prev[pageIndex].page > 0) {
+        const updatedQueryArr = [...prev];
+        updatedQueryArr[pageIndex] = {
+          ...updatedQueryArr[pageIndex],
+          page: updatedQueryArr[pageIndex].page - 1,
+        };
+        return updatedQueryArr;
+      }
+      return prev;
+    });
+  };
+  //Function to sort
+  const SortElements = (sortBy) => {
+    setQueryArr((prev) => {
+      const sortIndex = prev.findIndex((item) => item.hasOwnProperty("sort"));
+      if (sortIndex !== -1) {
+        const updatedQueryArr = [...prev];
+        updatedQueryArr[sortIndex] = {
+          ...updatedQueryArr[sortIndex],
+          sort: sortBy,
+        };
+        return updatedQueryArr;
+      }
+      return prev;
+    });
+  };
+
+  ///////////////////////search params and filtering end
   return (
     <div className="flex items-center max-w-screen bg-gray-50">
       <div className="md:w-[20vw] md:flex hidden">
@@ -111,23 +186,28 @@ function Programs() {
                 <p className=" px-2 py-1 font-semibold text-gray-600">
                   Programs
                 </p>
+                <p className="px-2 py-1  text-gray-400">{`${VisibleElements} of ${totalElement}`}</p>
               </div>
               <div className="overflow-x-scroll">
                 {programArr?.length > 0 ? (
                   <table>
                     <thead className="bg-gray-50">
                       <tr>
-                        <th className="border-b px-6 font-semibold py-1">
+                        <th className="border-b px-10 font-semibold py-1">
                           Select
                         </th>
-                        <th className="border-b px-6 font-semibold py-1">
+                        <th className="border-b px-10 font-semibold py-1">
                           <div className=" flex items-center w-max py-1">
                             Program Name
                             <Dropdown
                               origin={"origin-top-left"}
                               position={"left-0"}
                               setvalue={AddFilter}
-                              fieldname={""}
+                              setIsSort={SortElements}
+                              issort={queryArr.some(
+                                (obj) => obj.sort === "programName"
+                              )}
+                              fieldname={"programName"}
                               selected={doesFieldExists(
                                 queryArr,
                                 "programName"
@@ -138,52 +218,34 @@ function Programs() {
                             />
                           </div>
                         </th>
-                        <th className="border-b px-6 font-semibold py-1">
+                        <th className="border-b px-10 font-semibold py-1">
                           <div className=" flex items-center w-max py-1">
                             Preacher
                             <Dropdown
                               origin={"origin-top-left"}
                               position={"left-0"}
                               setvalue={AddFilter}
-                              fieldname={"Programs"}
-                              selected={doesFieldExists(queryArr, "Programs")}
-                              removeFilter={() => removeObjectByKey("Programs")}
-                            />
-                          </div>
-                        </th>
-                        <th className="border-b px-6 font-semibold py-1">
-                          <div className=" flex items-center w-max py-1">
-                            coordinator
-                            <Dropdown
-                              origin={"origin-top-left"}
-                              position={"left-0"}
-                              setvalue={AddFilter}
+                              setIsSort={SortElements}
+                              issort={queryArr.some(
+                                (obj) => obj.sort === "preacher"
+                              )}
                               fieldname={"preacher"}
                               selected={doesFieldExists(queryArr, "preacher")}
                               removeFilter={() => removeObjectByKey("preacher")}
                             />
                           </div>
                         </th>
-                        <th className="border-b px-6 font-semibold py-1">
+                        <th className="border-b px-10 font-semibold py-1">
                           <div className=" flex items-center w-max py-1">
-                            mentor
+                            coordinator
                             <Dropdown
                               origin={"origin-top-left"}
                               position={"left-0"}
                               setvalue={AddFilter}
-                              fieldname={"mentor"}
-                              selected={doesFieldExists(queryArr, "mentor")}
-                              removeFilter={() => removeObjectByKey("mentor")}
-                            />
-                          </div>
-                        </th>
-                        <th className="border-b px-6 font-semibold py-1">
-                          <div className=" flex items-center w-max py-1">
-                            incharge
-                            <Dropdown
-                              origin={"origin-top-left"}
-                              position={"left-0"}
-                              setvalue={AddFilter}
+                              setIsSort={SortElements}
+                              issort={queryArr.some(
+                                (obj) => obj.sort === "coordinator"
+                              )}
                               fieldname={"coordinator"}
                               selected={doesFieldExists(
                                 queryArr,
@@ -195,33 +257,97 @@ function Programs() {
                             />
                           </div>
                         </th>
-                        <th className="border-b px-6 font-semibold py-1">
+                        <th className="border-b px-10 font-semibold py-1">
+                          <div className=" flex items-center w-max py-1">
+                            mentor
+                            <Dropdown
+                              origin={"origin-top-left"}
+                              position={"left-0"}
+                              setvalue={AddFilter}
+                              setIsSort={SortElements}
+                              issort={queryArr.some(
+                                (obj) => obj.sort === "mentor"
+                              )}
+                              fieldname={"mentor"}
+                              selected={doesFieldExists(queryArr, "mentor")}
+                              removeFilter={() => removeObjectByKey("mentor")}
+                            />
+                          </div>
+                        </th>
+                        <th className="border-b px-10 font-semibold py-1">
+                          <div className=" flex items-center w-max py-1">
+                            incharge
+                            <Dropdown
+                              origin={"origin-top-left"}
+                              position={"left-0"}
+                              setvalue={AddFilter}
+                              setIsSort={SortElements}
+                              issort={queryArr.some(
+                                (obj) => obj.sort === "incharge"
+                              )}
+                              fieldname={"incharge"}
+                              selected={doesFieldExists(queryArr, "incharge")}
+                              removeFilter={() => removeObjectByKey("incharge")}
+                            />
+                          </div>
+                        </th>
+                        <th className="border-b px-10 font-semibold py-1">
                           <div className=" flex items-center w-max py-1">
                             Type
                             <Dropdown
-                              origin={"origin-top-right"}
-                              position={"right-0"}
+                              origin={"origin-top-left"}
+                              position={"left-0"}
                               setvalue={AddFilter}
-                              fieldname={"status"}
-                              selected={doesFieldExists(queryArr, "status")}
-                              removeFilter={() => removeObjectByKey("status")}
+                              setIsSort={SortElements}
+                              issort={queryArr.some(
+                                (obj) => obj.sort === "type"
+                              )}
+                              fieldname={"type"}
+                              selected={doesFieldExists(queryArr, "type")}
+                              removeFilter={() => removeObjectByKey("type")}
                             />
                           </div>
                         </th>
-                        <th className="border-b px-6 font-semibold py-1">
+                        <th className="border-b px-10 font-semibold py-1">
+                          <div className=" flex items-center w-max py-1">
+                            Audience Type
+                            <Dropdown
+                              origin={"origin-top-left"}
+                              position={"left-0"}
+                              setvalue={AddFilter}
+                              setIsSort={SortElements}
+                              issort={queryArr.some(
+                                (obj) => obj.sort === "audienceType"
+                              )}
+                              fieldname={"audienceType"}
+                              selected={doesFieldExists(
+                                queryArr,
+                                "audienceType"
+                              )}
+                              removeFilter={() =>
+                                removeObjectByKey("audienceType")
+                              }
+                            />
+                          </div>
+                        </th>
+                        <th className="border-b px-10 font-semibold py-1">
                           <div className=" flex items-center w-max py-1">
                             Location
                             <Dropdown
-                              origin={"origin-top-right"}
-                              position={"right-0"}
+                              origin={"origin-top-left"}
+                              position={"left-0"}
                               setvalue={AddFilter}
-                              fieldname={"status"}
-                              selected={doesFieldExists(queryArr, "status")}
-                              removeFilter={() => removeObjectByKey("status")}
+                              setIsSort={SortElements}
+                              issort={queryArr.some(
+                                (obj) => obj.sort === "location"
+                              )}
+                              fieldname={"location"}
+                              selected={doesFieldExists(queryArr, "location")}
+                              removeFilter={() => removeObjectByKey("location")}
                             />
                           </div>
                         </th>
-                        <th className="border-b px-6 font-semibold py-1">
+                        <th className="border-b px-10 font-semibold py-1">
                           <div className=" flex items-center w-max py-1 px-5">
                             Activities Links
                           </div>
@@ -286,6 +412,7 @@ function Programs() {
                               <i className="text-gray-500">null</i>
                             )}
                           </td>
+                          <td className="text-center">{Programs.type}</td>
                           <td className="text-center">
                             {Programs.audienceType}
                           </td>
@@ -305,6 +432,22 @@ function Programs() {
                   </div>
                 )}
               </div>
+            </div>
+            <div className="px-5 flex items-center justify-between mt-6">
+              <button
+                className="flex items-center gap-3 text-lg bg-white px-4 py-1 rounded border"
+                onClick={decreasePage}
+              >
+                <ChevronLeftIcon className="h-7 w-7" />
+                Prev
+              </button>
+              <button
+                className="flex items-center gap-3 text-lg bg-white px-4 py-1 rounded border"
+                onClick={increasePage}
+              >
+                Next
+                <ChevronRightIcon className="h-7 w-7" />
+              </button>
             </div>
           </div>
         ) : (

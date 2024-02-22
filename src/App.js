@@ -10,6 +10,7 @@ import Activities from "./admin/ModuleInformation/Activities/Activities";
 import CourseLevel from "./admin/ModuleInformation/CourseLevel/CourseLevel";
 import Volunteers from "./admin/ModuleInformation/Volunteers/Volunteers";
 import Participants from "./admin/ModuleInformation/Participants/Participants";
+import Attendance from "./admin/ModuleInformation/Attendance/Attendance";
 import Home from "./admin/ModuleHome/Home";
 import Settings from "./admin/ModuleSettings/Settings";
 import Attendence from "./participants/attendence/Attendence";
@@ -17,6 +18,7 @@ import ParticipantsActivities from "./participants/activities/ParticipantsActivi
 import ParticipantRegisteration from "./participants/attendence/Registeration";
 import ActivitiesM from "./admin/ModuleInformation/ActivitiesMaster/Activities";
 import { Toaster } from "react-hot-toast";
+import RSVP from "./admin/ModuleInformation/RSVP/RSVP";
 
 function App() {
   return (
@@ -46,6 +48,11 @@ function App() {
             path="/admin/information/participants"
             element={<Participants />}
           />
+          <Route
+            path="/admin/information/attendence"
+            element={<Attendance />}
+          />
+          <Route path="/admin/information/rsvp" element={<RSVP />} />
           <Route path="/admin/home" element={<Home />} />
           <Route path="/admin/dashboard" element={<Dashboard />} />
           <Route path="/admin/settings" element={<Settings />} />

@@ -1,4 +1,5 @@
 import {
+  ChevronLeftIcon,
   ChevronRightIcon,
   CubeTransparentIcon,
   PlusIcon,
@@ -11,26 +12,47 @@ import { SERVER_ENDPOINT } from "../../config/Server";
 import Dropdown from "../../../components/BottomNav.jsx/DropDown";
 import toast from "react-hot-toast";
 import Sidebar from "../../../components/BottomNav.jsx/Sidebar";
-import { ArrowLeftIcon, ArrowRightIcon } from "@heroicons/react/24/outline";
 
 function Volunteers() {
   const { pathname } = useLocation();
-  const [queryArr, setQueryArr] = useState([]);
+  const [queryArr, setQueryArr] = useState([
+    { page: 0 },
+    { size: 10 }, // a default page size
+    { sort: "id" },
+  ]);
   const [VolunteerData, setVolunteerData] = useState([]);
   const [OpenActivities, setOpenActivities] = useState(false);
-  const [currentPage, setPage] = useState(1);
+
   const [selected, setSelected] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedItem, setSelectedItem] = useState(0);
+  const [totalElement, setTotalElements] = useState(0);
+  const [VisibleElements, setVisibleElements] = useState(0);
+
+  let url = `${SERVER_ENDPOINT}/volunteer/`;
+  if (queryArr.length > 0) {
+    url +=
+      "?" +
+      queryArr
+        .map(
+          (param) =>
+            `${Object.keys(param)}=${encodeURIComponent(
+              param[Object.keys(param)]
+            )}`
+        )
+        .join("&");
+  }
 
   useEffect(() => {
     (async () => {
       setIsLoading(true);
       try {
-        const response = await fetch(`${SERVER_ENDPOINT}/volunteer/`);
+        const response = await fetch(url);
         if (response.ok) {
           const responseData = await response.json();
           setVolunteerData(responseData.content);
+          setTotalElements(responseData.totalElements);
+          setVisibleElements(responseData.numberOfElements);
         } else {
           const errorData = await response.json();
           toast.error(errorData.message);
@@ -41,17 +63,17 @@ function Volunteers() {
         setIsLoading(false);
       }
     })();
-  }, [OpenActivities]);
+  }, [OpenActivities, url]);
 
   function AddFilter(data) {
-    setQueryArr((prev) => [...prev, data]);
+    // setQueryArr((prev) => [...prev, data]);
   }
   function doesFieldExists(array, propertyName) {
-    return array?.some((obj) => obj.hasOwnProperty(propertyName));
+    // return array?.some((obj) => obj.hasOwnProperty(propertyName));
   }
 
   function removeObjectByKey(data) {
-    setQueryArr(queryArr.filter((item) => !Object.keys(item).includes(data)));
+    // setQueryArr(queryArr.filter((item) => !Object.keys(item).includes(data)));
   }
 
   function onChangeSelect(e) {
@@ -64,6 +86,57 @@ function Volunteers() {
     setSelected(false);
   }
 
+  ///////////////////////////////// this section everything is about filtering and pagination etc
+  //contents: pagination , search_parameter_management , sorting
+  // Function to increase page by one
+
+  const increasePage = () => {
+    setQueryArr((prev) => {
+      const pageIndex = prev.findIndex((item) => item.hasOwnProperty("page"));
+      if (pageIndex !== -1) {
+        const updatedQueryArr = [...prev];
+        updatedQueryArr[pageIndex] = {
+          ...updatedQueryArr[pageIndex],
+          page: updatedQueryArr[pageIndex].page + 1,
+        };
+        return updatedQueryArr;
+      }
+      return prev;
+    });
+  };
+
+  // Function to decrease page by one
+  const decreasePage = () => {
+    setQueryArr((prev) => {
+      const pageIndex = prev.findIndex((item) => item.hasOwnProperty("page"));
+      if (pageIndex !== -1 && prev[pageIndex].page > 0) {
+        const updatedQueryArr = [...prev];
+        updatedQueryArr[pageIndex] = {
+          ...updatedQueryArr[pageIndex],
+          page: updatedQueryArr[pageIndex].page - 1,
+        };
+        return updatedQueryArr;
+      }
+      return prev;
+    });
+  };
+  //Function to sort
+  const SortElements = (sortBy) => {
+    setQueryArr((prev) => {
+      const sortIndex = prev.findIndex((item) => item.hasOwnProperty("sort"));
+      if (sortIndex !== -1) {
+        const updatedQueryArr = [...prev];
+        updatedQueryArr[sortIndex] = {
+          ...updatedQueryArr[sortIndex],
+          sort: sortBy,
+        };
+        return updatedQueryArr;
+      }
+      return prev;
+    });
+  };
+
+  ///////////////////////search params and filtering end
   return (
     <div className="flex items-center max-w-screen bg-white">
       <div className="md:w-[20vw] md:flex hidden">
@@ -107,6 +180,7 @@ function Volunteers() {
                 <p className=" px-2 py-1 font-semibold text-gray-600">
                   Volunteer
                 </p>
+                <p className="px-2 py-1  text-gray-400">{`${VisibleElements} of ${totalElement}`}</p>
               </div>
               <div className="overflow-x-scroll">
                 {VolunteerData?.length > 0 ? (
@@ -123,6 +197,10 @@ function Volunteers() {
                               origin={"origin-top-left"}
                               position={"left-0"}
                               setvalue={AddFilter}
+                              setIsSort={SortElements}
+                              issort={queryArr.some(
+                                (obj) => obj.sort === "firstName"
+                              )}
                               fieldname={"firstName"}
                               selected={doesFieldExists(queryArr, "firstName")}
                               removeFilter={() =>
@@ -138,6 +216,10 @@ function Volunteers() {
                               origin={"origin-top-left"}
                               position={"left-0"}
                               setvalue={AddFilter}
+                              setIsSort={SortElements}
+                              issort={queryArr.some(
+                                (obj) => obj.sort === "lastName"
+                              )}
                               fieldname={"lastName"}
                               selected={doesFieldExists(queryArr, "lastName")}
                               removeFilter={() => removeObjectByKey("lastName")}
@@ -151,6 +233,10 @@ function Volunteers() {
                               origin={"origin-top-left"}
                               position={"left-0"}
                               setvalue={AddFilter}
+                              setIsSort={SortElements}
+                              issort={queryArr.some(
+                                (obj) => obj.sort === "initiatedName"
+                              )}
                               fieldname={"initiatedName"}
                               selected={doesFieldExists(
                                 queryArr,
@@ -169,6 +255,10 @@ function Volunteers() {
                               origin={"origin-top-left"}
                               position={"left-0"}
                               setvalue={AddFilter}
+                              setIsSort={SortElements}
+                              issort={queryArr.some(
+                                (obj) => obj.sort === "contactNumber"
+                              )}
                               fieldname={"contactNumber"}
                               selected={doesFieldExists(
                                 queryArr,
@@ -187,6 +277,10 @@ function Volunteers() {
                               origin={"origin-top-left"}
                               position={"left-0"}
                               setvalue={AddFilter}
+                              setIsSort={SortElements}
+                              issort={queryArr.some(
+                                (obj) => obj.sort === "dob"
+                              )}
                               fieldname={"dob"}
                               selected={doesFieldExists(queryArr, "dob")}
                               removeFilter={() => removeObjectByKey("dob")}
@@ -197,9 +291,13 @@ function Volunteers() {
                           <div className=" flex items-center w-max py-1">
                             gender
                             <Dropdown
-                              origin={"origin-top-right"}
-                              position={"right-0"}
+                              origin={"origin-top-left"}
+                              position={"left-0"}
                               setvalue={AddFilter}
+                              setIsSort={SortElements}
+                              issort={queryArr.some(
+                                (obj) => obj.sort === "gender"
+                              )}
                               fieldname={"gender"}
                               selected={doesFieldExists(queryArr, "gender")}
                               removeFilter={() => removeObjectByKey("gender")}
@@ -213,6 +311,10 @@ function Volunteers() {
                               origin={"origin-top-left"}
                               position={"left-0"}
                               setvalue={AddFilter}
+                              setIsSort={SortElements}
+                              issort={queryArr.some(
+                                (obj) => obj.sort === "currentService"
+                              )}
                               fieldname={"currentService"}
                               selected={doesFieldExists(
                                 queryArr,
@@ -231,6 +333,10 @@ function Volunteers() {
                               origin={"origin-top-left"}
                               position={"left-0"}
                               setvalue={AddFilter}
+                              setIsSort={SortElements}
+                              issort={queryArr.some(
+                                (obj) => obj.sort === "serviceInterested"
+                              )}
                               fieldname={"serviceInterested"}
                               selected={doesFieldExists(
                                 queryArr,
@@ -334,15 +440,20 @@ function Volunteers() {
             </div>
           </div>
         )}
-        <div className="mx-5 flex items-center justify-between mt-6">
-          <button className="px-4 py-1.5 rounded border bg-white shadow flex items-center justify-center gap-2">
-            <ArrowLeftIcon className="h-5 w-5" />
-            PREV
+        <div className="px-5 flex items-center justify-between mt-6">
+          <button
+            className="flex items-center gap-3 text-lg bg-white px-4 py-1 rounded border"
+            onClick={decreasePage}
+          >
+            <ChevronLeftIcon className="h-7 w-7" />
+            Prev
           </button>
-          <div></div>
-          <button className="px-4 py-1.5 rounded border bg-white shadow flex items-center justify-center gap-2">
-            NEXT
-            <ArrowRightIcon className="h-5 w-5" />
+          <button
+            className="flex items-center gap-3 text-lg bg-white px-4 py-1 rounded border"
+            onClick={increasePage}
+          >
+            Next
+            <ChevronRightIcon className="h-7 w-7" />
           </button>
         </div>
       </div>

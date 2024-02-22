@@ -13,10 +13,10 @@ const Dropdown = ({
   setvalue,
   selected,
   removeFilter,
+  issort,
+  setIsSort,
 }) => {
-  const [issort, setIsSort] = useState(false);
   const [isDropdownOpen, setDropdownOpen] = useState(false);
-
   const [formstate, setFormState] = useState("");
 
   const toggleDropdown = () => {
@@ -38,7 +38,7 @@ const Dropdown = ({
         {issort ? (
           <button
             onClick={() => {
-              setIsSort(false);
+              setIsSort("id");
             }}
             type="button"
             className="p-1 transition-colors duration-300 hover:bg-gray-200 ml-2 rounded-full"
@@ -48,7 +48,7 @@ const Dropdown = ({
         ) : (
           <button
             onClick={() => {
-              setIsSort(true);
+              setIsSort(fieldname);
             }}
             type="button"
             className="p-1 transition-colors duration-300 hover:bg-gray-200 ml-2 rounded-full"

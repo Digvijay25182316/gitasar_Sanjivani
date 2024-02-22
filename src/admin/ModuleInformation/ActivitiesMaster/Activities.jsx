@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import {
+  ChevronLeftIcon,
   ChevronRightIcon,
   CubeTransparentIcon,
   PlusIcon,
@@ -15,44 +16,65 @@ import Sidebar from "../../../components/BottomNav.jsx/Sidebar";
 
 function ActivitiesM() {
   const { pathname } = useLocation();
-  const [queryArr, setQueryArr] = useState([]);
+  const [queryArr, setQueryArr] = useState([
+    { page: 0 },
+    { size: 10 }, // a default page size
+    { sort: "id" },
+  ]);
   const [activitiesArr, setActivitiesArr] = useState([]);
   const [OpenActivityModal, setOpenActivityModal] = useState(false);
-  const [currentPage, setPage] = useState(1);
   const [selected, setSelected] = useState(false);
-  const [createCourseLoading, setCreateCourseLoading] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [selectedItem, setSelectedItem] = useState(0);
+  const [totalElement, setTotalElements] = useState(0);
+  const [VisibleElements, setVisibleElements] = useState(0);
 
-  useState(() => {
+  let url = `${SERVER_ENDPOINT}/activity/`;
+  if (queryArr.length > 0) {
+    url +=
+      "?" +
+      queryArr
+        .map(
+          (param) =>
+            `${Object.keys(param)}=${encodeURIComponent(
+              param[Object.keys(param)]
+            )}`
+        )
+        .join("&");
+  }
+
+  useEffect(() => {
     (async () => {
       setIsLoading(true);
       try {
-        const response = await fetch(`${SERVER_ENDPOINT}/activity/`);
+        const response = await fetch(url);
         if (response.ok) {
           const responseData = await response.json();
+          console.log(responseData);
           setActivitiesArr(responseData.content);
+          setVisibleElements(responseData?.numberOfElements);
+          setTotalElements(responseData?.totalElements);
         } else {
           const errorData = await response.json();
           toast.error(errorData.message);
         }
       } catch (error) {
-        toast.error(error.message);
+        toast.error(error.message || error);
       } finally {
         setIsLoading(false);
       }
     })();
-  }, [OpenActivityModal]);
+  }, [OpenActivityModal, url]);
 
   function AddFilter(data) {
-    setQueryArr((prev) => [...prev, data]);
+    // setQueryArr((prev) => [...prev, data]);
   }
   function doesFieldExists(array, propertyName) {
-    return array?.some((obj) => obj.hasOwnProperty(propertyName));
+    // return array?.some((obj) => obj.hasOwnProperty(propertyName));
   }
 
   function removeObjectByKey(data) {
-    setQueryArr(queryArr.filter((item) => !Object.keys(item).includes(data)));
+    // setQueryArr(queryArr.filter((item) => !Object.keys(item).includes(data)));
   }
   function onChangeSelect(e) {
     setSelectedItem(Number(e.target.value));
@@ -62,6 +84,58 @@ function ActivitiesM() {
     setSelectedItem(0);
     setSelected(false);
   }
+
+  ///////////////////////////////// this section everything is about filtering and pagination etc
+  //contents: pagination , search_parameter_management , sorting
+  // Function to increase page by one
+
+  const increasePage = () => {
+    setQueryArr((prev) => {
+      const pageIndex = prev.findIndex((item) => item.hasOwnProperty("page"));
+      if (pageIndex !== -1) {
+        const updatedQueryArr = [...prev];
+        updatedQueryArr[pageIndex] = {
+          ...updatedQueryArr[pageIndex],
+          page: updatedQueryArr[pageIndex].page + 1,
+        };
+        return updatedQueryArr;
+      }
+      return prev;
+    });
+  };
+
+  // Function to decrease page by one
+  const decreasePage = () => {
+    setQueryArr((prev) => {
+      const pageIndex = prev.findIndex((item) => item.hasOwnProperty("page"));
+      if (pageIndex !== -1 && prev[pageIndex].page > 0) {
+        const updatedQueryArr = [...prev];
+        updatedQueryArr[pageIndex] = {
+          ...updatedQueryArr[pageIndex],
+          page: updatedQueryArr[pageIndex].page - 1,
+        };
+        return updatedQueryArr;
+      }
+      return prev;
+    });
+  };
+  //Function to sort
+  const SortElements = (sortBy) => {
+    setQueryArr((prev) => {
+      const sortIndex = prev.findIndex((item) => item.hasOwnProperty("sort"));
+      if (sortIndex !== -1) {
+        const updatedQueryArr = [...prev];
+        updatedQueryArr[sortIndex] = {
+          ...updatedQueryArr[sortIndex],
+          sort: sortBy,
+        };
+        return updatedQueryArr;
+      }
+      return prev;
+    });
+  };
+
+  ///////////////////////search params and filtering end
   return (
     <div className="flex items-center max-w-screen">
       <Sidebar />
@@ -101,6 +175,7 @@ function ActivitiesM() {
                 <p className=" px-2 py-1 font-semibold text-gray-600">
                   Activity master
                 </p>
+                <p className="px-2 py-1  text-gray-400">{`${VisibleElements} of ${totalElement}`}</p>
               </div>
 
               <div className="overflow-x-scroll">
@@ -112,34 +187,40 @@ function ActivitiesM() {
                           Select
                         </th>
                         <th className="border-b px-6 font-semibold py-1">
-                          <div className=" flex items-center w-full">
+                          <div className=" flex items-center w-max">
                             Activity Name
                             <Dropdown
                               origin={"origin-top-left"}
                               position={"left-0"}
                               setvalue={AddFilter}
-                              fieldname={"programName"}
-                              selected={doesFieldExists(
-                                queryArr,
-                                "programName"
+                              setIsSort={SortElements}
+                              issort={queryArr.some(
+                                (obj) => obj.sort === "name"
                               )}
-                              removeFilter={() =>
-                                removeObjectByKey("programName")
-                              }
+                              fieldname={"name"}
+                              selected={doesFieldExists(queryArr, "name")}
+                              removeFilter={() => removeObjectByKey("name")}
                             />
                           </div>
                         </th>
                         <th className="border-b px-6 font-semibold py-1">
-                          <div className=" flex items-center w-full py-1">
+                          <div className=" flex items-center w-max py-1">
                             Activity Description
                             <Dropdown
                               origin={"origin-top-left"}
                               position={"left-0"}
                               setvalue={AddFilter}
-                              fieldname={"courseCode"}
-                              selected={doesFieldExists(queryArr, "courseCode")}
+                              setIsSort={SortElements}
+                              issort={queryArr.some(
+                                (obj) => obj.sort === "description"
+                              )}
+                              fieldname={"description"}
+                              selected={doesFieldExists(
+                                queryArr,
+                                "description"
+                              )}
                               removeFilter={() =>
-                                removeObjectByKey("courseCode")
+                                removeObjectByKey("description")
                               }
                             />
                           </div>
@@ -171,6 +252,22 @@ function ActivitiesM() {
                   </div>
                 )}
               </div>
+            </div>
+            <div className="px-5 flex items-center justify-between mt-6">
+              <button
+                className="flex items-center gap-3 text-lg bg-white px-4 py-1 rounded border"
+                onClick={decreasePage}
+              >
+                <ChevronLeftIcon className="h-7 w-7" />
+                Prev
+              </button>
+              <button
+                className="flex items-center gap-3 text-lg bg-white px-4 py-1 rounded border"
+                onClick={increasePage}
+              >
+                Next
+                <ChevronRightIcon className="h-7 w-7" />
+              </button>
             </div>
           </div>
         ) : (
