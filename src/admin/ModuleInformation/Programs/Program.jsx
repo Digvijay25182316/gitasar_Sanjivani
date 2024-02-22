@@ -210,14 +210,10 @@ function Programs() {
                             position={"left-0"}
                             setvalue={AddFilter}
                             setIsSort={SortElements}
-                            issort={queryArr.some(
-                              (obj) => obj.sort === "programName"
-                            )}
-                            fieldname={"programName"}
-                            selected={doesFieldExists(queryArr, "programName")}
-                            removeFilter={() =>
-                              removeObjectByKey("programName")
-                            }
+                            issort={queryArr.some((obj) => obj.sort === "name")}
+                            fieldname={"name"}
+                            selected={doesFieldExists(queryArr, "name")}
+                            removeFilter={() => removeObjectByKey("name")}
                           />
                         </div>
                       </th>
