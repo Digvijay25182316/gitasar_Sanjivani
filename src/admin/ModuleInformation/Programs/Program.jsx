@@ -195,7 +195,7 @@ function Programs() {
                     : VisibleElements
                 } of ${totalElement}`}</p>
               </div>
-              <div className="overflow-x-scroll">
+              <div className="overflow-x-scroll min-h-screen">
                 <table>
                   <thead className="bg-gray-50">
                     <tr>
@@ -348,7 +348,7 @@ function Programs() {
                   {programArr?.length > 0 ? (
                     <tbody>
                       {programArr?.map((Programs, index) => (
-                        <tr key={index + 1} className="border-b">
+                        <tr key={index + 1} className="border-b ">
                           <td className="flex justify-center py-5">
                             <input
                               type="checkbox"

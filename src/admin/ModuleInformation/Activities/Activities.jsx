@@ -210,7 +210,7 @@ function Activities() {
                     : VisibleElements
                 } of ${totalElement}`}</p>
               </div>
-              <div className="overflow-x-scroll">
+              <div className="overflow-x-scroll min-h-screen">
                 <table className="w-full">
                   <thead className="bg-gray-50">
                     <tr>
@@ -419,7 +419,7 @@ function Activities() {
                             <input
                               type="checkbox"
                               id=""
-                              value={index}
+                              value={activity?.id}
                               className=" checked:text-green-400 text-green-400"
                             />
                           </td>
@@ -498,7 +498,7 @@ function Activities() {
                             columnNameArr={columnNamesArr}
                           >
                             {activity?.activityName === "Attendance" ? (
-                              `${activity.activityDate}`
+                              `${activity?.activityDate}`
                             ) : (
                               <DateDisplay dateString={activity.activityDate} />
                             )}
