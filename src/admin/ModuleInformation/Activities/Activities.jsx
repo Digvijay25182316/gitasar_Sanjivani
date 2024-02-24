@@ -6,7 +6,7 @@ import {
 } from "@heroicons/react/24/solid";
 import React, { useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
-import Dropdown from "../../../components/BottomNav.jsx/DropDown";
+import Dropdown from "./DropDown";
 import AddActivitiesModal from "./AddActivitiesModal";
 import Slider from "../../../components/MdLeftHeaderSlider";
 import { SERVER_ENDPOINT } from "../../config/Server";

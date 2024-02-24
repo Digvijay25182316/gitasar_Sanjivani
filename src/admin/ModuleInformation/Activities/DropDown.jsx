@@ -7,10 +7,11 @@ import {
 import React, { useEffect, useRef, useState } from "react";
 
 const Dropdown = ({
+  isSpecialNativeQuery,
   position,
   origin,
   fieldname,
-
+  fieldname2,
   setvalue,
   selected,
   removeFilter,
@@ -64,7 +65,11 @@ const Dropdown = ({
         ) : (
           <button
             onClick={() => {
-              setIsSort(fieldname);
+              if (isSpecialNativeQuery) {
+                setIsSort(fieldname2);
+              } else {
+                setIsSort(fieldname);
+              }
             }}
             type="button"
             className="p-1 transition-colors duration-300 hover:bg-gray-200 ml-2 rounded-full"
