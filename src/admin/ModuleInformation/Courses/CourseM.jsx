@@ -119,7 +119,7 @@ function CourseM() {
     });
     setVisibleElements((prev) => prev - 10);
   };
-  console.log(VisibleElements);
+
   //Function to sort
   const SortElements = (sortBy) => {
     setQueryArr((prev) => {

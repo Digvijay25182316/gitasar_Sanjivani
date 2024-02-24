@@ -10,7 +10,6 @@ const Dropdown = ({
   position,
   origin,
   fieldname,
-
   setvalue,
   selected,
   removeFilter,

@@ -30,7 +30,7 @@ function Activities() {
   const [ActivityArr, setActivityArr] = useState([]);
   const [columnNamesArr, setColumnNamesArr] = useState([]); //to toggle visibility
   const [totalElement, setTotalElements] = useState(0);
-  const [specialNativeQuery, setSpecialNativeQuery] = useState(true);
+  const [specialNativeQuery, setSpecialNativeQuery] = useState(false);
   const [VisibleElements, setVisibleElements] = useState(10);
   const handleAddItemToColumnNameArr = (option) => {
     if (columnNamesArr.includes(option.value)) {

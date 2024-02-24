@@ -35,7 +35,6 @@ function CourseLevel() {
   const [isLoading, setIsLoading] = useState(false);
   const [totalElement, setTotalElements] = useState(0);
   const [VisibleElements, setVisibleElements] = useState(10);
-  console.log(VisibleElements, totalElement);
 
   let url = `${SERVER_ENDPOINT}/level/`;
   if (queryArr.length > 0) {
@@ -213,118 +212,31 @@ function CourseLevel() {
                         <th className="border-b px-6 font-semibold py-1">
                           <div className=" flex items-center w-max py-1">
                             Program Name
-                            <Dropdown
-                              origin={"origin-top-left"}
-                              position={"left-0"}
-                              setvalue={AddFilter}
-                              setIsSort={SortElements}
-                              issort={queryArr.some(
-                                (obj) => obj.sort === "programName"
-                              )}
-                              fieldname={"programName"}
-                              selected={doesFieldExists(
-                                queryArr,
-                                "programName"
-                              )}
-                              removeFilter={() =>
-                                removeObjectByKey("programName")
-                              }
-                            />
                           </div>
                         </th>
                         <th className="border-b px-6 font-semibold py-1">
                           <div className=" flex items-center w-max py-1">
                             Course Name
-                            <Dropdown
-                              origin={"origin-top-left"}
-                              position={"left-0"}
-                              setvalue={AddFilter}
-                              setIsSort={SortElements}
-                              issort={queryArr.some(
-                                (obj) => obj.sort === "courseLevel"
-                              )}
-                              fieldname={"courseLevel"}
-                              selected={doesFieldExists(
-                                queryArr,
-                                "courseLevel"
-                              )}
-                              removeFilter={() =>
-                                removeObjectByKey("courseLevel")
-                              }
-                            />
                           </div>
                         </th>
                         <th className="border-b px-6 font-semibold py-1">
                           <div className=" flex items-center w-max py-1">
                             preacher1
-                            <Dropdown
-                              origin={"origin-top-left"}
-                              position={"left-0"}
-                              setvalue={AddFilter}
-                              setIsSort={SortElements}
-                              issort={queryArr.some(
-                                (obj) => obj.sort === "preacher"
-                              )}
-                              fieldname={"preacher"}
-                              selected={doesFieldExists(queryArr, "preacher")}
-                              removeFilter={() => removeObjectByKey("preacher")}
-                            />
                           </div>
                         </th>
                         <th className="border-b px-6 font-semibold py-1">
                           <div className=" flex items-center w-max py-1">
                             preacher2
-                            <Dropdown
-                              origin={"origin-top-left"}
-                              position={"left-0"}
-                              setvalue={AddFilter}
-                              setIsSort={SortElements}
-                              issort={queryArr.some(
-                                (obj) => obj.sort === "preacher"
-                              )}
-                              fieldname={"preacher"}
-                              selected={doesFieldExists(queryArr, "preacher")}
-                              removeFilter={() => removeObjectByKey("preacher")}
-                            />
                           </div>
                         </th>
                         <th className="border-b px-6 font-semibold py-1">
                           <div className=" flex items-center w-max py-1">
                             mentor
-                            <Dropdown
-                              origin={"origin-top-left"}
-                              position={"left-0"}
-                              setvalue={AddFilter}
-                              setIsSort={SortElements}
-                              issort={queryArr.some(
-                                (obj) => obj.sort === "mentor"
-                              )}
-                              fieldname={"mentor"}
-                              selected={doesFieldExists(queryArr, "mentor")}
-                              removeFilter={() => removeObjectByKey("mentor")}
-                            />
                           </div>
                         </th>
                         <th className="border-b px-6 font-semibold py-1">
                           <div className=" flex items-center w-max py-1">
                             coordinator
-                            <Dropdown
-                              origin={"origin-top-left"}
-                              position={"left-0"}
-                              setvalue={AddFilter}
-                              setIsSort={SortElements}
-                              issort={queryArr.some(
-                                (obj) => obj.sort === "coordinator"
-                              )}
-                              fieldname={"coordinator"}
-                              selected={doesFieldExists(
-                                queryArr,
-                                "coordinator"
-                              )}
-                              removeFilter={() =>
-                                removeObjectByKey("coordinator")
-                              }
-                            />
                           </div>
                         </th>
                         <th className="border-b px-6 font-semibold py-1">

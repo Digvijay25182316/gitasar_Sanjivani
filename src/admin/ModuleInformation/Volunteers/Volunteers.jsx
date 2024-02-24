@@ -293,62 +293,16 @@ function Volunteers() {
                       <th className="border-b px-6 font-semibold py-1">
                         <div className=" flex items-center w-max py-1">
                           gender
-                          <Dropdown
-                            origin={"origin-top-left"}
-                            position={"left-0"}
-                            setvalue={AddFilter}
-                            setIsSort={SortElements}
-                            issort={queryArr.some(
-                              (obj) => obj.sort === "gender"
-                            )}
-                            fieldname={"gender"}
-                            selected={doesFieldExists(queryArr, "gender")}
-                            removeFilter={() => removeObjectByKey("gender")}
-                          />
                         </div>
                       </th>
                       <th className="border-b px-6 font-semibold py-1">
                         <div className=" flex items-center w-max py-1">
                           Current Service
-                          <Dropdown
-                            origin={"origin-top-left"}
-                            position={"left-0"}
-                            setvalue={AddFilter}
-                            setIsSort={SortElements}
-                            issort={queryArr.some(
-                              (obj) => obj.sort === "currentService"
-                            )}
-                            fieldname={"currentService"}
-                            selected={doesFieldExists(
-                              queryArr,
-                              "currentService"
-                            )}
-                            removeFilter={() =>
-                              removeObjectByKey("currentService")
-                            }
-                          />
                         </div>
                       </th>
                       <th className="border-b px-6 font-semibold py-1">
                         <div className=" flex items-center w-max py-1">
                           interested Service
-                          <Dropdown
-                            origin={"origin-top-left"}
-                            position={"left-0"}
-                            setvalue={AddFilter}
-                            setIsSort={SortElements}
-                            issort={queryArr.some(
-                              (obj) => obj.sort === "serviceInterested"
-                            )}
-                            fieldname={"serviceInterested"}
-                            selected={doesFieldExists(
-                              queryArr,
-                              "serviceInterested"
-                            )}
-                            removeFilter={() =>
-                              removeObjectByKey("serviceInterested")
-                            }
-                          />
                         </div>
                       </th>
                     </tr>

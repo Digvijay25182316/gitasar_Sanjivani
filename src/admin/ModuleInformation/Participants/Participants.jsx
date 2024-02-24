@@ -267,21 +267,7 @@ function Participants() {
                       </th>
 
                       <th className="border-b px-6 font-semibold py-1">
-                        <div className="w-max">
-                          Gender{" "}
-                          <Dropdown
-                            origin={"origin-top-left"}
-                            position={"left-0"}
-                            setvalue={AddFilter}
-                            setIsSort={SortElements}
-                            issort={queryArr.some(
-                              (obj) => obj.sort === "gender"
-                            )}
-                            fieldname={"gender"}
-                            selected={doesFieldExists(queryArr, "gender")}
-                            removeFilter={() => removeObjectByKey("gender")}
-                          />
-                        </div>
+                        <div className="w-max">Gender</div>
                       </th>
                     </tr>
                   </thead>
