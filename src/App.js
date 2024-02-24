@@ -19,6 +19,7 @@ import ParticipantRegisteration from "./participants/attendence/Registeration";
 import ActivitiesM from "./admin/ModuleInformation/ActivitiesMaster/Activities";
 import { Toaster } from "react-hot-toast";
 import RSVP from "./admin/ModuleInformation/RSVP/RSVP";
+import RSVPParticipant from "./participants/RSVP/RSVP";
 
 function App() {
   return (
@@ -57,6 +58,7 @@ function App() {
           <Route path="/admin/dashboard" element={<Dashboard />} />
           <Route path="/admin/settings" element={<Settings />} />
           <Route path="/attendence/:levelId" element={<Attendence />} />
+          <Route path="/rsvp/:levelId" element={<RSVPParticipant />} />
           <Route
             path="/activities/:programId"
             element={<ParticipantsActivities />}

@@ -10,9 +10,11 @@ import { SERVER_ENDPOINT } from "../../config/Server";
 import { ChevronDownIcon } from "@heroicons/react/24/solid";
 
 const ProgramDropDown = ({
+  isSpecialNativeQuery,
   position,
   origin,
   fieldname,
+  fieldname2,
   setvalue,
   selected,
   removeFilter,
@@ -24,6 +26,7 @@ const ProgramDropDown = ({
   const [isLoading, setIsLoading] = useState(false);
   const [isOpenSelection, setIsOpenSelection] = useState(false);
   const [selectedType, setSelectedType] = useState({});
+
   const menuRef = useRef();
 
   const handleClickOutside = (event) => {
@@ -64,9 +67,17 @@ const ProgramDropDown = ({
     })();
   }, []);
 
+  const handleSubmit = (program) => {
+    setSelectedType(program);
+    setIsOpenSelection(false);
+    setvalue({ [fieldname]: program.name });
+    toggleprogramDropDown();
+    setIsSort("id");
+  };
+
   return (
     <div className="relative inline-block text-left" ref={menuRef}>
-      <div className=" flex items-center">
+      <div className=" flex programs-center">
         {issort ? (
           <button
             onClick={() => {
@@ -80,7 +91,11 @@ const ProgramDropDown = ({
         ) : (
           <button
             onClick={() => {
-              setIsSort(fieldname);
+              if (isSpecialNativeQuery) {
+                setIsSort(fieldname2);
+              } else {
+                setIsSort(fieldname);
+              }
             }}
             type="button"
             className="p-1 transition-colors duration-300 hover:bg-gray-200 ml-2 rounded-full"
@@ -89,7 +104,7 @@ const ProgramDropDown = ({
           </button>
         )}
 
-        <div className="flex items-center">
+        <div className="flex programs-center">
           {!selected ? (
             <button
               onClick={toggleprogramDropDown}
@@ -101,7 +116,10 @@ const ProgramDropDown = ({
           ) : (
             <button
               className="bg-red-200 rounded-full text-red-500"
-              onClick={removeFilter}
+              onClick={() => {
+                removeFilter();
+                setIsSort("id");
+              }}
             >
               <XMarkIcon className="h-5 w-5" />
             </button>
@@ -118,7 +136,7 @@ const ProgramDropDown = ({
           <button
             type="button"
             onClick={() => !isLoading && setIsOpenSelection(!isOpenSelection)}
-            className={`inline-flex items-center justify-between w-full px-4 py-2 text-sm font-medium  bg-white border border-gray-300 rounded-md shadow-sm ${
+            className={`inline-flex programs-center justify-between w-full px-4 py-2 text-sm font-medium  bg-white border border-gray-300 rounded-md shadow-sm ${
               isLoading
                 ? "text-gray-400"
                 : "hover:bg-gray-50 focus:outline-none focus:ring-1 text-gray-700"
@@ -145,20 +163,14 @@ const ProgramDropDown = ({
             >
               <div className="py-1 w-full" role="none">
                 {programArr?.length > 0 ? (
-                  programArr.map((item, index) => (
+                  programArr.map((program, index) => (
                     <p
-                      value={item.value}
                       key={index}
                       role="menu"
                       className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                      onClick={() => {
-                        setSelectedType(item);
-                        setIsOpenSelection(false);
-                        setvalue({ [fieldname]: item.name });
-                        toggleprogramDropDown();
-                      }}
+                      onClick={() => handleSubmit(program)}
                     >
-                      {item?.name}
+                      {program?.name}
                     </p>
                   ))
                 ) : (

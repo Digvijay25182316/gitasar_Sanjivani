@@ -10,9 +10,11 @@ import { SERVER_ENDPOINT } from "../../config/Server";
 import { ChevronDownIcon } from "@heroicons/react/24/solid";
 
 const ActivityTypeDropDown = ({
+  isSpecialNativeQuery,
   position,
   origin,
   fieldname,
+  fieldname2,
   setvalue,
   selected,
   removeFilter,
@@ -80,7 +82,11 @@ const ActivityTypeDropDown = ({
         ) : (
           <button
             onClick={() => {
-              setIsSort(fieldname);
+              if (isSpecialNativeQuery) {
+                setIsSort(fieldname2);
+              } else {
+                setIsSort(fieldname);
+              }
             }}
             type="button"
             className="p-1 transition-colors duration-300 hover:bg-gray-200 ml-2 rounded-full"
@@ -156,6 +162,7 @@ const ActivityTypeDropDown = ({
                         setIsOpenSelection(false);
                         setvalue({ [fieldname]: item.name });
                         toggleActivityTypeDropDown();
+                        setIsSort("id");
                       }}
                     >
                       {item?.name}

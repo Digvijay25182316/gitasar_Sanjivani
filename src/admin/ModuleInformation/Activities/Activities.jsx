@@ -25,13 +25,12 @@ function Activities() {
     { sort: "id" },
   ]);
 
-  console.log(queryArr);
-
   const [openActivities, setOpenActivities] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [ActivityArr, setActivityArr] = useState([]);
   const [columnNamesArr, setColumnNamesArr] = useState([]); //to toggle visibility
   const [totalElement, setTotalElements] = useState(0);
+  const [specialNativeQuery, setSpecialNativeQuery] = useState(true);
   const [VisibleElements, setVisibleElements] = useState(10);
   const handleAddItemToColumnNameArr = (option) => {
     if (columnNamesArr.includes(option.value)) {
@@ -97,6 +96,7 @@ function Activities() {
 
   function AddFilter(data) {
     setQueryArr((prev) => [...prev, data]);
+    setSpecialNativeQuery(true);
   }
   function doesFieldExists(array, propertyName) {
     return array?.some((obj) => obj.hasOwnProperty(propertyName));
@@ -104,6 +104,7 @@ function Activities() {
 
   function removeObjectByKey(data) {
     setQueryArr(queryArr.filter((item) => !Object.keys(item).includes(data)));
+    setSpecialNativeQuery(false);
   }
   const increasePage = () => {
     setQueryArr((prev) => {
@@ -225,14 +226,18 @@ function Activities() {
                         <div className=" flex items-center w-max py-1">
                           Program Name
                           <ProgramDropDown
+                            isSpecialNativeQuery={specialNativeQuery}
                             origin={"origin-top-left"}
                             position={"left-0"}
                             setvalue={AddFilter}
                             setIsSort={SortElements}
                             issort={queryArr.some(
-                              (obj) => obj.sort === "programName"
+                              (obj) =>
+                                obj.sort === "programName" ||
+                                obj.sort === "program_name"
                             )}
                             fieldname={"programName"}
+                            fieldname2={"program_name"}
                             selected={doesFieldExists(queryArr, "programName")}
                             removeFilter={() =>
                               removeObjectByKey("programName")
@@ -248,14 +253,18 @@ function Activities() {
                         <div className=" flex items-center w-max py-1">
                           Course Code
                           <Dropdown
+                            isSpecialNativeQuery={specialNativeQuery}
                             origin={"origin-top-left"}
                             position={"left-0"}
                             setvalue={AddFilter}
                             setIsSort={SortElements}
                             issort={queryArr.some(
-                              (obj) => obj.sort === "courseCode"
+                              (obj) =>
+                                obj.sort === "courseCode" ||
+                                obj.sort === "course_code"
                             )}
                             fieldname={"courseCode"}
+                            fieldname2={"course_code"}
                             selected={doesFieldExists(queryArr, "courseCode")}
                             removeFilter={() => removeObjectByKey("courseCode")}
                           />
@@ -269,14 +278,18 @@ function Activities() {
                         <div className=" flex items-center w-max py-1">
                           Session Name
                           <Dropdown
+                            isSpecialNativeQuery={specialNativeQuery}
                             origin={"origin-top-left"}
                             position={"left-0"}
                             setvalue={AddFilter}
                             setIsSort={SortElements}
                             issort={queryArr.some(
-                              (obj) => obj.sort === "scheduledSessionName"
+                              (obj) =>
+                                obj.sort === "scheduledSessionName" ||
+                                obj.sort === "scheduled_session_name"
                             )}
                             fieldname={"scheduledSessionName"}
+                            fieldname2={"scheduled_session_name"}
                             selected={doesFieldExists(
                               queryArr,
                               "scheduledSessionName"
@@ -295,14 +308,18 @@ function Activities() {
                         <div className=" flex items-center w-max py-1">
                           Activity
                           <ActivityTypeDropDown
+                            isSpecialNativeQuery={specialNativeQuery}
                             origin={"origin-top-left"}
                             position={"left-0"}
                             setvalue={AddFilter}
                             setIsSort={SortElements}
                             issort={queryArr.some(
-                              (obj) => obj.sort === "activityName"
+                              (obj) =>
+                                obj.sort === "activityName" ||
+                                obj.sort === "activity_name"
                             )}
                             fieldname={"activityName"}
+                            fieldname2={"activity_name"}
                             selected={doesFieldExists(queryArr, "activityName")}
                             removeFilter={() =>
                               removeObjectByKey("activityName")
@@ -318,14 +335,18 @@ function Activities() {
                         <div className=" flex items-center w-max py-1">
                           Phone
                           <Dropdown
+                            isSpecialNativeQuery={specialNativeQuery}
                             origin={"origin-top-left"}
                             position={"left-0"}
                             setvalue={AddFilter}
                             setIsSort={SortElements}
                             issort={queryArr.some(
-                              (obj) => obj.sort === "participantContactNumber"
+                              (obj) =>
+                                obj.sort === "participantContactNumber" ||
+                                obj.sort === "participant_contact_number"
                             )}
                             fieldname={"participantContactNumber"}
+                            fieldname2={"participant_contact_number"}
                             selected={doesFieldExists(
                               queryArr,
                               "participantContactNumber"
@@ -344,14 +365,18 @@ function Activities() {
                         <div className=" flex items-center w-max py-1">
                           First Name
                           <Dropdown
+                            isSpecialNativeQuery={specialNativeQuery}
                             origin={"origin-top-right"}
                             position={"right-0"}
                             setvalue={AddFilter}
                             setIsSort={SortElements}
                             issort={queryArr.some(
-                              (obj) => obj.sort === "participantFirstName"
+                              (obj) =>
+                                obj.sort === "participantFirstName" ||
+                                obj.sort === "participant_first_name"
                             )}
                             fieldname={"participantFirstName"}
+                            fieldname2={"participant_first_name"}
                             selected={doesFieldExists(
                               queryArr,
                               "participantFirstName"
@@ -370,14 +395,18 @@ function Activities() {
                         <div className=" flex items-center w-max py-1">
                           Last Name
                           <Dropdown
+                            isSpecialNativeQuery={specialNativeQuery}
                             origin={"origin-top-right"}
                             position={"right-0"}
                             setvalue={AddFilter}
                             setIsSort={SortElements}
                             issort={queryArr.some(
-                              (obj) => obj.sort === "participantLastName"
+                              (obj) =>
+                                obj.sort === "participantLastName" ||
+                                obj.sort === "participant_last_name"
                             )}
                             fieldname={"participantLastName"}
+                            fieldname2={"participant_last_name"}
                             selected={doesFieldExists(
                               queryArr,
                               "participantLastName"
@@ -396,6 +425,7 @@ function Activities() {
                         <div className=" flex items-center w-max py-1">
                           date
                           <Dropdown
+                            isSpecialNativeQuery={specialNativeQuery}
                             origin={"origin-top-right"}
                             position={"right-0"}
                             setvalue={AddFilter}
@@ -404,6 +434,7 @@ function Activities() {
                               (obj) => obj.sort === "created"
                             )}
                             fieldname={"created"}
+                            fieldname2={"created"}
                             selected={doesFieldExists(queryArr, "created")}
                             removeFilter={() => removeObjectByKey("created")}
                           />

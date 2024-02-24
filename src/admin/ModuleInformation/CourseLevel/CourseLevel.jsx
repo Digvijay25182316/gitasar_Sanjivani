@@ -351,6 +351,11 @@ function CourseLevel() {
                         </th>
                         <th className="border-b px-6 font-semibold py-1">
                           <div className=" flex items-center w-max py-1 px-5">
+                            RSVP Links
+                          </div>
+                        </th>
+                        <th className="border-b px-6 font-semibold py-1">
+                          <div className=" flex items-center w-max py-1 px-5">
                             Activities Links
                           </div>
                         </th>
@@ -449,6 +454,24 @@ function CourseLevel() {
                                 />
                                 <QrCode
                                   url={`${FRONTEND_ENDPOINT}/attendence/${courseLevel.id}`}
+                                  courseCode={courseLevel.programName}
+                                />
+                              </div>
+                            </td>
+                            <td className="text-center">
+                              <div className="flex items-center gap-5 justify-center">
+                                <a
+                                  href={`${FRONTEND_ENDPOINT}/rsvp/${courseLevel?.id}`}
+                                  className=" hover:underline   text-blue-700 flex items-center gap-2 justify-center"
+                                >
+                                  <LinkIcon className="h-4 w-4" />
+                                  Link
+                                </a>
+                                <CopyClipBoard
+                                  url={`${FRONTEND_ENDPOINT}/rsvp/${courseLevel?.id}`}
+                                />
+                                <QrCode
+                                  url={`${FRONTEND_ENDPOINT}/rsvp/${courseLevel.id}`}
                                   courseCode={courseLevel.programName}
                                 />
                               </div>
