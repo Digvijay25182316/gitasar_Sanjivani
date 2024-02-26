@@ -478,8 +478,8 @@ function Activities() {
                             fieldName={"sessionName"}
                             columnNameArr={columnNamesArr}
                           >
-                            {activity?.sessionName ? (
-                              <div>{activity.sessionName}</div>
+                            {activity?.scheduledSessionName ? (
+                              <div>{activity.scheduledSessionName}</div>
                             ) : (
                               <i className="text-gray-500">Null</i>
                             )}
