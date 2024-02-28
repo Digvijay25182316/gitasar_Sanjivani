@@ -115,34 +115,6 @@ function Sidebar() {
             <p>Participants</p>
           </div>
         </Link>
-        <Link to={"/admin/information/attendence"}>
-          <div
-            className={`flex items-center text-lg transition-all duration-500 ${
-              pathname.startsWith("/admin/information/attendence")
-                ? "bg-gray-100 text-blue-700 border rounded-lg  border-gray-300"
-                : "text-gray-500 hover:bg-gray-100 rounded-lg"
-            }  px-5 py-1.5 mx-2 lg:mx-5 gap-5`}
-          >
-            <p>
-              <FingerPrintIcon className="h-6 w-6" />
-            </p>
-            <p>Attendence</p>
-          </div>
-        </Link>
-        <Link to={"/admin/information/rsvp"}>
-          <div
-            className={`flex items-center text-lg transition-all duration-500 ${
-              pathname.startsWith("/admin/information/rsvp")
-                ? "bg-gray-100 text-blue-700 border rounded-lg  border-gray-300"
-                : "text-gray-500 hover:bg-gray-100 rounded-lg"
-            }  px-5 py-1.5 mx-2 lg:mx-5 gap-5`}
-          >
-            <p>
-              <HandRaisedIcon className="h-6 w-6" />
-            </p>
-            <p>Rsvp</p>
-          </div>
-        </Link>
       </div>
     </div>
   );
