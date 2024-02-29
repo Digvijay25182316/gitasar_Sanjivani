@@ -19,6 +19,7 @@ import ActivitiesM from "./admin/ModuleInformation/ActivitiesMaster/Activities";
 import { Toaster } from "react-hot-toast";
 import RSVPParticipant from "./participants/RSVP/RSVP";
 import Sadhana from "./participants/Sadhana/Sadhana";
+import SadhanaAdmin from "./admin/ModuleInformation/Sadhana/Sadhana";
 
 function App() {
   return (
@@ -48,6 +49,7 @@ function App() {
             path="/admin/information/participants"
             element={<Participants />}
           />
+          <Route path="/admin/information/sadhana" element={<SadhanaAdmin />} />
 
           <Route path="/admin/home" element={<Home />} />
           <Route path="/admin/dashboard" element={<Dashboard />} />

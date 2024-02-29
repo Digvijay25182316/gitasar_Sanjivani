@@ -1,4 +1,4 @@
-import { XMarkIcon } from "@heroicons/react/24/solid";
+import { PencilIcon, XMarkIcon } from "@heroicons/react/24/solid";
 import React, { useState } from "react";
 import {
   NOR as NORComponent,
@@ -51,7 +51,13 @@ function FormModalComp() {
 
   return (
     <>
-      <button onClick={() => setIsOpen(true)}>open</button>
+      <button
+        onClick={() => setIsOpen(true)}
+        className="text-center w-full flex items-center justify-center gap-3 text-blue-700"
+      >
+        open
+        <PencilIcon className="h-4 w-4" />
+      </button>
       {isOpen ? (
         <div className="fixed top-0 left-0 right-0 bottom-0  h-screen bg-white z-[1000] overflow-y-auto overflow-x-hidden w-full">
           <button
@@ -240,3 +246,21 @@ function FormModalComp() {
 }
 
 export default FormModalComp;
+
+const namesOfFields = [
+  { NOR: "Number of Rounds " },
+  { EJRB8A: "Early Japa rounds before 8 AM " },
+  { AJRA8A: "Early Japa rounds after 8 AM " },
+  { F8RCT: "First 8 rounds completed time " },
+  { N8RCT: "Next 8 rounds completed time " },
+  { WUT: "Wake up time " },
+  { ST: "Sleep time " },
+  { PBR: "Prabhupada Book Reading " },
+  { BNR: "Book Name Reading" },
+  { PCH: "Prabhupada Class Hearing " },
+  { GCH: "Guru Class Hearing " },
+  { CH: "Class Hearing " },
+  { S: "Speaker " },
+  { AA: "Attended Arthi" },
+  { MIU: "Mobile/Internet-Usage" },
+];

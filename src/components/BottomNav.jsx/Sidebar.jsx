@@ -2,13 +2,13 @@ import {
   AcademicCapIcon,
   ArrowTrendingUpIcon,
   CalendarDaysIcon,
-  FingerPrintIcon,
-  HandRaisedIcon,
   PresentationChartBarIcon,
   QueueListIcon,
   UserGroupIcon,
   UserIcon,
+  SparklesIcon,
 } from "@heroicons/react/24/outline";
+
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
 
@@ -113,6 +113,20 @@ function Sidebar() {
               <UserGroupIcon className="h-6 w-6" />
             </p>
             <p>Participants</p>
+          </div>
+        </Link>
+        <Link to={"/admin/information/sadhana"}>
+          <div
+            className={`flex items-center text-lg transition-all duration-500 ${
+              pathname.startsWith("/admin/information/sadhana")
+                ? "bg-gray-100 text-blue-700 border rounded-lg  border-gray-300"
+                : "text-gray-500 hover:bg-gray-100 rounded-lg"
+            }  px-5 py-1.5 mx-2 lg:mx-5 gap-5`}
+          >
+            <p>
+              <SparklesIcon className="h-6 w-6" />
+            </p>
+            <p>Sadhana</p>
           </div>
         </Link>
       </div>
