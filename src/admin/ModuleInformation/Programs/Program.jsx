@@ -15,6 +15,7 @@ import toast from "react-hot-toast";
 import ExternalLink from "./ExternalLink";
 import VolunteerDataCard from "./VolunteerDataCard";
 import Sidebar from "../../../components/BottomNav.jsx/Sidebar";
+import FormModalComp from "../../../components/ModalForm/FormModalComp";
 
 function Programs() {
   const { pathname } = useLocation();
@@ -343,6 +344,11 @@ function Programs() {
                           Activities Links
                         </div>
                       </th>
+                      <th className="border-b px-10 font-semibold py-1">
+                        <div className=" flex items-center w-max py-1 px-5">
+                          Sadhana Links
+                        </div>
+                      </th>
                     </tr>
                   </thead>
                   {programArr?.length > 0 ? (
@@ -412,6 +418,9 @@ function Programs() {
 
                           <td className="flex items-center gap-5 justify-center">
                             <ExternalLink Programs={Programs} />
+                          </td>
+                          <td>
+                            <FormModalComp program={Programs} />
                           </td>
                         </tr>
                       ))}

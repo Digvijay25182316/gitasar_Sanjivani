@@ -61,7 +61,7 @@ function App() {
             element={<ParticipantsActivities />}
           />
           <Route path="/registeration" element={<ParticipantRegisteration />} />
-          <Route path="/sadhana" element={<Sadhana />} />
+          <Route path="/sadhana/:programId" element={<Sadhana />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
         <BottomNav />

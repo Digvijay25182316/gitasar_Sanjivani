@@ -19,7 +19,6 @@ import { FRONTEND_ENDPOINT, SERVER_ENDPOINT } from "../../config/Server";
 import toast from "react-hot-toast";
 import Sidebar from "../../../components/BottomNav.jsx/Sidebar";
 import VolunteerDataCard from "./VolunteerDataCard";
-import FormModalComp from "../../../components/ModalForm/FormModalComp";
 
 function CourseLevel() {
   const { pathname } = useLocation();
@@ -272,11 +271,6 @@ function CourseLevel() {
                             Activities Links
                           </div>
                         </th>
-                        <th className="border-b px-6 font-semibold py-1">
-                          <div className=" flex items-center w-max py-1 px-5">
-                            Sadhana
-                          </div>
-                        </th>
                       </tr>
                     </thead>
                     {coursesArr?.length > 0 ? (
@@ -411,9 +405,6 @@ function CourseLevel() {
                                   courseCode={courseLevel.programName}
                                 />
                               </div>
-                            </td>
-                            <td>
-                              <FormModalComp />
                             </td>
                           </tr>
                         ))}

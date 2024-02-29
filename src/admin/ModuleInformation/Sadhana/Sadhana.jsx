@@ -165,12 +165,6 @@ function SadhanaAdmin() {
               <div className="flex items-center gap-3 bg-white text-gray-700 px-2 py-1 border rounded">
                 <button onClick={ClearSelection}>clear selection</button>
               </div>
-              <button
-                onClick={() => setOpenActivityModal(true)}
-                className="flex items-center gap-2 bg-white px-4 py-1.5 border border-gray-300 rounded text-blue-800"
-              >
-                <PlusIcon className="h-4 w-4" /> New Activity
-              </button>
             </div>
             <div className="md:mx-5 mx-2 flex rounded justify-end">
               <HeadlessMenu
@@ -199,6 +193,42 @@ function SadhanaAdmin() {
                       <th className="border-b px-6 font-semibold py-1">
                         Select
                       </th>
+                      <HidableColumnsHeader
+                        columnNameArr={columnNamesArr}
+                        fieldName={"Program Name"}
+                        className="border-b px-6 font-semibold py-1"
+                      >
+                        <div className="text-sm whitespace-nowrap">
+                          Program Name{" "}
+                        </div>
+                      </HidableColumnsHeader>
+                      <HidableColumnsHeader
+                        columnNameArr={columnNamesArr}
+                        fieldName={"First Name"}
+                        className="border-b px-6 font-semibold py-1"
+                      >
+                        <div className="text-sm whitespace-nowrap">
+                          Participant First Name{" "}
+                        </div>
+                      </HidableColumnsHeader>
+                      <HidableColumnsHeader
+                        columnNameArr={columnNamesArr}
+                        fieldName={"Last Name"}
+                        className="border-b px-6 font-semibold py-1"
+                      >
+                        <div className="text-sm whitespace-nowrap">
+                          Participant Last Name{" "}
+                        </div>
+                      </HidableColumnsHeader>
+                      <HidableColumnsHeader
+                        columnNameArr={columnNamesArr}
+                        fieldName={"Contact Number"}
+                        className="border-b px-6 font-semibold py-1"
+                      >
+                        <div className="text-sm whitespace-nowrap">
+                          Participant Contact Number{" "}
+                        </div>
+                      </HidableColumnsHeader>
                       <HidableColumnsHeader
                         columnNameArr={columnNamesArr}
                         fieldName={"Number of Rounds"}

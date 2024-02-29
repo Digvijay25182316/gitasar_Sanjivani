@@ -22,12 +22,10 @@ import { FRONTEND_ENDPOINT, SERVER_ENDPOINT } from "../../admin/config/Server";
 import toast from "react-hot-toast";
 import CopyClipBoard from "../BottomNav.jsx/CopyClipBoard";
 import { Link, useNavigate, useParams } from "react-router-dom";
+import { LinkIcon } from "@heroicons/react/24/solid";
 
-function FormModalComp() {
-  const { programId } = useParams();
+function FormModalComp({ program }) {
   const [isLoading, setIsLoading] = useState(false);
-  const [activitiesArr, setActivitiesArr] = useState([]);
-  const [participant, setParticipant] = useState({});
   const [phoneNumber, setPhoneNumber] = useState("");
   const navigate = useNavigate();
   const storeToLocalStorage = (item) => {
@@ -55,18 +53,29 @@ function FormModalComp() {
     checkedItems.forEach((item) => {
       params.append("functionNames", item.functionName);
     });
-    setGeneratedUrl(`${FRONTEND_ENDPOINT}/sadhana?${params.toString()}`);
+    setGeneratedUrl(
+      `${FRONTEND_ENDPOINT}/sadhana/${program.id}?${params.toString()}`
+    );
   };
 
   return (
     <>
-      <button
-        onClick={() => setIsOpen(true)}
-        className="text-center w-full flex items-center justify-center gap-3 text-blue-700"
-      >
-        open
-        <PencilIcon className="h-4 w-4" />
-      </button>
+      <div className="flex items-center justify-center w-full gap-5">
+        <Link to={`${FRONTEND_ENDPOINT}/sadhana/${program.id}`}>
+          <p className="flex items-center gap-2 text-blue-700 underline">
+            <LinkIcon className="h-4 w-4" />
+            Link
+          </p>
+        </Link>
+        <CopyClipBoard url={`${FRONTEND_ENDPOINT}/sadhana/${program.id}`} />
+        <button
+          onClick={() => setIsOpen(true)}
+          className="gap-3 text-blue-700 flex items-center"
+        >
+          open
+          <PencilIcon className="h-4 w-4" />
+        </button>
+      </div>
       {isOpen ? (
         <div className="fixed top-0 left-0 right-0 bottom-0  h-screen bg-white z-[1000] overflow-y-auto overflow-x-hidden w-full">
           <button
