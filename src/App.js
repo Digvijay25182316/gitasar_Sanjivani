@@ -18,6 +18,7 @@ import ParticipantRegisteration from "./participants/attendence/Registeration";
 import ActivitiesM from "./admin/ModuleInformation/ActivitiesMaster/Activities";
 import { Toaster } from "react-hot-toast";
 import RSVPParticipant from "./participants/RSVP/RSVP";
+import Sadhana from "./participants/Sadhana/Sadhana";
 
 function App() {
   return (
@@ -58,6 +59,7 @@ function App() {
             element={<ParticipantsActivities />}
           />
           <Route path="/registeration" element={<ParticipantRegisteration />} />
+          <Route path="/sadhana" element={<Sadhana />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
         <BottomNav />

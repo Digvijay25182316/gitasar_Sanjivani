@@ -3,18 +3,19 @@ import {
   ClipboardDocumentListIcon,
 } from "@heroicons/react/24/solid";
 import React, { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
 function CopyClipBoard({ url }) {
   const [isclipBoard, setClipBoard] = useState(false);
 
-  const addToClipBoard = (url) => {
-    return navigator.clipboard
+  const addToClipBoard = async (url) => {
+    await navigator.clipboard
       .writeText(url)
       .then((data) => {
         setClipBoard(true);
-        console.log(data, "copied");
+        toast.success("copied");
       })
-      .catch((err) => console.log(err));
+      .catch((err) => toast.error(err.message));
   };
   useEffect(() => {
     setTimeout(() => {
