@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 import {
+  BarsArrowDownIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
   CubeTransparentIcon,
@@ -23,10 +24,33 @@ function SadhanaAdmin() {
   const [activitiesArr, setActivitiesArr] = useState([]);
   const [OpenActivityModal, setOpenActivityModal] = useState(false);
   const [selected, setSelected] = useState(false);
+  const [columnNamesArr, setColumnNamesArr] = useState([]); //to toggle visibility
   const [isLoading, setIsLoading] = useState(false);
   const [selectedItem, setSelectedItem] = useState(0);
   const [totalElement, setTotalElements] = useState(0);
   const [VisibleElements, setVisibleElements] = useState(10);
+
+  const handleAddItemToColumnNameArr = (option) => {
+    if (columnNamesArr?.includes(option.value)) {
+      setColumnNamesArr(
+        columnNamesArr.filter((selected) => selected !== option.value)
+      );
+    } else {
+      setColumnNamesArr([...columnNamesArr, option.value]);
+    }
+  };
+  useEffect(() => {
+    // Load data from local storage on component mount
+    const storedData = localStorage.getItem("sadhanaArr");
+    if (storedData) {
+      setColumnNamesArr(JSON.parse(storedData));
+    }
+  }, []);
+
+  useEffect(() => {
+    // Save data to local storage whenever dataArray changes
+    localStorage.setItem("sadhanaArr", JSON.stringify(columnNamesArr));
+  }, [columnNamesArr]);
 
   let url = `${SERVER_ENDPOINT}/activity/`;
   if (queryArr.length > 0) {
@@ -41,27 +65,6 @@ function SadhanaAdmin() {
         )
         .join("&");
   }
-
-  useEffect(() => {
-    (async () => {
-      setIsLoading(true);
-      try {
-        const response = await fetch(url);
-        if (response.ok) {
-          const responseData = await response.json();
-          setActivitiesArr(responseData.content);
-          setTotalElements(responseData?.totalElements);
-        } else {
-          const errorData = await response.json();
-          toast.error(errorData.message);
-        }
-      } catch (error) {
-        toast.error(error.message || error);
-      } finally {
-        setIsLoading(false);
-      }
-    })();
-  }, [OpenActivityModal, url]);
 
   function AddFilter(data) {
     // setQueryArr((prev) => [...prev, data]);
@@ -169,6 +172,12 @@ function SadhanaAdmin() {
                 <PlusIcon className="h-4 w-4" /> New Activity
               </button>
             </div>
+            <div className="md:mx-5 mx-2 flex rounded justify-end">
+              <HeadlessMenu
+                options={columnNamesArr}
+                onSelect={handleAddItemToColumnNameArr}
+              />
+            </div>
             <div className="md:mx-5 mx-2 bg-white flex flex-col rounded border">
               <div className="flex items-center justify-between border-b">
                 <p className=" px-2 py-1 font-semibold text-gray-600">
@@ -190,81 +199,141 @@ function SadhanaAdmin() {
                       <th className="border-b px-6 font-semibold py-1">
                         Select
                       </th>
-                      <th className="border-b px-6 font-semibold py-1">
+                      <HidableColumnsHeader
+                        columnNameArr={columnNamesArr}
+                        fieldName={"Number of Rounds"}
+                        className="border-b px-6 font-semibold py-1"
+                      >
                         <div className="text-sm whitespace-nowrap">
                           Number of Rounds{" "}
                         </div>
-                      </th>
-                      <th className="border-b px-6 font-semibold py-1">
+                      </HidableColumnsHeader>
+                      <HidableColumnsHeader
+                        columnNameArr={columnNamesArr}
+                        fieldName={"Early Japa rounds before 8 AM"}
+                        className="border-b px-6 font-semibold py-1"
+                      >
                         <div className="text-sm whitespace-nowrap">
                           Early Japa rounds before 8 AM{" "}
                         </div>
-                      </th>
-                      <th className="border-b px-6 font-semibold py-1">
+                      </HidableColumnsHeader>
+                      <HidableColumnsHeader
+                        columnNameArr={columnNamesArr}
+                        fieldName={"Early Japa rounds after 8 AM"}
+                        className="border-b px-6 font-semibold py-1"
+                      >
                         <div className="text-sm whitespace-nowrap">
                           Early Japa rounds after 8 AM{" "}
                         </div>
-                      </th>
-                      <th className="border-b px-6 font-semibold py-1">
+                      </HidableColumnsHeader>
+                      <HidableColumnsHeader
+                        columnNameArr={columnNamesArr}
+                        fieldName={"First 8 rounds completed time"}
+                        className="border-b px-6 font-semibold py-1"
+                      >
                         <div className="text-sm whitespace-nowrap">
                           First 8 rounds completed time{" "}
                         </div>
-                      </th>
-                      <th className="border-b px-6 font-semibold py-1">
+                      </HidableColumnsHeader>
+                      <HidableColumnsHeader
+                        columnNameArr={columnNamesArr}
+                        fieldName={"Next 8 rounds completed time"}
+                        className="border-b px-6 font-semibold py-1"
+                      >
                         <div className="text-sm whitespace-nowrap">
                           Next 8 rounds completed time{" "}
                         </div>
-                      </th>
-                      <th className="border-b px-6 font-semibold py-1">
+                      </HidableColumnsHeader>
+                      <HidableColumnsHeader
+                        columnNameArr={columnNamesArr}
+                        fieldName={"Wake up time"}
+                        className="border-b px-6 font-semibold py-1"
+                      >
                         <div className="text-sm whitespace-nowrap">
                           Wake up time{" "}
                         </div>
-                      </th>
-                      <th className="border-b px-6 font-semibold py-1">
+                      </HidableColumnsHeader>
+                      <HidableColumnsHeader
+                        columnNameArr={columnNamesArr}
+                        fieldName={"Sleep time"}
+                        className="border-b px-6 font-semibold py-1"
+                      >
                         <div className="text-sm whitespace-nowrap">
                           Sleep time{" "}
                         </div>
-                      </th>
-                      <th className="border-b px-6 font-semibold py-1">
+                      </HidableColumnsHeader>
+                      <HidableColumnsHeader
+                        columnNameArr={columnNamesArr}
+                        fieldName={"Prabhupada Book Reading"}
+                        className="border-b px-6 font-semibold py-1"
+                      >
                         <div className="text-sm whitespace-nowrap">
                           Prabhupada Book Reading{" "}
                         </div>
-                      </th>
-                      <th className="border-b px-6 font-semibold py-1">
+                      </HidableColumnsHeader>
+                      <HidableColumnsHeader
+                        columnNameArr={columnNamesArr}
+                        fieldName={"Book Name Reading"}
+                        className="border-b px-6 font-semibold py-1"
+                      >
                         <div className="text-sm whitespace-nowrap">
                           Book Name Reading
                         </div>
-                      </th>
-                      <th className="border-b px-6 font-semibold py-1">
+                      </HidableColumnsHeader>
+                      <HidableColumnsHeader
+                        columnNameArr={columnNamesArr}
+                        fieldName={"Prabhupada Class Hearing"}
+                        className="border-b px-6 font-semibold py-1"
+                      >
                         <div className="text-sm whitespace-nowrap">
                           Prabhupada Class Hearing{" "}
                         </div>
-                      </th>
-                      <th className="border-b px-6 font-semibold py-1">
+                      </HidableColumnsHeader>
+                      <HidableColumnsHeader
+                        columnNameArr={columnNamesArr}
+                        fieldName={"Guru Class Hearing"}
+                        className="border-b px-6 font-semibold py-1"
+                      >
                         <div className="text-sm whitespace-nowrap">
                           Guru Class Hearing{" "}
                         </div>
-                      </th>
-                      <th className="border-b px-6 font-semibold py-1">
+                      </HidableColumnsHeader>
+                      <HidableColumnsHeader
+                        columnNameArr={columnNamesArr}
+                        fieldName={"Class Hearing"}
+                        className="border-b px-6 font-semibold py-1"
+                      >
                         <div className="text-sm whitespace-nowrap">
                           Class Hearing{" "}
                         </div>
-                      </th>
-                      <th className="border-b px-6 font-semibold py-1">
+                      </HidableColumnsHeader>
+                      <HidableColumnsHeader
+                        columnNameArr={columnNamesArr}
+                        fieldName={"Speaker"}
+                        className="border-b px-6 font-semibold py-1"
+                      >
                         <div className="text-sm whitespace-nowrap">
                           Speaker{" "}
                         </div>
-                      </th>
-                      <th className="border-b px-6 font-semibold py-1">
+                      </HidableColumnsHeader>
+                      <HidableColumnsHeader
+                        columnNameArr={columnNamesArr}
+                        fieldName={"Attended Arthi"}
+                        className="border-b px-6 font-semibold py-1"
+                      >
                         <div className="text-sm whitespace-nowrap">
                           Attended Arthi
                         </div>
-                      </th>
-                      <th className="border-b px-6 font-semibold py-1">
+                      </HidableColumnsHeader>
+                      <HidableColumnsHeader
+                        columnNameArr={columnNamesArr}
+                        fieldName={"Mobile/Internet-Usage"}
+                        className="border-b px-6 font-semibold py-1"
+                      >
                         <div className="text-sm whitespace-nowrap">
                           Mobile/Internet-Usage
                         </div>
-                      </th>
+                      </HidableColumnsHeader>
                     </tr>
                   </thead>
                   {activitiesArr?.length > 0 ? (
@@ -338,3 +407,121 @@ function SadhanaAdmin() {
 }
 
 export default SadhanaAdmin;
+
+function HeadlessMenu({ options, onSelect }) {
+  const columnNames = [
+    "Number of Rounds",
+    "Early Japa rounds before 8 AM",
+    "Early Japa rounds after 8 AM",
+    "First 8 rounds completed time",
+    "Next 8 rounds completed time",
+    "Wake up time",
+    "Sleep time",
+    "Prabhupada Book Reading",
+    "Book Name Reading",
+    "Prabhupada Class Hearing",
+    "Guru Class Hearing",
+    "Class Hearing",
+    "Speaker",
+    "Attended Arthi",
+    "Mobile/Internet-Usage",
+  ];
+  const [isOpen, setIsOpen] = useState(false);
+  const menuRef = useRef();
+
+  const handleButtonClick = () => {
+    setIsOpen(!isOpen);
+  };
+
+  const handleClickOutside = (event) => {
+    if (menuRef.current && !menuRef.current.contains(event.target)) {
+      setIsOpen(false);
+    }
+  };
+
+  // Attach click outside listener
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  return (
+    <div ref={menuRef} className="relative inline-block text-left">
+      <div>
+        <button
+          type="button"
+          className="inline-flex justify-center w-full rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none"
+          onClick={handleButtonClick}
+        >
+          <BarsArrowDownIcon className="h-5 w-5 rotate-90" />
+        </button>
+      </div>
+
+      {isOpen && (
+        <div className="origin-top-right absolute right-0 mt-2 w-64 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-[100]">
+          <div className="py-1">
+            {columnNames?.map((option, index) => (
+              <label
+                key={index}
+                className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+              >
+                <input
+                  type="checkbox"
+                  className="form-checkbox h-5 w-5 text-indigo-600 transition duration-150 ease-in-out"
+                  value={option}
+                  checked={options.includes(option)}
+                  onChange={(e) => {
+                    onSelect(e.target);
+                    setIsOpen(false);
+                  }}
+                />
+                <span className="ml-2 whitespace-nowrap">{option}</span>
+              </label>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function HidableColumns({ children, fieldName, columnNameArr }) {
+  const [isHidden, setIsHidden] = useState(false);
+
+  useEffect(() => {
+    setIsHidden(columnNameArr.includes(fieldName));
+  }, [columnNameArr, fieldName]);
+
+  return !isHidden ? <td className="text-center">{children}</td> : null;
+}
+function HidableColumnsHeader({ children, fieldName, columnNameArr }) {
+  const [isHidden, setIsHidden] = useState(false);
+
+  useEffect(() => {
+    setIsHidden(columnNameArr.includes(fieldName));
+  }, [columnNameArr, fieldName]);
+
+  return !isHidden ? (
+    <th className="border-b px-6 font-semibold py-1">{children}</th>
+  ) : null;
+}
+
+const columnArr = [
+  "NOR",
+  "EJRB8A",
+  "AJRA8A",
+  "F8RCT",
+  "N8RCT",
+  "WUT",
+  "ST",
+  "PBR",
+  "BNR",
+  "PCH",
+  "GCH",
+  "CH",
+  "S",
+  "AA",
+  "MIU",
+];

@@ -18,12 +18,21 @@ import {
   MIU as MIUComponent,
   FormListItems,
 } from "./ConfigModalForm";
-import { FRONTEND_ENDPOINT } from "../../admin/config/Server";
+import { FRONTEND_ENDPOINT, SERVER_ENDPOINT } from "../../admin/config/Server";
 import toast from "react-hot-toast";
 import CopyClipBoard from "../BottomNav.jsx/CopyClipBoard";
-import { Link } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 
 function FormModalComp() {
+  const { programId } = useParams();
+  const [isLoading, setIsLoading] = useState(false);
+  const [activitiesArr, setActivitiesArr] = useState([]);
+  const [participant, setParticipant] = useState({});
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const navigate = useNavigate();
+  const storeToLocalStorage = (item) => {
+    localStorage.setItem("phoneNumber", item);
+  };
   const [GeneratedURL, setGeneratedUrl] = useState("");
   const [isOpen, setIsOpen] = useState(false);
 
@@ -61,7 +70,7 @@ function FormModalComp() {
       {isOpen ? (
         <div className="fixed top-0 left-0 right-0 bottom-0  h-screen bg-white z-[1000] overflow-y-auto overflow-x-hidden w-full">
           <button
-            className="absolute z-[100] right-5 top-5 text-lg flex items-center gap-3 bg-gray-500 text-white p-2 rounded-xl"
+            className="absolute z-[100] right-5 top-5 text-lg flex items-center gap-3 bg-gray-500 text-white px-2 py-1 rounded-xl h-max"
             onClick={() => setIsOpen(false)}
           >
             <XMarkIcon className="h-5 w-5" />
@@ -101,6 +110,7 @@ function FormModalComp() {
               </div>
             </div>
             <div className="flex flex-col items-center gap-5 w-[70vw] ml-[23vw] my-5">
+              <p className="flex text-xl font-semibold">PreviewForm</p>
               <div className="flex ">
                 <a
                   href={GeneratedURL}
@@ -110,31 +120,42 @@ function FormModalComp() {
                 </a>
                 {GeneratedURL && <CopyClipBoard url={GeneratedURL} />}
               </div>
-              <div className="mt-10 px-5 border rounded-xl">
-                <div className="py-5">
-                  <h1 className="text-center font-bold text-xl">
-                    Sadhana Form
-                  </h1>
-                  <p className="text-center px-5 text-gray-400">
-                    This form is to track you daily progress in the path of
-                    <i className="text-red-400 ml-2">Krsna consiousness</i>
-                  </p>
-                </div>
+              <div className="mt-5 px-5 border rounded-xl">
+                <h1 className="text-center font-bold text-xl p-5">
+                  Sadhana Form
+                </h1>
 
-                <div className="pb-5">
-                  <div className="flex flex-col">
-                    <label className="font-semibold">PHONE NUMBER</label>
+                <div className="flex md:flex-row flex-col gap-2 md:items-end items-center justify-center">
+                  <div className="flex flex-col gap-2 mx-5">
+                    <label className="font-semibold text-gray-600">
+                      Phone Number
+                    </label>
                     <input
-                      type="text"
-                      placeholder="7878989023"
-                      className="border px-4 py-1.5 rounded-lg"
+                      type="tel"
+                      className="px-4 py-1.5 border rounded outline-none "
+                      placeholder="8888959287 "
+                      value={phoneNumber}
+                      onChange={(e) => setPhoneNumber(e.target.value)}
                     />
                   </div>
-                  <button className="px-4 py-1.5 justify-between w-full font-semibold text-white bg-blue-500 border border-blue-800 rounded-lg mt-5">
-                    Submit
-                  </button>
+                  <div className="flex items-end gap-5 ml-2">
+                    <button
+                      className={`px-4 py-1.5 text-lg  ${
+                        isLoading
+                          ? "bg-blue-400 text-white"
+                          : "bg-blue-700 text-white"
+                      } rounded md:w-[150px] w-[100px]`}
+                      type="submit"
+                      disabled
+                    >
+                      {isLoading ? "loading..." : "Search"}
+                    </button>
+                  </div>
                 </div>
-
+                <p className="text-center p-5 text-gray-400">
+                  This form is to track your daily progress in the path of
+                  <i className="text-red-400 ml-2">Krsna consiousness</i>
+                </p>
                 <div className="flex flex-col gap-5">
                   {checkedItems.map((item, index) => {
                     switch (item.functionName) {
@@ -233,9 +254,20 @@ function FormModalComp() {
                     }
                   })}
                 </div>
-                <button className="my-5 py-1.5 px-4 text-center rounded-lg bg-blue-500 border border-blue-800 w-full text-white">
-                  Submit
-                </button>
+                {checkedItems?.length > 0 ? (
+                  <div className="flex justify-center w-full ">
+                    <button
+                      className="my-5 py-1.5 px-4 text-center rounded-lg bg-blue-500 border border-blue-800 text-white w-[200px]"
+                      type="submit"
+                    >
+                      Submit
+                    </button>
+                  </div>
+                ) : (
+                  <div className="text-center font-semibold my-10 text-gray-400">
+                    No Configured Fields
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -247,20 +279,20 @@ function FormModalComp() {
 
 export default FormModalComp;
 
-const namesOfFields = [
-  { NOR: "Number of Rounds " },
-  { EJRB8A: "Early Japa rounds before 8 AM " },
-  { AJRA8A: "Early Japa rounds after 8 AM " },
-  { F8RCT: "First 8 rounds completed time " },
-  { N8RCT: "Next 8 rounds completed time " },
-  { WUT: "Wake up time " },
-  { ST: "Sleep time " },
-  { PBR: "Prabhupada Book Reading " },
-  { BNR: "Book Name Reading" },
-  { PCH: "Prabhupada Class Hearing " },
-  { GCH: "Guru Class Hearing " },
-  { CH: "Class Hearing " },
-  { S: "Speaker " },
-  { AA: "Attended Arthi" },
-  { MIU: "Mobile/Internet-Usage" },
-];
+// const namesOfFields = [
+//   { NOR: "Number of Rounds " },
+//   { EJRB8A: "Early Japa rounds before 8 AM " },
+//   { AJRA8A: "Early Japa rounds after 8 AM " },
+//   { F8RCT: "First 8 rounds completed time " },
+//   { N8RCT: "Next 8 rounds completed time " },
+//   { WUT: "Wake up time " },
+//   { ST: "Sleep time " },
+//   { PBR: "Prabhupada Book Reading " },
+//   { BNR: "Book Name Reading" },
+//   { PCH: "Prabhupada Class Hearing " },
+//   { GCH: "Guru Class Hearing " },
+//   { CH: "Class Hearing " },
+//   { S: "Speaker " },
+//   { AA: "Attended Arthi" },
+//   { MIU: "Mobile/Internet-Usage" },
+// ];
