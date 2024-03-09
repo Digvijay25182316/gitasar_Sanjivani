@@ -1,7 +1,40 @@
 import { ChevronDownIcon, XMarkIcon } from "@heroicons/react/24/solid";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { SERVER_ENDPOINT } from "../../config/Server";
 import toast from "react-hot-toast";
+import ReactDatePicker from "react-datepicker";
+import { CiCalendarDate } from "react-icons/ci";
+const formatDate = (date) => {
+  var currentDate = new Date(date);
+
+  // Extract day, month, year, hours, minutes, and seconds
+  var day = currentDate.getDate();
+  var month = currentDate.getMonth() + 1; // Adding 1 because getMonth() returns zero-based index
+  var year = currentDate.getFullYear();
+  var hours = currentDate.getHours();
+  var minutes = currentDate.getMinutes();
+  var seconds = currentDate.getSeconds();
+
+  // Format day, month, hours, minutes, and seconds with leading zeros if necessary
+  day = day < 10 ? "0" + day : day;
+  month = month < 10 ? "0" + month : month;
+  hours = hours < 10 ? "0" + hours : hours;
+  minutes = minutes < 10 ? "0" + minutes : minutes;
+  seconds = seconds < 10 ? "0" + seconds : seconds;
+  var formattedDate =
+    day +
+    "/" +
+    month +
+    "/" +
+    year +
+    " " +
+    hours +
+    ":" +
+    minutes +
+    ":" +
+    seconds;
+  return formattedDate;
+};
 
 function ScheduleSessions({ courseData, onCancel, onClose }) {
   const [loadingSessions, setLoadingSessions] = useState(false);
@@ -114,14 +147,23 @@ function ScheduleSessions({ courseData, onCancel, onClose }) {
                 >
                   Planned Session Date
                 </label>
-                <input
-                  type="date"
-                  className="border bg-white px-4 py-2 rounded-md transition-colors duration-500 focus:outline-gray-400"
-                  name="startTime"
-                  onChange={(e) => {
-                    setScheduleDate(e.target.value);
-                  }}
-                />
+                <div className="border flex items-center bg-white px-4 py-2 rounded-md transition-colors duration-500 focus:outline-gray-400 w-full">
+                  <ReactDatePicker
+                    type="date"
+                    id="startTime"
+                    value={scheduledDate ? formatDate(scheduledDate) : ""}
+                    name="startTime"
+                    showTimeSelect
+                    wrapperClassName="w-full outline-none"
+                    onChange={(e) => {
+                      setScheduleDate(e);
+                    }}
+                    placeholderText="enter the date"
+                    dateFormat="MMMM d, yyyy h:mm aa"
+                    className="w-full outline-none"
+                  />
+                  <CiCalendarDate className="text-lg" />
+                </div>
               </div>
 
               <div className="flex flex-col gap-5 px-5">
@@ -202,6 +244,22 @@ export default ScheduleSessions;
 const SelectCourse = ({ isLoading, label, TypeArr, setType }) => {
   const [isOpenSelection, setIsOpenSelection] = useState(false);
   const [selectedType, setSelectedType] = useState({});
+
+  const menuRef = useRef();
+
+  const handleClickOutside = (event) => {
+    if (menuRef.current && !menuRef.current.contains(event.target)) {
+      setIsOpenSelection(false);
+    }
+  };
+  // Attach click outside listener
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   return (
     <>
       <div className="flex flex-col gap-2">
@@ -212,7 +270,7 @@ const SelectCourse = ({ isLoading, label, TypeArr, setType }) => {
         >
           {label}
         </p>
-        <div className="relative inline-block text-left">
+        <div className="relative inline-block text-left" ref={menuRef}>
           <button
             type="button"
             onClick={() => !isLoading && setIsOpenSelection(!isOpenSelection)}
@@ -272,6 +330,21 @@ const SelectCourse = ({ isLoading, label, TypeArr, setType }) => {
 const SelectSession = ({ isLoading, label, TypeArr, setType }) => {
   const [isOpenSelection, setIsOpenSelection] = useState(false);
   const [selectedType, setSelectedType] = useState({});
+
+  const menuRef = useRef();
+
+  const handleClickOutside = (event) => {
+    if (menuRef.current && !menuRef.current.contains(event.target)) {
+      setIsOpenSelection(false);
+    }
+  };
+  // Attach click outside listener
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
   return (
     <>
       <div className="flex flex-col gap-2">
@@ -282,7 +355,7 @@ const SelectSession = ({ isLoading, label, TypeArr, setType }) => {
         >
           {label}
         </p>
-        <div className="relative inline-block text-left">
+        <div className="relative inline-block text-left" ref={menuRef}>
           <button
             type="button"
             onClick={() => !isLoading && setIsOpenSelection(!isOpenSelection)}

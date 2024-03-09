@@ -7,7 +7,7 @@ import {
   ChevronDownIcon,
   ChevronLeftIcon,
 } from "@heroicons/react/24/solid";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 import Dropdown from "../../../components/BottomNav.jsx/DropDown";
 import CopyClipBoard from "../../../components/BottomNav.jsx/CopyClipBoard";
@@ -586,6 +586,21 @@ const CreateCourse = ({
     setIsOpenSelection(false);
   };
 
+  const menuRef = useRef();
+
+  const handleClickOutside = (event) => {
+    if (menuRef.current && !menuRef.current.contains(event.target)) {
+      setIsOpenSelection(false);
+    }
+  };
+  // Attach click outside listener
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   return (
     <CourseModal
       isOpen={OpenCourseLevel}
@@ -612,7 +627,7 @@ const CreateCourse = ({
                 >
                   Program Name
                 </p>
-                <div className="relative inline-block text-left">
+                <div className="relative inline-block text-left" ref={menuRef}>
                   <button
                     type="button"
                     onClick={() =>
@@ -827,6 +842,20 @@ function SelectVolunteerInput({
   const [currentVolunteer, setCurrentVolunteer] = useState({});
   const [isOpenSelection, setIsOpenSelection] = useState(false);
   const [selectedVolunteer, setSelectedVolunteer] = useState({});
+  const menuRef = useRef();
+
+  const handleClickOutside = (event) => {
+    if (menuRef.current && !menuRef.current.contains(event.target)) {
+      setIsOpenSelection(false);
+    }
+  };
+  // Attach click outside listener
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   useEffect(() => {
     if (volunteer_id) {
@@ -848,7 +877,7 @@ function SelectVolunteerInput({
         >
           {label}
         </p>
-        <div className="relative inline-block text-left">
+        <div className="relative inline-block text-left" ref={menuRef}>
           <button
             type="button"
             onClick={() => !isLoading && setIsOpenSelection(!isOpenSelection)}

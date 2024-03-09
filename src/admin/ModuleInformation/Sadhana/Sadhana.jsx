@@ -5,14 +5,14 @@ import {
   ChevronLeftIcon,
   ChevronRightIcon,
   CubeTransparentIcon,
-  PlusIcon,
 } from "@heroicons/react/24/solid";
 import Slider from "../../../components/MdLeftHeaderSlider";
 import { useLocation } from "react-router-dom";
-import Dropdown from "../../../components/BottomNav.jsx/DropDown";
 import { SERVER_ENDPOINT } from "../../config/Server";
-import toast from "react-hot-toast";
 import Sidebar from "../../../components/BottomNav.jsx/Sidebar";
+import ProgramDropDown from "../Activities/ProgramDropDown";
+import toast from "react-hot-toast";
+import Dropdown from "../Activities/DropDown";
 
 function SadhanaAdmin() {
   const { pathname } = useLocation();
@@ -21,8 +21,9 @@ function SadhanaAdmin() {
     { size: 10 }, // a default page size
     { sort: "id" },
   ]);
-  const [activitiesArr, setActivitiesArr] = useState([]);
+  const [SadhanaArr, setSadhanaArr] = useState([]);
   const [OpenActivityModal, setOpenActivityModal] = useState(false);
+  const [specialNativeQuery, setSpecialNativeQuery] = useState(false);
   const [selected, setSelected] = useState(false);
   const [columnNamesArr, setColumnNamesArr] = useState([]); //to toggle visibility
   const [isLoading, setIsLoading] = useState(false);
@@ -52,7 +53,7 @@ function SadhanaAdmin() {
     localStorage.setItem("sadhanaArr", JSON.stringify(columnNamesArr));
   }, [columnNamesArr]);
 
-  let url = `${SERVER_ENDPOINT}/activity/`;
+  let url = `${SERVER_ENDPOINT}/participant-sadhana/filter/`;
   if (queryArr.length > 0) {
     url +=
       "?" +
@@ -66,15 +67,36 @@ function SadhanaAdmin() {
         .join("&");
   }
 
+  useEffect(() => {
+    (async () => {
+      setIsLoading(true);
+      try {
+        const response = await fetch(url);
+        if (response.ok) {
+          const responseData = await response.json();
+          setSadhanaArr(responseData.content);
+          setTotalElements(responseData?.totalElements);
+        } else {
+          const errorData = await response.json();
+          toast.error(errorData.message);
+        }
+      } catch (error) {
+        toast.error(error.message || error);
+      } finally {
+        setIsLoading(false);
+      }
+    })();
+  }, [url]);
+
   function AddFilter(data) {
-    // setQueryArr((prev) => [...prev, data]);
+    setQueryArr((prev) => [...prev, data]);
   }
   function doesFieldExists(array, propertyName) {
-    // return array?.some((obj) => obj.hasOwnProperty(propertyName));
+    return array?.some((obj) => obj.hasOwnProperty(propertyName));
   }
 
   function removeObjectByKey(data) {
-    // setQueryArr(queryArr.filter((item) => !Object.keys(item).includes(data)));
+    setQueryArr(queryArr.filter((item) => !Object.keys(item).includes(data)));
   }
   function onChangeSelect(e) {
     setSelectedItem(Number(e.target.value));
@@ -175,7 +197,7 @@ function SadhanaAdmin() {
             <div className="md:mx-5 mx-2 bg-white flex flex-col rounded border">
               <div className="flex items-center justify-between border-b">
                 <p className=" px-2 py-1 font-semibold text-gray-600">
-                  Activity master
+                  Sadhana
                 </p>
                 <p className="px-2 py-1  text-gray-400">{`${
                   totalElement < 10
@@ -200,6 +222,24 @@ function SadhanaAdmin() {
                       >
                         <div className="text-sm whitespace-nowrap">
                           Program Name{" "}
+                          <ProgramDropDown
+                            isSpecialNativeQuery={specialNativeQuery}
+                            origin={"origin-top-left"}
+                            position={"left-0"}
+                            setvalue={AddFilter}
+                            setIsSort={SortElements}
+                            issort={queryArr.some(
+                              (obj) =>
+                                obj.sort === "programName" ||
+                                obj.sort === "program_name"
+                            )}
+                            fieldname={"programName"}
+                            fieldname2={"program_name"}
+                            selected={doesFieldExists(queryArr, "programName")}
+                            removeFilter={() =>
+                              removeObjectByKey("programName")
+                            }
+                          />
                         </div>
                       </HidableColumnsHeader>
                       <HidableColumnsHeader
@@ -209,6 +249,27 @@ function SadhanaAdmin() {
                       >
                         <div className="text-sm whitespace-nowrap">
                           Participant First Name{" "}
+                          <Dropdown
+                            isSpecialNativeQuery={specialNativeQuery}
+                            origin={"origin-top-left"}
+                            position={"left-0"}
+                            setvalue={AddFilter}
+                            setIsSort={SortElements}
+                            issort={queryArr.some(
+                              (obj) =>
+                                obj.sort === "participantFirstName" ||
+                                obj.sort === "participant_first_name"
+                            )}
+                            fieldname={"participantFirstName"}
+                            fieldname2={"participant_first_name"}
+                            selected={doesFieldExists(
+                              queryArr,
+                              "participantFirstName"
+                            )}
+                            removeFilter={() =>
+                              removeObjectByKey("participantFirstName")
+                            }
+                          />
                         </div>
                       </HidableColumnsHeader>
                       <HidableColumnsHeader
@@ -218,6 +279,27 @@ function SadhanaAdmin() {
                       >
                         <div className="text-sm whitespace-nowrap">
                           Participant Last Name{" "}
+                          <Dropdown
+                            isSpecialNativeQuery={specialNativeQuery}
+                            origin={"origin-top-left"}
+                            position={"left-0"}
+                            setvalue={AddFilter}
+                            setIsSort={SortElements}
+                            issort={queryArr.some(
+                              (obj) =>
+                                obj.sort === "participantLastName" ||
+                                obj.sort === "participant_last_name"
+                            )}
+                            fieldname={"participantFirstName"}
+                            fieldname2={"participant_last_name"}
+                            selected={doesFieldExists(
+                              queryArr,
+                              "participantLastName"
+                            )}
+                            removeFilter={() =>
+                              removeObjectByKey("participantLastName")
+                            }
+                          />
                         </div>
                       </HidableColumnsHeader>
                       <HidableColumnsHeader
@@ -227,6 +309,27 @@ function SadhanaAdmin() {
                       >
                         <div className="text-sm whitespace-nowrap">
                           Participant Contact Number{" "}
+                          <Dropdown
+                            isSpecialNativeQuery={specialNativeQuery}
+                            origin={"origin-top-left"}
+                            position={"left-0"}
+                            setvalue={AddFilter}
+                            setIsSort={SortElements}
+                            issort={queryArr.some(
+                              (obj) =>
+                                obj.sort === "participantContactNumber" ||
+                                obj.sort === "participant_contact_number"
+                            )}
+                            fieldname={"participantContactNumber"}
+                            fieldname2={"participant_contact_number"}
+                            selected={doesFieldExists(
+                              queryArr,
+                              "participantContactNumber"
+                            )}
+                            removeFilter={() =>
+                              removeObjectByKey("participantContactNumber")
+                            }
+                          />
                         </div>
                       </HidableColumnsHeader>
                       <HidableColumnsHeader
@@ -364,11 +467,21 @@ function SadhanaAdmin() {
                           Mobile/Internet-Usage
                         </div>
                       </HidableColumnsHeader>
+
+                      <HidableColumnsHeader
+                        columnNameArr={columnNamesArr}
+                        fieldName={"SadhanaDate"}
+                        className="border-b px-6 font-semibold py-1"
+                      >
+                        <div className="text-sm whitespace-nowrap">
+                          Sadhana Date
+                        </div>
+                      </HidableColumnsHeader>
                     </tr>
                   </thead>
-                  {activitiesArr?.length > 0 ? (
+                  {SadhanaArr?.length > 0 ? (
                     <tbody>
-                      {activitiesArr?.map((acitivity, index) => (
+                      {SadhanaArr?.map((sadhana, index) => (
                         <tr key={index} className="border-b">
                           <td className="flex justify-center py-5">
                             <input
@@ -379,8 +492,145 @@ function SadhanaAdmin() {
                               onChange={onChangeSelect}
                             />
                           </td>
-                          <td className="px-10">{acitivity.name}</td>
-                          <td className="px-10">{acitivity.description}</td>
+
+                          <HidableColumns
+                            columnNameArr={columnNamesArr}
+                            fieldName={"Program Name"}
+                          >
+                            {sadhana.programName}
+                          </HidableColumns>
+
+                          <HidableColumns
+                            columnNameArr={columnNamesArr}
+                            fieldName={"First Name"}
+                          >
+                            {sadhana.participantFirstName}
+                          </HidableColumns>
+
+                          <HidableColumns
+                            columnNameArr={columnNamesArr}
+                            fieldName={"Last Name"}
+                          >
+                            {sadhana.participantLastName}
+                          </HidableColumns>
+
+                          <HidableColumns
+                            columnNameArr={columnNamesArr}
+                            fieldName={"Contact Number"}
+                          >
+                            {sadhana.participantContactNumber}
+                          </HidableColumns>
+
+                          <HidableColumns
+                            columnNameArr={columnNamesArr}
+                            fieldName={"Number of Rounds"}
+                          >
+                            {sadhana.numberOfRounds}
+                          </HidableColumns>
+
+                          <HidableColumns
+                            columnNameArr={columnNamesArr}
+                            fieldName={"Early Japa rounds before 8 AM"}
+                          >
+                            {sadhana.earlyJapaRoundsBefore8AM}
+                          </HidableColumns>
+
+                          <HidableColumns
+                            columnNameArr={columnNamesArr}
+                            fieldName={"Early Japa rounds after 8 AM"}
+                          >
+                            {sadhana.earlyJapaRoundsAfter8AM}
+                          </HidableColumns>
+
+                          <HidableColumns
+                            columnNameArr={columnNamesArr}
+                            fieldName={"First 8 rounds completed time"}
+                          >
+                            {sadhana.first8RoundsCompletedTime}
+                          </HidableColumns>
+
+                          <HidableColumns
+                            columnNameArr={columnNamesArr}
+                            fieldName={"Next 8 rounds completed time"}
+                          >
+                            {sadhana.next8RoundsCompletedTime}
+                          </HidableColumns>
+
+                          <HidableColumns
+                            columnNameArr={columnNamesArr}
+                            fieldName={"Wake up time"}
+                          >
+                            {sadhana.wakeUpTime}
+                          </HidableColumns>
+
+                          <HidableColumns
+                            columnNameArr={columnNamesArr}
+                            fieldName={"Sleep time"}
+                          >
+                            {sadhana.sleepTime}
+                          </HidableColumns>
+
+                          <HidableColumns
+                            columnNameArr={columnNamesArr}
+                            fieldName={"Prabhupada Book Reading"}
+                          >
+                            {sadhana.prabhupadaBookReading}
+                          </HidableColumns>
+
+                          <HidableColumns
+                            columnNameArr={columnNamesArr}
+                            fieldName={"Book Name Reading"}
+                          >
+                            {sadhana.nonPrabhupadaBookReading}
+                          </HidableColumns>
+
+                          <HidableColumns
+                            columnNameArr={columnNamesArr}
+                            fieldName={"Prabhupada Class Hearing"}
+                          >
+                            {sadhana.prabhupadaClassHearing}
+                          </HidableColumns>
+
+                          <HidableColumns
+                            columnNameArr={columnNamesArr}
+                            fieldName={"Guru Class Hearing"}
+                          >
+                            {sadhana.guruClassHearing}
+                          </HidableColumns>
+
+                          <HidableColumns
+                            columnNameArr={columnNamesArr}
+                            fieldName={"Class Hearing"}
+                          >
+                            {sadhana.otherClassHearing}
+                          </HidableColumns>
+
+                          <HidableColumns
+                            columnNameArr={columnNamesArr}
+                            fieldName={"Speaker"}
+                          >
+                            {sadhana.speaker}
+                          </HidableColumns>
+
+                          <HidableColumns
+                            columnNameArr={columnNamesArr}
+                            fieldName={"Attended Arthi"}
+                          >
+                            {sadhana.attendedArti}
+                          </HidableColumns>
+
+                          <HidableColumns
+                            columnNameArr={columnNamesArr}
+                            fieldName={"Mobile/Internet-Usage"}
+                          >
+                            {sadhana.mobileInternetUsage}
+                          </HidableColumns>
+                          <HidableColumns
+                            columnNameArr={columnNamesArr}
+                            fieldName={"sadhanaDate"}
+                          >
+                            {sadhana.sadhanaDate}
+                          </HidableColumns>
                         </tr>
                       ))}
                     </tbody>
@@ -391,7 +641,7 @@ function SadhanaAdmin() {
                           className="text-center text-gray-400 py-10"
                           colSpan={10}
                         >
-                          No Activities Found
+                          No Sadhana Found
                         </td>
                       </tr>
                     </tbody>
@@ -455,6 +705,7 @@ function HeadlessMenu({ options, onSelect }) {
     "Speaker",
     "Attended Arthi",
     "Mobile/Internet-Usage",
+    "SadhanaDate",
   ];
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef();

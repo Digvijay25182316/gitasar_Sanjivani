@@ -7,7 +7,6 @@ import {
 import { AcademicCapIcon } from "@heroicons/react/24/outline";
 import React, { useEffect, useState } from "react";
 import CourseModal from "./CourseModal";
-
 import SessionList from "./SessionList";
 import { SERVER_ENDPOINT } from "../../config/Server";
 import toast from "react-hot-toast";
@@ -20,7 +19,6 @@ function ViewPageController({ totalElement, VisibleElements, selected, id }) {
   const [UpdateOpen, setUpdateOpen] = useState(false);
   const [AddSession, setAddSession] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  console.log(selected);
 
   useEffect(() => {
     (async () => {
@@ -58,7 +56,7 @@ function ViewPageController({ totalElement, VisibleElements, selected, id }) {
         </button>
       </div>
 
-      <CourseModal isOpen={ViewOpen} setIsOpen={() => setViewOpen(false)}>
+      <CourseModal isOpen={ViewOpen} setIsOpen={() => setAddSession(false)}>
         {!AddSession ? (
           <div className="w-screen h-screen flex justify-center  ">
             {!isLoading ? (

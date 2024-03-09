@@ -21,6 +21,16 @@ import toast from "react-hot-toast";
 import { useNavigate, useParams } from "react-router-dom";
 import { SERVER_ENDPOINT } from "../../admin/config/Server";
 
+function formatDate(date) {
+  // Extract day, month, and year components
+  const day = date.getDate().toString().padStart(2, "0"); // Ensure two-digit day
+  const month = (date.getMonth() + 1).toString().padStart(2, "0"); // Month is zero-based
+  const year = date.getFullYear().toString().slice(2); // Get last two digits of the year
+
+  // Format the date as DD-MM-YY
+  return `${day}-${month}-${year}`;
+}
+
 function Sadhana() {
   const { programId } = useParams();
   const [checkedItems, setCheckedItems] = useState([]);
@@ -37,11 +47,12 @@ function Sadhana() {
   });
   /////////////////to set all the fields in the initlastate of formdata
   useEffect(() => {
+    const date = formatDate(new Date());
     setFormData((prevData) => ({
       ...prevData,
       programName: programDetails?.name,
       participantId: Participant?.id ? Number(Participant.id) : 0,
-      sadhanaDate: "05-03-24",
+      sadhanaDate: date,
     }));
   }, [programDetails, Participant]);
 
@@ -151,7 +162,6 @@ function Sadhana() {
     const header = new Headers();
     header.append("Content-Type", "application/json");
     e.preventDefault();
-    console.log(formData);
     try {
       const response = await fetch(
         `${SERVER_ENDPOINT}/participant-sadhana/record`,
