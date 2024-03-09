@@ -354,7 +354,7 @@ export function PBR({ label, onChange, value }) {
     <div className="flex flex-col gap-1 w-full">
       <label className="font-semibold" htmlFor="PBR">
         {label}
-        <i className="text-gray-500 font-normal">in hours</i>
+        <i className="text-gray-500 font-normal">in minutes</i>
         <i className="text-red-400">*</i>
       </label>
       <input
@@ -387,7 +387,7 @@ export function BNR({ label, onChange, value }) {
     <div className="flex flex-col gap-1 w-full">
       <label className="font-semibold" htmlFor="BNR">
         {label}
-        <i className="text-gray-500 font-normal">in hours</i>
+        <i className="text-gray-500 font-normal">in minutes</i>
         <i className="text-red-400">*</i>
       </label>
       <input
@@ -421,7 +421,7 @@ export function PCH({ label, onChange, value }) {
     <div className="flex flex-col gap-1 w-full">
       <label className="font-semibold" htmlFor="PCH">
         {label}
-        <i className="text-gray-500 font-normal">in hours</i>
+        <i className="text-gray-500 font-normal">in minutes</i>
         <i className="text-red-400">*</i>
       </label>
       <input
@@ -454,7 +454,7 @@ export function GCH({ label, onChange, value }) {
     <div className="flex flex-col gap-1 w-full">
       <label className="font-semibold" htmlFor="GCH">
         {label}
-        <i className="text-gray-500 font-normal">in hours</i>
+        <i className="text-gray-500 font-normal">in minutes</i>
         <i className="text-red-400">*</i>
       </label>
       <input
@@ -487,7 +487,7 @@ export function CH({ label, onChange, value }) {
     <div className="flex flex-col gap-1 w-full">
       <label className="font-semibold" htmlFor="CH">
         {label}
-        <i className="text-gray-500 font-normal">in hours</i>
+        <i className="text-gray-500 font-normal">in minutes</i>
         <i className="text-red-400">*</i>
       </label>
       <input
@@ -627,7 +627,7 @@ export function MIU({ label, onChange, value }) {
     <div className="flex flex-col gap-1 w-full">
       <label className="font-semibold" htmlFor="MIU">
         {label}
-        <i className="text-gray-500 font-normal">in hours</i>
+        <i className="text-gray-500 font-normal">in minutes</i>
         <i className="text-red-400">*</i>
       </label>
       <input
