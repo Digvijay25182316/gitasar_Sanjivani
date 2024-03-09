@@ -1,6 +1,11 @@
 import "./App.css";
 import Dashboard from "./admin/ModuleDashboard/Dashboard";
-import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
+import {
+  Route,
+  BrowserRouter as Router,
+  Routes,
+  useNavigate,
+} from "react-router-dom";
 import BottomNav from "./components/BottomNav.jsx/BottomNav";
 import Program from "./admin/ModuleInformation/Programs/Program";
 import Header from "./components/BottomNav.jsx/Header";
@@ -20,6 +25,7 @@ import { Toaster } from "react-hot-toast";
 import RSVPParticipant from "./participants/RSVP/RSVP";
 import Sadhana from "./participants/Sadhana/Sadhana";
 import SadhanaAdmin from "./admin/ModuleInformation/Sadhana/Sadhana";
+import { useEffect } from "react";
 
 function App() {
   return (
@@ -27,6 +33,7 @@ function App() {
       <Router>
         <Header />
         <Routes>
+          <Route path="/" element={<DefaultRouteHandler />} />
           <Route path="/admin/information/program" element={<Program />} />
           <Route path="/admin/information/mcourse" element={<CourseM />} />
           <Route
@@ -72,3 +79,10 @@ function App() {
 }
 
 export default App;
+
+const DefaultRouteHandler = () => {
+  const navigate = useNavigate();
+  useEffect(() => {
+    navigate("/admin/dashboard");
+  }, [navigate]);
+};

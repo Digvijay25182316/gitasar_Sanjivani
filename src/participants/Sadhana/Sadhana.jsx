@@ -15,6 +15,7 @@ import {
   S as SComponent,
   AA as AAComponent,
   MIU as MIUComponent,
+  FormListItems,
 } from "../../components/ModalForm/ConfigModalForm";
 import toast from "react-hot-toast";
 import { useNavigate, useParams } from "react-router-dom";
@@ -23,16 +24,31 @@ import { SERVER_ENDPOINT } from "../../admin/config/Server";
 function Sadhana() {
   const { programId } = useParams();
   const [checkedItems, setCheckedItems] = useState([]);
-  const [formData, setFormData] = useState(new FormData());
   const [Participant, setParticipant] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState("");
   const [programDetails, setProgramDetails] = useState({});
+  const [checkedItemsObjDB, setCheckedItemsObjDB] = useState({});
+
+  const [formData, setFormData] = useState({
+    programId: Number(programId),
+    programName: programDetails.name,
+    participantId: Participant.id ? Number(Participant.id) : 0,
+  });
+  /////////////////to set all the fields in the initlastate of formdata
+  useEffect(() => {
+    setFormData((prevData) => ({
+      ...prevData,
+      programName: programDetails?.name,
+      participantId: Participant?.id ? Number(Participant.id) : 0,
+      sadhanaDate: "05-03-24",
+    }));
+  }, [programDetails, Participant]);
 
   const storeToLocalStorage = (item) => {
     localStorage.setItem("phoneNumber", item);
   };
-
+  /////////////////to prepopulate the phonenumber of previously input form
   useEffect(() => {
     const phoneNumber = localStorage.getItem("phoneNumber");
     if (phoneNumber) {
@@ -40,28 +56,7 @@ function Sadhana() {
     }
   }, []);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const url = window.location.search; // Get the search parameters part of the URL
-    const params = new URLSearchParams(url);
-
-    const checkedItems = [];
-
-    // Iterate over each search parameter
-    params.forEach((value, key) => {
-      // Assuming your parameter name is always 'functionNames'
-      if (key === "functionNames") {
-        // Split the values by comma if multiple values are present
-        const values = value.split(",");
-        // Push each value into the checkedItem state array
-        values.forEach((item) => {
-          checkedItems.push({ functionName: item });
-        });
-      }
-    });
-    setCheckedItems(checkedItems);
-  }, []);
-
+  ///////////to fetch the programData if programId exists
   useEffect(() => {
     (async () => {
       try {
@@ -81,10 +76,44 @@ function Sadhana() {
     })();
   }, [programId]);
 
+  ////////////////to see what are the fields included in the sadhana form
+  useEffect(() => {
+    if (programDetails.sadhanaForm > 0) {
+      (async () => {
+        try {
+          const response = await fetch(
+            `${SERVER_ENDPOINT}/sadhana-form/id/${programDetails.sadhanaForm}`
+          );
+          if (response.ok) {
+            const responseData = await response.json();
+            setCheckedItemsObjDB(responseData);
+          } else {
+            const errorData = await response.json();
+            console.log(errorData);
+          }
+        } catch (error) {
+          toast.error(error.message);
+        }
+      })();
+    }
+  }, [programDetails.sadhanaForm]);
+
+  ////////////to set the checked items based on the the form structure got from the database
+  useEffect(() => {
+    const filteredArrForChecked = FormListItems.filter(
+      (item) => checkedItemsObjDB[item.databaseField] === true
+    );
+    setCheckedItems(filteredArrForChecked);
+  }, [checkedItemsObjDB]);
+
   const handleChange = (e) => {
-    // Update the form data whenever the input value changes
-    formData.set(e.target.name, e.target.value);
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
   };
+
   //to get the participant based on the mobile number
   async function handleSubmitUser(e) {
     setIsLoading(true);
@@ -118,11 +147,26 @@ function Sadhana() {
     }
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
+    const header = new Headers();
+    header.append("Content-Type", "application/json");
     e.preventDefault();
-    // Handle form submission here
-    console.log(...formData);
-    toast.success("successfully submitted");
+    console.log(formData);
+    try {
+      const response = await fetch(
+        `${SERVER_ENDPOINT}/participant-sadhana/record`,
+        { method: "POST", headers: header, body: JSON.stringify(formData) }
+      );
+      if (response.ok) {
+        const responseData = await response.json();
+        toast.success(responseData?.message);
+      } else {
+        const responseError = await response.json();
+        toast.error(responseError?.message || responseError.title);
+      }
+    } catch (error) {
+      toast.error(error.message || error);
+    }
   };
 
   return (
@@ -150,7 +194,7 @@ function Sadhana() {
                   type="submit"
                   disabled={isLoading}
                 >
-                  {isLoading ? "Loading..." : "Search"}
+                  {isLoading ? "Loading..." : <i>Search</i>}
                 </button>
               </div>
             </div>
@@ -308,7 +352,7 @@ function Sadhana() {
                 }
               })}
             </div>
-            {checkedItems?.length > 0 ? (
+            {programDetails?.sadhanaForm > 0 ? (
               <div className={`w-full flex items-center justify-center`}>
                 <button
                   className="my-5 py-1.5 px-4 text-center rounded-lg bg-blue-500 border border-blue-800 w-[200px] text-white"

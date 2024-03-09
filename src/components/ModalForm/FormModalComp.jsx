@@ -1,5 +1,9 @@
-import { PencilIcon, XMarkIcon } from "@heroicons/react/24/solid";
-import React, { useState } from "react";
+import {
+  ClipboardDocumentListIcon,
+  PencilIcon,
+  XMarkIcon,
+} from "@heroicons/react/24/solid";
+import React, { useEffect, useState } from "react";
 import {
   NOR as NORComponent,
   EJRB8A as EJRB8AComponent,
@@ -21,61 +25,191 @@ import {
 import { FRONTEND_ENDPOINT, SERVER_ENDPOINT } from "../../admin/config/Server";
 import toast from "react-hot-toast";
 import CopyClipBoard from "../BottomNav.jsx/CopyClipBoard";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { LinkIcon } from "@heroicons/react/24/solid";
+import QrCode from "../../admin/ModuleInformation/Programs/QrCode";
 
 function FormModalComp({ program }) {
   const [isLoading, setIsLoading] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState("");
-  const navigate = useNavigate();
-  const storeToLocalStorage = (item) => {
-    localStorage.setItem("phoneNumber", item);
-  };
-  const [GeneratedURL, setGeneratedUrl] = useState("");
   const [isOpen, setIsOpen] = useState(false);
-
   const [checkedItems, setCheckedItems] = useState([]);
+  const [checkedItemsObjDB, setCheckedItemsObjDB] = useState({});
+  const [checkedItemsObj, setCheckedItemsObj] = useState({
+    programId: program.id,
+    numberOfRounds: false,
+    earlyJapaRoundsBefore8AM: false,
+    earlyJapaRoundsAfter8AM: false,
+    first8RoundsCompletedTime: false,
+    next8RoundsCompletedTime: false,
+    wakeUpTime: false,
+    sleepTime: false,
+    prabhupadaBookReading: false,
+    nonPrabhupadaBookReading: false,
+    prabhupadaClassHearing: false,
+    guruClassHearing: false,
+    otherClassHearing: false,
+    speaker: false,
+    attendedArti: false,
+    mobileInternetUsage: false,
+  });
+
+  useEffect(() => {
+    const filteredArrForChecked = FormListItems.filter(
+      (item) => checkedItemsObjDB[item.databaseField] === true
+    );
+    setCheckedItems(filteredArrForChecked);
+  }, [checkedItemsObjDB]);
+
+  useEffect(() => {
+    if (program.sadhanaForm > 0) {
+      (async () => {
+        try {
+          const response = await fetch(
+            `${SERVER_ENDPOINT}/sadhana-form/id/${program.sadhanaForm}`
+          );
+          if (response.ok) {
+            const responseData = await response.json();
+            setCheckedItemsObjDB(responseData);
+          } else {
+            const errorData = await response.json();
+            console.log(errorData);
+          }
+        } catch (error) {
+          toast.error(error.message);
+        }
+      })();
+    }
+  }, [program.sadhanaForm]);
+
+  useEffect(() => {
+    setCheckedItemsObj((prevState) => {
+      const newState = { ...prevState };
+      checkedItems.forEach((key) => {
+        if (newState.hasOwnProperty(key.databaseField)) {
+          newState[key.databaseField] = true;
+        } else {
+          console.log(newState[key.databaseField]);
+        }
+      });
+      return newState;
+    });
+  }, [checkedItems]);
 
   const handleChange = (event, item) => {
     const { checked } = event.target;
-
     if (checked) {
       setCheckedItems((prevItems) => [...prevItems, item]);
     } else {
       setCheckedItems((prevItems) =>
         prevItems.filter((prevItem) => prevItem.id !== item.id)
       );
+      setCheckedItemsObj((prevState) => ({
+        ...prevState,
+        [item.databaseField]: checked, // Set to the checkbox status
+      }));
     }
   };
 
-  const generateURL = () => {
-    const params = new URLSearchParams();
-    checkedItems.forEach((item) => {
-      params.append("functionNames", item.functionName);
-    });
-    setGeneratedUrl(
-      `${FRONTEND_ENDPOINT}/sadhana/${program.id}?${params.toString()}`
-    );
+  const generateForm = async () => {
+    if (Object.keys(checkedItemsObj).length <= 1) {
+      toast.error("you haven't selected any field");
+      return;
+    }
+    setIsLoading(true);
+    if (program.sadhanaForm > 0) {
+      checkedItemsObj.id = program.sadhanaForm;
+      const header = new Headers();
+      header.append("Content-Type", "application/json");
+      try {
+        const response = await fetch(`${SERVER_ENDPOINT}/sadhana-form/update`, {
+          method: "POST",
+          headers: header,
+          body: JSON.stringify(checkedItemsObj),
+        });
+        if (response.ok) {
+          const responseData = await response.json();
+          toast.success(responseData.message);
+        } else {
+          const errorData = await response.json();
+          toast.error(errorData.message);
+        }
+      } catch (error) {
+        toast.error(error.message);
+      } finally {
+        setIsLoading(false);
+      }
+    } else {
+      const header = new Headers();
+      header.append("Content-Type", "application/json");
+      try {
+        const response = await fetch(
+          `${SERVER_ENDPOINT}/sadhana-form/generate`,
+          {
+            method: "POST",
+            headers: header,
+            body: JSON.stringify(checkedItemsObj),
+          }
+        );
+        if (response.ok) {
+          const responseData = await response.json();
+
+          toast.success(responseData.message);
+        } else {
+          const errorData = await response.json();
+          toast.error(errorData);
+        }
+      } catch (error) {
+        toast.error(error.message);
+      } finally {
+        setIsLoading(false);
+      }
+    }
   };
 
   return (
     <>
-      <div className="flex items-center justify-center w-full gap-5">
-        <Link to={`${FRONTEND_ENDPOINT}/sadhana/${program.id}`}>
-          <p className="flex items-center gap-2 text-blue-700 underline">
+      {program.sadhanaForm === 0 ? (
+        <div className="flex items-center justify-center w-full gap-5">
+          <p className="flex items-center gap-2 text-gray-400 underline">
             <LinkIcon className="h-4 w-4" />
             Link
           </p>
-        </Link>
-        <CopyClipBoard url={`${FRONTEND_ENDPOINT}/sadhana/${program.id}`} />
-        <button
-          onClick={() => setIsOpen(true)}
-          className="gap-3 text-blue-700 flex items-center"
-        >
-          open
-          <PencilIcon className="h-4 w-4" />
-        </button>
-      </div>
+          <ClipboardDocumentListIcon className="h-6 w-6 text-gray-400" />
+          <QrCode
+            url={`${FRONTEND_ENDPOINT}/sadhana/${program.id}`}
+            courseCode={"ABCDEFG"}
+          />
+          <button
+            onClick={() => setIsOpen(true)}
+            className="gap-3 text-blue-700 flex items-center"
+          >
+            open
+            <PencilIcon className="h-4 w-4" />
+          </button>
+        </div>
+      ) : (
+        <div className="flex items-center justify-center w-full gap-5 px-5">
+          <Link to={`${FRONTEND_ENDPOINT}/sadhana/${program.id}`}>
+            <p className="flex items-center gap-2 text-blue-700 underline">
+              <LinkIcon className="h-4 w-4" />
+              Link
+            </p>
+          </Link>
+          <CopyClipBoard url={`${FRONTEND_ENDPOINT}/sadhana/${program.id}`} />
+          <QrCode
+            url={`${FRONTEND_ENDPOINT}/sadhana/${program.id}`}
+            courseCode={"ABCDEFG"}
+          />
+          <button
+            onClick={() => setIsOpen(true)}
+            className="gap-3 text-blue-700 flex items-center"
+          >
+            open
+            <PencilIcon className="h-4 w-4" />
+          </button>
+        </div>
+      )}
       {isOpen ? (
         <div className="fixed top-0 left-0 right-0 bottom-0  h-screen bg-white z-[1000] overflow-y-auto overflow-x-hidden w-full">
           <button
@@ -86,7 +220,7 @@ function FormModalComp({ program }) {
             close
           </button>
           <div className="flex items-center w-full">
-            <div className="md:w-[23vw] h-screen fixed top-0 left-0 border-r bg-white">
+            <div className="md:w-[23vw] h-screen fixed top-0 left-0 border-r bg-white z-[100]">
               <div className="py-10 flex flex-col gap-2">
                 {FormListItems?.map((item) => (
                   <div key={item.id} className="px-5 whitespace-nowrap">
@@ -112,9 +246,20 @@ function FormModalComp({ program }) {
               <div className="px-5">
                 <button
                   className="text-center w-full border px-4 py-1.5 rounded-lg bg-green-500 text-white"
-                  onClick={() => generateURL()}
+                  onClick={() => generateForm()}
                 >
-                  GenerateURL
+                  {isLoading ? (
+                    <div
+                      className="inline-block h-6 w-6 animate-spin rounded-full border-2 border-solid border-current border-gray-500 border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
+                      role="status"
+                    >
+                      <span className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">
+                        Loading...
+                      </span>
+                    </div>
+                  ) : (
+                    "generateForm"
+                  )}
                 </button>
               </div>
             </div>
@@ -122,13 +267,18 @@ function FormModalComp({ program }) {
               <p className="flex text-xl font-semibold">PreviewForm</p>
               <div className="flex ">
                 <a
-                  href={GeneratedURL}
+                  href={`${FRONTEND_ENDPOINT}/sadhana/${program.id}`}
                   className="w-[300px] line-clamp-4 text-blue-500 underline"
                 >
-                  {GeneratedURL && GeneratedURL}
+                  {`${FRONTEND_ENDPOINT}/sadhana/${program.id}`}
                 </a>
-                {GeneratedURL && <CopyClipBoard url={GeneratedURL} />}
+                {
+                  <CopyClipBoard
+                    url={`${FRONTEND_ENDPOINT}/sadhana/${program.id}`}
+                  />
+                }
               </div>
+
               <div className="mt-5 px-5 border rounded-xl">
                 <h1 className="text-center font-bold text-xl p-5">
                   Sadhana Form
@@ -149,15 +299,11 @@ function FormModalComp({ program }) {
                   </div>
                   <div className="flex items-end gap-5 ml-2">
                     <button
-                      className={`px-4 py-1.5 text-lg  ${
-                        isLoading
-                          ? "bg-blue-400 text-white"
-                          : "bg-blue-700 text-white"
-                      } rounded md:w-[150px] w-[100px]`}
+                      className={`px-4 py-1.5 text-lg bg-blue-700 text-white rounded md:w-[150px] w-[100px]`}
                       type="submit"
                       disabled
                     >
-                      {isLoading ? "loading..." : "Search"}
+                      Search
                     </button>
                   </div>
                 </div>
@@ -172,7 +318,7 @@ function FormModalComp({ program }) {
                         return (
                           <NORComponent
                             key={index}
-                            label={"Number of Rounds "}
+                            label={"Number of Rounds"}
                           />
                         );
                       case "EJRB8A":
@@ -268,6 +414,7 @@ function FormModalComp({ program }) {
                     <button
                       className="my-5 py-1.5 px-4 text-center rounded-lg bg-blue-500 border border-blue-800 text-white w-[200px]"
                       type="submit"
+                      disabled={true}
                     >
                       Submit
                     </button>
