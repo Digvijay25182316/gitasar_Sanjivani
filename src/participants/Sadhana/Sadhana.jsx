@@ -191,6 +191,10 @@ function Sadhana() {
         handleShare(formData);
         setSubmittedSuccess(true);
       } else {
+        if (response.status === 409) {
+          toast.error("you have already submitted sadhana for today");
+          return;
+        }
         const responseError = await response.json();
         toast.error(responseError?.message || responseError.title);
       }
