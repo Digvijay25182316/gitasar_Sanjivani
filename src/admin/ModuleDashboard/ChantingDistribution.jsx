@@ -71,8 +71,11 @@ const ChantingDistribution = ({ data }) => {
   };
 
   return (
-    <div className="bg-white shadow">
-      <h1 className="bg-blue-700 text-white px-5"> chanting statistics</h1>
+    <div className="bg-white shadow rounded-xl">
+      <h2 className="bg-blue-700 text-white px-5 rounded-t-xl">
+        {" "}
+        chanting statistics
+      </h2>
       <Pie data={chartData} options={chartOptions} />
     </div>
   );

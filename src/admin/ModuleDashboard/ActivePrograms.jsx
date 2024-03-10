@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 
 const programs = [
   { name: "Gitasar Batch 6", totalAttendance: 40 },
@@ -11,10 +11,10 @@ const programs = [
 
 function ActivePrograms() {
   return (
-    <div className="bg-white rounded-xl shadow ">
-      <p className="text-lg bg-blue-700 rounded-t-lg text-white border-b px-2">
+    <div className="bg-white shadow rounded-xl">
+      <h2 className="bg-blue-700 text-white px-5 rounded-t-xl">
         Top 5 Active Programs With Attendance Count
-      </p>
+      </h2>
       <div>
         <table className="border-collapse w-full">
           <thead>

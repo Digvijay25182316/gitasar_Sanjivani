@@ -358,7 +358,7 @@ function Programs() {
                           <td className="flex justify-center py-5">
                             <input
                               type="checkbox"
-                              value={index + 1}
+                              value={Programs.id}
                               className=" checked:text-green-400 text-green-400 cursor-pointer"
                               onChange={onChangeSelect}
                               disabled={selected}

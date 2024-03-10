@@ -18,8 +18,10 @@ const ChantingGraph = () => {
   };
 
   return (
-    <div className="bg-white shadow">
-      <h2 className="bg-blue-700 text-white px-5">Chanting Statistics</h2>
+    <div className="bg-white shadow rounded-xl">
+      <h2 className="bg-blue-700 text-white px-5 rounded-t-xl">
+        Chanting Statistics
+      </h2>
       <Doughnut data={data} width={300} height={300} />
     </div>
   );
