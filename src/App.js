@@ -26,6 +26,7 @@ import RSVPParticipant from "./participants/RSVP/RSVP";
 import Sadhana from "./participants/Sadhana/Sadhana";
 import SadhanaAdmin from "./admin/ModuleInformation/Sadhana/Sadhana";
 import { useEffect } from "react";
+import ExtraCourses from "./admin/ModuleInformation/ExtraCourses/ExtraCourses";
 
 function App() {
   return (
@@ -68,6 +69,7 @@ function App() {
             element={<ParticipantsActivities />}
           />
           <Route path="/registeration" element={<ParticipantRegisteration />} />
+          <Route path="/extraregisteration" element={<ExtraCourses />} />
           <Route path="/sadhana/:programId" element={<Sadhana />} />
           <Route path="*" element={<NotFound />} />
         </Routes>

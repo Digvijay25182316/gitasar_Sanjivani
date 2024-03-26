@@ -56,6 +56,10 @@ function VolunteersModal({ isOpen, setIsOpen }) {
         toast.success(responseData.message);
         setIsOpen();
       } else {
+        if (response.status === 409) {
+          toast.error("This Entry Already exists");
+          return;
+        }
         const errorData = await response.json();
         toast.error(errorData.message);
       }

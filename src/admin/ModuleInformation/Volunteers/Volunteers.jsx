@@ -173,7 +173,7 @@ function Volunteers() {
                 onClick={() => setOpenActivities(true)}
                 className="flex items-center gap-2 bg-white px-4 py-1.5 border border-gray-300 rounded text-blue-800"
               >
-                <PlusIcon className="h-4 w-4" /> New Activity
+                <PlusIcon className="h-4 w-4" /> New Volunteer
               </button>
             </div>
 

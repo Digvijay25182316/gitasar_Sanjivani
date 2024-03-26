@@ -71,6 +71,10 @@ function ProgramModal({ isOpen, onClose, children }) {
         toast.success(responseData.message);
         onClose();
       } else {
+        if (response.status === 409) {
+          toast.error("This Entry Already exists");
+          return;
+        }
         const errorData = await response.json();
         toast.error(errorData.error);
       }
@@ -88,28 +92,6 @@ function ProgramModal({ isOpen, onClose, children }) {
       setProgramType("");
       setAudienceType("");
     }
-
-    // await fetch(`${SERVER_ENDPOINT}/program/create`, {
-    //   method: "POST",
-    //   headers: header,
-    //   body: JSON.stringify(formData),
-    // })
-    //   .then((data) => {
-    //     if (data.ok) {
-    //       return data.json();
-    //     } else {
-    //       setIsError(true);
-    //       return data.json();
-    //     }
-    //   })
-    //   .then((data) => {
-    //     if (isError) {
-    //       toast.error(data.message);
-    //     } else {
-    //       toast.success(data.message);
-    //     }
-    //   })
-    //   .catch((err) => toast.error(err.message));
   }
 
   useEffect(() => {
